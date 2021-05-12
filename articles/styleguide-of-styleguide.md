@@ -19,16 +19,16 @@ published: true
 - 仮に Scratch(GUI) でプログラミングするとしても、それは依然として論点ですか？
   - Yes の場合、それを StyleGuide に含めるべきかを再考する。
 - ファイルの外側の論点ですか？
-  Yes の場合、Meta Rules に分類 ... e.g. フォルダ構成など。
+  Yes の場合、 `Meta Rules` に分類 ... e.g. フォルダ構成など。
 - それはプログラミング言語に関わらず論点ですか？
   - Yes の場合、それは目の見えない人がプログラミングする場合でも論点ですか？
-    - Yes の場合、Style Rules に分類 ... e.g. 変数の命名、モジュールの分割
-    - No の場合、Formatting Rules に分類 ... e.g. スペース or インデント
-  - No（つまり言語特有の論点） の場合、Language Feature に分類
+    - Yes の場合、 `Style Rules` に分類 ... e.g. 変数の命名、モジュールの分割
+    - No の場合、 `Formatting Rules` に分類 ... e.g. スペース or インデント
+  - No（つまり言語特有の論点） の場合、 `Language Feature` に分類
 
 ## 中間成果物
 
-インターネット上に公開されている Web 企業のコーディング規則のうち、分類がなされているものの分類を表にした。
+インターネット上に公開されている Web 企業のコーディング規則のうち、分類がなされているものの分類を表にした。（完成が目標ではないので、めっちゃ途中です）
 
 [Style Guides Categorization - Google Spread Sheet](https://docs.google.com/spreadsheets/d/1_x0Wt0YEFOf_XqX5wXlqyz7rHyu4j6sF_aTH1zI2T1A/edit?usp=sharing)
 
