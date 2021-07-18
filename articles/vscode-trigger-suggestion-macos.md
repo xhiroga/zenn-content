@@ -29,7 +29,7 @@ VSCodeには `Trigger Suggestion`というショートカットがあります�
 `Trigger Suggestion`にはデフォルトで3つのショートカットが設定されています。
 
  - `Ctrl + Space`
- - `Option + Ecs`
+ - `Option + Esc`
  - `Command + |`
 
 このうち一番押しやすいであろう `Ctrl + Space` は、macOSだと入力ソースの切り替えに割り当てられています。そのせいで気づかなかったのかもしれませんね。  
@@ -45,7 +45,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 60 "<dic
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 61 "<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>32</integer><integer>49</integer><integer>786432</integer></array><key>type</key><string>standard</string></dict></dict>"
 ```
 
-なお個人的には、`Option + Ecs`で十分かな、と思っています。
+なお個人的には、`Option + Esc`で十分かな、と思っています。
 
 ## まとめ
 
