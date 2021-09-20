@@ -9,11 +9,11 @@ published: true
 DigitalOceanでインスタンスとロードバランサーを構築し、おひとり様Redashインスタンスの運用をはじめました。  
 誰かの役に立ったらいいな＆間違いがあったら指摘してほしいな、という思いから記事にします。
 
-**クレジットについて**
+**無料$100クレジットのリンク**
 
 リファラルプログラムがあり、以下のリンクからサインアップすると $100 のクレジットが手に入ります（私にも$25が追加されます）。私は誰の紹介もなくサインアップして悔しい思いをしたので、よければ！
 
-[<img src="https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg">](https://www.digitalocean.com/?refcode=140d95082e62&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
+[![DigitalOcean Referral Badge]([画像のURL](https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg))]([リンクのURL](https://www.digitalocean.com/?refcode=140d95082e62&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge))
 
 
 ## 免責
@@ -66,4 +66,6 @@ docker run -it --rm --name certbot \
 
 DigitalOceanでインスタンスとロードバランサーを構築することで、他のクラウドベンダーと比べて安価にRedashインスタンスをホストできました。
 
-[<img src="https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg">](https://www.digitalocean.com/?refcode=140d95082e62&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
+**無料$100クレジットのリンク（再掲）**
+
+[![DigitalOcean Referral Badge]([画像のURL](https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg))]([リンクのURL](https://www.digitalocean.com/?refcode=140d95082e62&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge))
