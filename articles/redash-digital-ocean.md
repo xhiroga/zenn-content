@@ -1,4 +1,10 @@
-# $20/MonthでRedashインスタンスを建てる（クレジットつき）
+---
+title: "$20/MonthでRedashインスタンスを建てる（クレジットつき）"
+emoji: "🔖"
+type: "tech" # tech: 技術記事 / idea: アイデア
+topics: ["DigitalOcean","redash"]
+published: true
+---
 
 DigitalOceanでインスタンスとロードバランサーを構築し、おひとり様Redashインスタンスの運用をはじめました。  
 誰かの役に立ったらいいな＆間違いがあったら指摘してほしいな、という思いから記事にします。
