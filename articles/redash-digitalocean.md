@@ -13,7 +13,7 @@ DigitalOceanでインスタンスとロードバランサーを構築し、お�
 
 リファラルプログラムがあり、以下のリンクからサインアップすると $100 のクレジットが手に入ります（私にも$25が追加されます）。私は誰の紹介もなくサインアップして悔しい思いをしたので、よければ！
 
-[![DigitalOcean Referral Badge](https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg)]([リンクのURL](https://www.digitalocean.com/?refcode=140d95082e62&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge))
+[![DigitalOcean Referral Badge](https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg)](https://www.digitalocean.com/?refcode=140d95082e62&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
 
 
 ## 免責
@@ -68,4 +68,4 @@ DigitalOceanでインスタンスとロードバランサーを構築するこ�
 
 **無料$100クレジットのリンク（再掲）**
 
-[![DigitalOcean Referral Badge](https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg)]([リンクのURL](https://www.digitalocean.com/?refcode=140d95082e62&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge))
+[![DigitalOcean Referral Badge](https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg)](https://www.digitalocean.com/?refcode=140d95082e62&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
