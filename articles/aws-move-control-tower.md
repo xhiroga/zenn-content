@@ -3,7 +3,7 @@ title: "AWS Control TowerとSSOを北バージニアから東京リージョン�
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["AWS"]
-published: false
+published: true
 ---
 
 2021年3月に[AWS Control Tower が東京リージョンで利用できるようになりました。](https://aws.amazon.com/jp/blogs/news/aws-control-tower-tokyo/)  
