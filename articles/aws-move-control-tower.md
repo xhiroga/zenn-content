@@ -15,12 +15,6 @@ published: true
 - [Control Towerを廃止して東京リージョンで再有効化してみた – 廃止編 \| DevelopersIO](https://dev.classmethod.jp/articles/decommission-control-tower/)
 - [Control Towerを廃止して東京リージョンで再設定してみた \- Qiita](https://qiita.com/kazu_kazu/items/122d7dc6b6e34a23e081)
 
-# 手順
-
-- AWS Control Towerの退役
-- AWS SSOの退役
-- 手動クリーンアップ
-
 ## 前提
 
 - 作業用にAdmin権限を持つIAM Userを作成してあります。
@@ -30,6 +24,12 @@ published: true
 - OrganizationのControl Tower統合も削除せずに持ち越しました。
 
 （というか、正直に言ってOrganizationにControl Tower統合があるとは知りませんでした...マネジメントコンソールだと分からないので...）
+
+# 手順
+
+- AWS Control Towerの退役
+- AWS SSOの退役
+- 手動クリーンアップ
 
 ## AWS Control Towerの退役
 
