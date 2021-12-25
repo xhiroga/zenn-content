@@ -16,8 +16,8 @@ published: true
 └ var
 ```
 
-すでにQiitaに同様の記事がありますが、より自分好みの方法を考えたので記事にした次第です。
-https://qiita.com/paty-fakename/items/c82ed27b4070feeceff6
+すでにQiitaに[ディレクトリ構成図を書くときに便利な記号](https://qiita.com/paty-fakename/items/c82ed27b4070feeceff6)という素晴らしい記事がありますが、より自分好みの方法を考えたので記事にした次第です。
+
 
 また、macOSの場合です。
 
@@ -29,9 +29,7 @@ https://qiita.com/paty-fakename/items/c82ed27b4070feeceff6
 
 ## 記号について
 
-正式名称を罫線素片といい、文字のみで罫線のあるアプリケーションをデザインしたかった時代に登場した。
-
-https://ja.wikipedia.org/wiki/%E7%BD%AB%E7%B7%9A%E7%B4%A0%E7%89%87
+正式名称を[罫線素片](https://ja.wikipedia.org/wiki/%E7%BD%AB%E7%B7%9A%E7%B4%A0%E7%89%87)といい、文字のみで罫線のあるアプリケーションをデザインしたかった時代に登場した記号とのこと。
 
 ## Emoji and Symbols Viewer による入力
 
