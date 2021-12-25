@@ -55,7 +55,7 @@ Macの標準日本語入力・Google日本語入力のいずれでも、以下�
 
 macOSのシステム環境設定のキーボードから設定できる、Unicodeの入力用キーボードです。
 
-![Unicode Hex Input](2021-12-25-unicode-hex-input.png)
+![Unicode Hex Input](/images/2021-12-25-unicode-hex-input.png)
 
 以下のYouTubeの動画がわかりやすいので、ご参考まで。
 
