@@ -24,9 +24,13 @@ macOSの設定を編集できるコマンド `defaults` の歴史について、
 | 2001-03-22 | OS Xが販売開始される |
 | 2002 | GNUstepがリリースされる |
 
-## defaultsの歴史
+## OS・フレームワークとコマンドの対応表
 
-`defaults` コマンドって何？という方は、以下のコマンドを実行してみて下さい。
+![](/images/2012-12-26-defaults-history.png)
+
+## `defaults`とは
+
+そもそも`defaults`コマンドって何？という方は、以下のコマンドを実行してみて下さい。
 
 ```shell
 defaults read com.apple.dock orientation
@@ -83,15 +87,16 @@ GNUstep自体の歴史は[GNUstep History](http://gnustep.made-it.com/Guides/His
 
 ### 現在
 
-defaultsは隠しコマンドと呼ばれることもありますが、現在でも[Appleの開発者向けドキュメント](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html)に記載があります。隠し設定の編集もできるコマンド、の方が正確ですね。
+[Appleの開発者向けドキュメント](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html)に記載があります。
 
-ちなみに設定可能な項目は、[Dock](https://developer.apple.com/documentation/devicemanagement/dock)のように一部のプロパティを公開しているアプリを除けば見つけられないものがほとんどでした。
+### TIPS
+
+設定可能な項目は、[Dock](https://developer.apple.com/documentation/devicemanagement/dock)のように一部のプロパティを公開しているアプリを除けば見つけられないものがほとんどでした。
 人によって様々な探し方がありますが、以下が参考になると思います。
 
 - [OS X ハッキング\!\(315\) stringsコマンドで裏オプション探し \| マイナビニュース](https://news.mynavi.jp/article/osx-315/)
 - [Macの設定を自動化するdefaultsコマンドと、それを助けるpdef \- memo\.yammer\.jp](https://memo.yammer.jp/posts/pdef)
 - [Mac を買ったら必ずやっておきたい初期設定を、全て自動化してみた](https://zenn.dev/ulwlu/articles/1c3a1da12887ed)
-
 
 ## 参考文献
 
