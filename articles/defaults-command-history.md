@@ -89,6 +89,13 @@ GNUstep自体の歴史は[GNUstep History](http://gnustep.made-it.com/Guides/His
 
 [Appleの開発者向けドキュメント](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html)に記載があります。
 
+また、`defaults`以外にも`PlistBuddy`や`plutil`といったユーティリティが追加されています。
+
+```shell
+ls /usr/libexec/PlistBuddy
+ls /usr/bin/plutil
+```
+
 ### TIPS
 
 設定可能な項目は、[Dock](https://developer.apple.com/documentation/devicemanagement/dock)のように一部のプロパティを公開しているアプリを除けば見つけられないものがほとんどでした。
