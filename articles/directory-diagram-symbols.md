@@ -24,7 +24,7 @@ published: true
 ## TL;DR
 
 - 英語入力なら Ctrl + Cmd + Space で Emoji and Symbols Viewer を表示し、 box と入力して候補に出すのが最も早い
-- かな入力の場合、ショートカットを登録するかGoogle日本語入力で変換する
+- かな入力の場合、「みぎうえ」などで変換できる
 - Unicode Hex Inputでも入力できる
 
 ## 記号について
@@ -33,10 +33,11 @@ published: true
 
 ## Emoji and Symbols Viewer による入力
 
-Cmd + Ctrl + Space で 絵文字入力のためのウィンドウを開き、boxで表示できます（英語で利用している場合）
+Cmd + Ctrl + Space で 絵文字入力のためのウィンドウを開き、"box"などと入力すると表示できます（英語で利用している場合）
 
 ![Input box drawing characters from emoji and symbols viewer](/images/box-drawing-characters.gif)
 
+これは、罫線素片を英語で Box drawing symbolsと呼ぶからですね。
 
 ## ショートカットの設定またはGoogle日本語入力
 
