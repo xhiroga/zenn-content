@@ -96,7 +96,7 @@ ls /usr/libexec/PlistBuddy
 ls /usr/bin/plutil
 ```
 
-### TIPS
+## TIPS
 
 設定可能な項目は、[Dock](https://developer.apple.com/documentation/devicemanagement/dock)のように一部のプロパティを公開しているアプリを除けば見つけられないものがほとんどでした。
 人によって様々な探し方がありますが、以下が参考になると思います。
