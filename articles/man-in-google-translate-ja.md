@@ -10,6 +10,8 @@ published: true
 
 Web版のman pagesのGoogle翻訳版リンクを生成します（Debianに対応）
 
+![](/images/2021-12-31-man-in-google-translate-ja.gif)
+
 ```shell
 % gman () { man "$1" > /dev/null && echo "https://dyn-manpages-debian-org.translate.goog/jump?q=$1&_x_tr_sl=auto&_x_tr_tl=ja&_x_tr_hl=$2"; }
 % gman interfaces ja
@@ -53,3 +55,4 @@ Debian ManpagesのWebサイトは、ありがたいことにクエリパラメ�
 ## References
 
 - [linux \- How do I check if a man page exists? \- Stack Overflow](https://stackoverflow.com/questions/12241709/how-do-i-check-if-a-man-page-exists)
+gman () { man "$1" > /dev/null && echo "https://dyn-manpages-debian-org.translate.goog/jump?q=$1&_x_tr_sl=auto&_x_tr_tl=ja&_x_tr_hl=$2"; }
