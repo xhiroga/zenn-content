@@ -55,4 +55,3 @@ Debian ManpagesのWebサイトは、ありがたいことにクエリパラメ�
 ## References
 
 - [linux \- How do I check if a man page exists? \- Stack Overflow](https://stackoverflow.com/questions/12241709/how-do-i-check-if-a-man-page-exists)
-gman () { man "$1" > /dev/null && echo "https://dyn-manpages-debian-org.translate.goog/jump?q=$1&_x_tr_sl=auto&_x_tr_tl=ja&_x_tr_hl=$2"; }
