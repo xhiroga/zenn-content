@@ -43,6 +43,9 @@ Dockerイメージはこちら。
 | man -L C.UTF-8 ls | English | English | English |
 | man -L ja_JP.utf8 ls | 日本語だがUTF-8が表示されない | 日本語 | 日本語 |
 
+### 補足
+
+`man -E UTF-8 -L ja_JP.UTF-8 ls`だと、惜しいところまで行くのですが表示崩れがあります（条件などは要調査）
 
 ## まとめ
 
