@@ -51,4 +51,3 @@ Ansible公式の[ソース \(devel\) からの Ansible の実行](https://docs.a
 
 - [Ansible のインストール — Ansible Documentation](https://docs.ansible.com/ansible/2.9_ja/installation_guide/intro_installation.html#devel-ansible)
 - [Using Python Environments in Visual Studio Code](https://code.visualstudio.com/docs/python/environments#_global-and-virtual-environments)
-
