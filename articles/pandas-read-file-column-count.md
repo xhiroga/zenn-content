@@ -3,7 +3,7 @@ title: "Pandasで1行目と2行目の列数が違い、かつデリミタが複�
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Python","pandas"]
-published: false
+published: true
 ---
 
 ## TL;DR
@@ -56,5 +56,5 @@ df.head()
 ## まとめ
 
 - `read_table`で複雑なデリミタを指定する場合は挙動に気をつける
-- 全角スペース（に限らず、分析しないデータ）はなるべく早い段階で取り除く
+- 全角スペース（に限らず、分析対象外のデータ）はなるべく早い段階で取り除く
 - 汚いデータを整形するのもPandasの仕事と割り切って、Index Nameを列に持ってきても良かったかもしれない
