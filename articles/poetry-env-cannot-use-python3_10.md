@@ -59,7 +59,7 @@ poetry config virtualenvs.in-project true --local
 # OR
 export POETRY_VIRTUALENVS_IN_PROJECT=true
 
-poetry init --python 3.10
+poetry init --python ^3.10
 poetry install
 ```
 
