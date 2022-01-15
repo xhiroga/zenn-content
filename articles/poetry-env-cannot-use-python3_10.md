@@ -9,7 +9,7 @@ published: true
 ## TL;DR
 
 PoetryをHomebrewでインストールしている場合、Python3.10が同梱される（2022年1月現在）。  
-Homebrewで依存関係のためにインストールされるモジュールは通常PATHに存在しないので、`poetry env use python3.10`ではエラーになる。
+Homebrewで依存関係のためにインストールされるモジュールは通常PATHに存在しないので、pyenvなどでインストールしていない限りは`poetry env use python3.10`がエラーになる。
 
 ## Poetryの仕様
 
