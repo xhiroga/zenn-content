@@ -50,7 +50,7 @@ Password Strength : Very strong
 
 Basic認証でパスワードを入力すると、
 
-![RTX1210 Basic認証](images/2022-03-20-09-15-03.png)
+![RTX1210 Basic認証](/images/2022-03-20-09-15-03.png)
 
 管理ユーザーとしてログインしていました。
 
