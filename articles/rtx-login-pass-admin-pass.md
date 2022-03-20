@@ -3,7 +3,7 @@ title: "RTX1210でログインパスワードと管理パスワードに同じ�
 emoji: "🐘"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["rtx", "rtx1210"]
-published: false
+published: true
 ---
 
 ## TL;DR
