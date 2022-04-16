@@ -3,20 +3,19 @@ title: "HerokuのOAuthトークン流出で、やっておくといいことリ�
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Heroku", "GitHub"]
-published: false
+published: true
 ---
 
-HerokuのOAuthトークン流出でやっておくといいことを、Organization管理者と個人で分けてまとめました。
+2022-04-16にアナウンスが有ったHerokuのOAuthトークン流出インシデントを受けてやっておくといいことを、Organization管理者向けと個人向けに分けてまとめました。
 
 ## 注意
 
 - 執筆者はGitHubやHerokuの専門家ではありません。この記事は誤っている可能性があります。
-- この記事は現在調査中の問題について書かれています。最新情報は必ず[公式]((https://status.heroku.com/incidents/2413))のドキュメントを参照してください。
+- この記事は現在調査中の問題について書かれています。最新情報は必ず[公式](https://status.heroku.com/incidents/2413)のレポートを参照してください。
 
 ## インシデントについて
 
-GitHubがHeroku利用者に発行したOAuthトークンが侵害されたことで、プライベートリポジトリの一部がダウンロードされるインシデントが発生しています。例えばnpmのプライベートリポジトリなどが被害に遭っています。  
-本件について、チームメンバーへの展開などを念頭に置いて対応をまとめました。
+GitHubがHeroku利用者に発行したOAuthトークンが侵害されたことで、プライベートリポジトリの一部がダウンロードされるインシデントが発生しています。例えばnpmのプライベートリポジトリなどが被害に遭っています。詳細は[公式](https://status.heroku.com/incidents/2413)のレポートを参照してください。
 
 ## この記事での対応方針
 
@@ -37,7 +36,9 @@ GitHubがHeroku利用者に発行したOAuthトークンが侵害されたこと
 
 以下のURLの{organization_id}をご自身の管理するOrganizationの値に置き換えてアクセスし、`Third-party application access policy` を確認します。
 
+```
 https://github.com/organizations/{organization_id}/settings/oauth_application_policy
+```
 
 ![](/images/2022-04-16_heroku-incident-2413-checklist_1.png)
 
@@ -47,13 +48,15 @@ https://github.com/organizations/{organization_id}/settings/oauth_application_po
 
 以下のURLの{organization_id}をご自身の管理するOrganizationの値に置き換えてアクセスし、`Audit log` を確認します。
 
+```
 https://github.com/organizations/{organization_id}/settings/audit-log?q=action%3Aorg.oauth_app_access_approved
+```
 
 Filter欄に `action:org.oauth_app_access_approved` と入力します。すると、過去にOrganizationでアクセス権限がApproveされたアプリケーションが表示されます。
 
 ![](/images/2022-04-16_heroku-incident-2413-checklist_2.png)
 
-この中にHeroku Dashboardがなければ、Organizationは一応今回のインシデントの対象ではないと私は判断しています。ただし個人側のAuditLogでは恐らく古いイベントが検索結果に表示されなかったこともあるので、監査ログと併用したりメンバー側にも確認を依頼するのが確実かもしれません。
+この中にHeroku Dashboardがなければ、Organizationは一応今回のインシデントの対象ではないと私は判断しています。ただし個人側のSecurity Logでは恐らく古いイベントが検索結果に表示されなかったこともあるので、監査ログと併用したりメンバー側にも確認を依頼するのが確実かもしれません。
 
 ### 3. 監査ログの調査
 
