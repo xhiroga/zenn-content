@@ -120,8 +120,5 @@ GitHubのOrganization管理者と個人向けに、今回のインシデント�
 
 ## 参考
 
-[Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413)
-
-
-
-
+- [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413)
+- [Security alert: Attack campaign involving stolen OAuth user tokens issued to two third\-party integrators \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/)
