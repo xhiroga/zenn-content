@@ -7,9 +7,9 @@ published: true
 ---
 
 日本時間の2022年4月16日にアナウンスがあった、Heroku/Travis-CIのOAuthユーザートークンの流出および悪用を受けて、ユーザーとしてやっておくといいことをまとめました。  
-GitHubのOrganizationのオーナーとメンバー向けに分けてあります。
+GitHubのOrganizationのオーナー向けと個人向けとに分けてあります。
 
-> 追記: [ソニックガーデン社のJunichi Ito](https://twitter.com/jnchito)さんから[補足のコメント](https://zenn.dev/link/comments/5639edd17311a9)を頂き、記事にも取り込んでいます。ありがとうございます！
+> 追記: 複数の[補足のコメント](https://zenn.dev/link/comments/5639edd17311a9)を頂き、記事にも取り込んでいます。ありがとうございます！
 
 
 ## 注意
