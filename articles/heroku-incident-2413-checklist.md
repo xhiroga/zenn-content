@@ -18,7 +18,7 @@ GitHubのOrganizationのオーナー向けと個人向けで分けてありま�
 - この記事は現在調査中の問題について書かれています。最新情報は必ず公式サイトをご確認ください。
     - [GitHub](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/)
     - [Heroku](https://status.heroku.com/incidents/2413)
-    - 2022-04-17T11:00:00JST 時点ではTravis-CIからの公式声明はなし。
+    - 2022-04-18T05:00:00JST 時点ではTravis-CIからの公式声明はなし。
 
 
 ## インシデントの概要
@@ -38,6 +38,7 @@ GitHubがHerokuとTravis-CIのOAuthアプリケーションに発行したトー
 | 2022-04-15 | Herokuがブログを公開 | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
 | 2022-04-15 | Travis-CIの従業員らしきユーザーがOAuthトークンを無効化している報告がツイッターに上げられる | [Twitter](https://twitter.com/sf_tristanb/status/1515117868484071425) |
 | 2022-04-16 | SalesforceのBotがHeroku Dasuboardの全てのOAuthトークンの無効化を始めたと思われる報告がツイッターに上げられる | [Twitter](https://twitter.com/kn1cht/status/1515354344522399744) |
+| 2022-04-17 | 全てのHeroku DashboardのOAuthトークンの無効化が完了 | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
 
 GitHubは現在、影響を受けたユーザーと組織の特定と通知を行っているようです。もし被害に遭っていた場合、4/19の朝8時頃までに通知メール等を受信すると思われます。
 
@@ -143,6 +144,7 @@ Filter欄に `action:org.oauth_app_access_approved` と入力します。する�
 
 上述の通り、国や時間、頻度、連携しているアプリケーションのログとの整合性などを見ると良いと思います。`action:org.oauth_app_access_approved` と `action:repo.download_zip` 以外でも、重要なイベントは確認すると良さそうです。
 
+その他のactionは[こちら](https://docs.github.com/ja/github-ae@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/searching-the-audit-log-for-your-enterpriseからご覧いただけます。
 
 ### 5. 関係者への連絡
 
@@ -168,11 +170,11 @@ Filter欄に `action:org.oauth_app_access_approved` と入力します。する�
 ![](/images/2022-04-16_heroku-incident-2413-checklist_4.png)
 
 Heroku Dashboard/Travis-CIがあったら、クリックして開きます。
+`Organization Access`が許可されていた場合、Organizationのオーナーに報告しましょう。
 
 ![](/images/2022-04-16_heroku-incident-2413-checklist_5.png)
 
 まだアクセスがApproveされている場合 `Revoke Access`から取り消すことができます。  
-なお、`Organization Access`が許可されていた場合、Organizationのオーナーに報告しましょう。
 
 ![](/images/2022-04-16_heroku-incident-2413-checklist_6.png)
 
@@ -190,10 +192,12 @@ github.com 上で簡単に検索した後、ログをExportして詳細な調査
 
 また、[同様にSecurity Log で Filtersに `action:oauth_authorization.destroy` と入力すると](https://github.com/settings/security-log?q=action%3Aoauth_authorization.destroy)、アクセス権限を取り消したOAuth Applicationを表示できます。
 
+それ以外の種類のactionは[こちら](https://docs.github.com/ja/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/reviewing-your-security-log)からご覧いただけます。
+
 #### Exportによる調査
 
 [`Security Log`](https://github.com/settings/security-log)から監査ログをExportします。  
-アクセス元の国なども分かるので、覚えのないアクセスがないか見てみても良いのではないでしょうか。
+国や時間、頻度などから、不審なイベントがないかを見ると良いと思います。
 
 
 ### 4. 関係者への連絡
@@ -216,3 +220,5 @@ GitHubのOrganizationのオーナーと個人向けに、今回のインシデ�
 
 - [Security alert: Attack campaign involving stolen OAuth user tokens issued to two third\-party integrators \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/)
 - [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413)
+- [Searching the audit log for your enterprise \- GitHub Docs](https://docs.github.com/ja/github-ae@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/searching-the-audit-log-for-your-enterprise)
+- [セキュリティログをレビューする \- GitHub Docs](https://docs.github.com/ja/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/reviewing-your-security-log)
