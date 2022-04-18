@@ -18,7 +18,7 @@ GitHubのOrganizationのオーナー向けと個人向けで分けてありま�
 - この記事は現在調査中の問題について書かれています。最新情報は必ず公式サイトをご確認ください。
     - [GitHub](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/)
     - [Heroku](https://status.heroku.com/incidents/2413)
-    - 2022-04-18T05:00:00JST 時点ではTravis-CIからの公式声明はなし。
+    - [Travis CI](https://blog.travis-ci.com/2022-04-17-securitybulletin)
 
 
 ## インシデントの概要
@@ -39,8 +39,8 @@ GitHubがHerokuとTravis-CIのOAuthアプリケーションに発行したトー
 | 2022-04-15 | Travis-CIの従業員らしきユーザーがOAuthトークンを無効化している報告がツイッターに上げられる | [Twitter](https://twitter.com/sf_tristanb/status/1515117868484071425) |
 | 2022-04-16 | SalesforceのBotがHeroku Dasuboardの全てのOAuthトークンの無効化を始めたと思われる報告がツイッターに上げられる | [Twitter](https://twitter.com/kn1cht/status/1515354344522399744) |
 | 2022-04-17 | 全てのHeroku DashboardのOAuthトークンの無効化が完了 | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
-
-GitHubは現在、影響を受けたユーザーと組織の特定と通知を行っているようです。もし被害に遭っていた場合、4/19の朝8時頃までに通知メール等を受信すると思われます。
+| 2022-04-18 | Travis-CIがブログを公開 | [The Travis CI Blog](https://blog.travis-ci.com/2022-04-17-securitybulletin) |
+| 2022-04-18 | GitHubが被害を受けたユーザーに対しての通知を実施（日本時間の4/19 5:30AM） | [Security alert \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/) |
 
 ## インシデントの影響
 
@@ -60,7 +60,7 @@ npmのOrganizationのプライベートリポジトリにコミットされて�
 Heroku DashboardのGitHub統合の全てのOAuthトークンが失効させられる方針となったため、Heroku Dashboardを用いたHerokuへのアプリケーションのデプロイはできなくなります。  
 GitHubのリポジトリをHerokuにデプロイするための方法は他にもあるので、[公式の案内](https://status.heroku.com/incidents/2413)を参考にしてください。
 
-Travis-CIでも類似の影響があるかもしれませんが、公式声明がないことや私がユーザーでないことから詳細は分かりません。
+Travis-CIでも類似の影響があるかもしれません。[公式の案内](https://blog.travis-ci.com/2022-04-17-securitybulletin)を参考にして下さい。
 
 
 ## やったほうがいいこと
@@ -220,5 +220,6 @@ GitHubのOrganizationのオーナーと個人向けに、今回のインシデ�
 
 - [Security alert: Attack campaign involving stolen OAuth user tokens issued to two third\-party integrators \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/)
 - [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413)
+- [The Travis CI Blog: SECURITY BULLETIN; Certain private customer repositories may have been accessed](https://blog.travis-ci.com/2022-04-17-securitybulletin)
 - [Searching the audit log for your enterprise \- GitHub Docs](https://docs.github.com/ja/github-ae@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/searching-the-audit-log-for-your-enterprise)
 - [セキュリティログをレビューする \- GitHub Docs](https://docs.github.com/ja/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/reviewing-your-security-log)
