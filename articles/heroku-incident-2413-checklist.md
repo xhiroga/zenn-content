@@ -144,7 +144,7 @@ Filter欄に `action:org.oauth_app_access_approved` と入力します。する�
 
 上述の通り、国や時間、頻度、連携しているアプリケーションのログとの整合性などを見ると良いと思います。`action:org.oauth_app_access_approved` と `action:repo.download_zip` 以外でも、重要なイベントは確認すると良さそうです。
 
-その他のactionは[こちら](https://docs.github.com/ja/github-ae@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/searching-the-audit-log-for-your-enterpriseからご覧いただけます。
+その他のactionは[こちら](https://docs.github.com/ja/github-ae@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/searching-the-audit-log-for-your-enterprise)からご覧いただけます。
 
 ### 5. 関係者への連絡
 
