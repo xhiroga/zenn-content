@@ -40,7 +40,7 @@ GitHubがHerokuとTravis-CIのOAuthアプリケーションに発行したトー
 | 2022-04-16 | SalesforceのBotがHeroku Dasuboardの全てのOAuthトークンの無効化を始めたと思われる報告がツイッターに上げられる | [Twitter](https://twitter.com/kn1cht/status/1515354344522399744) |
 | 2022-04-17 | 全てのHeroku DashboardのOAuthトークンの無効化が完了 | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
 | 2022-04-18 | Travis-CIがブログを公開 | [The Travis CI Blog](https://blog.travis-ci.com/2022-04-17-securitybulletin) |
-| 2022-04-18 | GitHubが被害を受けたユーザーに対しての通知を実施（日本時間の4/19 5:30AM） | [Security alert \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/) |
+| 2022-04-18 | GitHubが被害を受けたユーザーに対しての通知を実施（日本時間の4/19 6:30AM） | [Security alert \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/) |
 
 ## インシデントの影響
 
