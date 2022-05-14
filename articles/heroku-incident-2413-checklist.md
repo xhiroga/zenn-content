@@ -25,12 +25,14 @@ GitHubのOrganizationのオーナー向けと個人向けで分けてありま�
 
 GitHubがHerokuとTravis-CIのOAuthアプリケーションに発行したトークンが流出・悪用したことで、それらの連携が有効だった多くのOrganizationからプライベートリポジトリが閲覧・ダウンロードされる自体が発生しました。npmも被害に遭ったOrganizationの一つです。
 
-時系列順にイベントをまとめました。
+時系列順にイベントをまとめました。なお、下記以外の攻撃が無かったことを保証するものではありません。
 
 | 日付（UTC） | イベント | Source |
 | --- | --- | --- |
 | 日付不明 | 攻撃者がTravis-CIのOAuthトークンを用いた攻撃を行う |  |
-| 2022-04-09 | 攻撃者がHerokuのOAuthトークンを用いてプライベートリポジトリを大量にダウンロード（それ以外の日付での攻撃の有無は不明） | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
+| 2022-04-07 | 攻撃者がHerokuのデータベースにアクセスし、OAuth Appのトークンをダウンロード | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
+| 2022-04-08 | 攻撃者がGitHubのリポジトリに関するメタデータ（筆者注: 所属Organizationなどか？）を列挙 | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
+| 2022-04-09 | 攻撃者がHerokuのOAuthトークンを用いてプライベートリポジトリを大量にダウンロード | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
 | 2022-04-12 | GitHubのセキュリティチームが調査を開始 | [Security alert \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/) |
 | 2022-04-13, 14 | GitHubからHeroku, Travis-CIに対して通知 |  [Security alert \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/) |
 | 2022-04-13~ | Herokuが攻撃に用いられたOAuthトークンを無効化 | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
@@ -41,6 +43,8 @@ GitHubがHerokuとTravis-CIのOAuthアプリケーションに発行したトー
 | 2022-04-17 | 全てのHeroku DashboardのOAuthトークンの無効化が完了 | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
 | 2022-04-18 | Travis-CIがブログを公開 | [The Travis CI Blog](https://blog.travis-ci.com/2022-04-17-securitybulletin) |
 | 2022-04-18 | GitHubが被害を受けたユーザーに対しての通知を実施（日本時間の4/19 6:30AM） | [Security alert \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/) |
+| 2022-04-27 | GitHubが攻撃の分析結果を発表。複数の組織を対象とした標的型攻撃という見解 | [Security alert \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/) |
+| 2022-05-07 | Herokuがパスワードリセットを実施 | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
 
 ## インシデントの影響
 
