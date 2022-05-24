@@ -30,7 +30,7 @@ GitHubがHerokuとTravis-CIのOAuthアプリケーションに発行したトー
 | 日付（UTC） | イベント | Source |
 | --- | --- | --- |
 | 日付不明 | 攻撃者がTravis-CIのOAuthトークンを用いた攻撃を行う |  |
-| 2022-04-07 | 攻撃者がHerokuのデータベースにアクセスし、OAuth Appのトークンをダウンロード | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
+| 2022-04-07 | 攻撃者がHerokuのデータベースにアクセスし、OAuth Appのトークン、及び一部ユーザーのConfig Varsをダウンロード | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
 | 2022-04-08 | 攻撃者がGitHubのリポジトリに関するメタデータ（筆者注: 所属Organizationなどか？）を列挙 | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
 | 2022-04-09 | 攻撃者がHerokuのOAuthトークンを用いてプライベートリポジトリを大量にダウンロード | [Incident 2413 \| Heroku Status](https://status.heroku.com/incidents/2413) |
 | 2022-04-12 | GitHubのセキュリティチームが調査を開始 | [Security alert \| The GitHub Blog](https://github.blog/2022-04-15-security-alert-stolen-oauth-user-tokens/) |
@@ -75,6 +75,7 @@ GitHubによる攻撃対象者への連絡とHeroku/Travis-CIによるOAuthト�
 - (まだの場合)Heroku Dashboard/Travis-CIのOAuthトークンの無効化
 - 攻撃を受けたどうかの確認
 - 関係者への連絡
+- (メールで案内があった場合）HerokuのConfig Varのローテーション
 
 
 ## Organizationのオーナーがやったほうがいいこと
@@ -214,6 +215,11 @@ github.com 上で簡単に検索した後、ログをExportして詳細な調査
 4. 過去にHeroku Dashboard/Travis-CIにアクセスを許可したり、削除した履歴があるか（ある場合はその期間）
 
 また、攻撃の証拠を見つけた場合、[Herokuであればサポートに問い合わせるよう案内が出ています](https://status.heroku.com/incidents/2413)。
+
+## HerokuのReview AppsまたはHeroku CIのConfig Varに不正アクセスされた場合にやったほうがいいこと
+
+HerokuのReview AppsまたはHeroku CIのConfig Varに不正アクセスされたユーザーには、5/19までにHerokuから直接メールで案内がされています。案内に従い、Config Varsのローテーションなどの対応を行うと良いでしょう。
+
 
 ## まとめ
 
