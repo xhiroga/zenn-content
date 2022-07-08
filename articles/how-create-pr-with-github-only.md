@@ -1,9 +1,9 @@
 ---
-title: "非エンジニアでもできる！PCへのインストール不要で、GitHub上で文言変更のPullRequestを出す手順書"
+title: "非エンジニアでもOK！インストール不要、ブラウザのGitHub上で文言変更のPullRequestを出す方法"
 emoji: "🔖"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["GitHub"]
-published: false
+published: true
 ---
 
 エンジニアの人に頼まずに文言修正をしたいこと、ありませんか？  
