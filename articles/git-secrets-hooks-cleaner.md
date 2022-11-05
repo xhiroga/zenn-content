@@ -3,7 +3,7 @@ title: "git-secretsのアンインストールに伴い、templateで作ったho
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["git", "git-secrets"]
-published: false
+published: true
 ---
 
 [git-secrets](https://github.com/awslabs/git-secrets)、利用していらっしゃるでしょうか？  
