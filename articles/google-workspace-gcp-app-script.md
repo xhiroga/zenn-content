@@ -2,7 +2,7 @@
 title: "GCPのapp-script以下の見えないアクティブなプロジェクトを削除する"
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["Google Workspace", "gcp", "Google App Script]
+topics: ["Google Workspace", "gcp", "Google App Script"]
 published: true
 ---
 
