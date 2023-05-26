@@ -49,11 +49,11 @@ sequenceDiagram
     zap->>local: HTTPでWebサイトをリクエスト
     local-->>zap: 
     zap-->>Chrome: Webサイトを返却
-    Chrome->>Chrome: JavaScriptが外部サーバーへのHTTPS通信を要求
     Chrome->>zap: SSLサーバー証明書を要求
     zap-->>Chrome: 
     Chrome->>OS: 証明書の信頼性を確認
     OS-->>Chrome: 
+
 ```
 
 ## 設定手順
