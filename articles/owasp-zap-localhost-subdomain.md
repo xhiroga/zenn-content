@@ -18,12 +18,6 @@ published: false
 
 ### シーケンス解説
 <!-- 
-    Chrome->>zap: HTTPでWebサイトをリクエスト
-    zap->>OS: DNS名前解決
-    OS-->>zap: 
-    zap->>local: HTTPでWebサイトをリクエスト
-    local-->>zap: 
-    zap-->>Chrome: Webサイトを返却
     Chrome->>Chrome: JavaScriptが外部サーバーへのHTTPS通信を要求
     Chrome->>zap: SSLサーバー証明書を要求
     zap-->>Chrome: 
@@ -49,6 +43,7 @@ sequenceDiagram
     zap->>local: HTTPでWebサイトをリクエスト
     local-->>zap: 
     zap-->>Chrome: Webサイトを返却
+    Chrome->>Chrome: JavaScriptが外部サーバーへのHTTPS通信を要求
 ```
 
 ## 設定手順
