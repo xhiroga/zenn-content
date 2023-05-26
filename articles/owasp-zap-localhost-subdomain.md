@@ -49,9 +49,6 @@ sequenceDiagram
     zap->>local: HTTPでWebサイトをリクエスト
     local-->>zap: 
     zap-->>Chrome: Webサイトを返却
-    Chrome->>zap: SSLサーバー証明書を要求
-    zap-->>Chrome: 
-
 ```
 
 ## 設定手順
