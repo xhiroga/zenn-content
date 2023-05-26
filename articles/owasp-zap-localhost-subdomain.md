@@ -48,11 +48,9 @@ sequenceDiagram
     OS-->>zap: 
     zap->>local: HTTPでWebサイトをリクエスト
     local-->>zap: 
-    zap-->>Chrome: 
+    zap-->>Chrome: Webサイトを返却
     Chrome->>zap: SSLサーバー証明書を要求
     zap-->>Chrome: 
-    Chrome->>OS: 証明書の信頼性を確認
-    OS-->>Chrome: 
 
 ```
 
