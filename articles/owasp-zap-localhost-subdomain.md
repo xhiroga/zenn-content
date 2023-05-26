@@ -14,18 +14,19 @@ published: false
 2. localhostのサブドメインを解決する設定
 3. OWASP ZAPのサーバー証明書を解決する設定
 
-なお、Firefoxを用いる場合、外部サービスとの通信で躓いてしまったので記事にしていません。
+なお、Firefoxを用いる方法は、外部サービスとの通信で躓いてしまったので記事にしていません。
 
 ### シーケンス解説
-
-```mermaid
-sequenceDiagram
-    participant OS
+<!-- 
+participant OS
     participant Chrome
     participant zap as OWASP ZAP
     participant local as Local Server
     participant 3rd as 外部サービス
+ -->
 
+```mermaid
+sequenceDiagram
     Chrome->>zap: HTTPでWebサイトをリクエスト
     zap->>OS: DNS名前解決
     OS-->>zap: 
@@ -43,7 +44,7 @@ sequenceDiagram
     zap-->>Chrome: 
 ```
 
-## 設定低順
+## 設定手順
 
 ### Chromeのプロキシ設定
 
