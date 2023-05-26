@@ -17,17 +17,8 @@ published: false
 なお、Firefoxを用いる方法は、外部サービスとの通信で躓いてしまったので記事にしていません。
 
 ### シーケンス解説
-<!-- 
-    Chrome->>Chrome: JavaScriptが外部サーバーへのHTTPS通信を要求
-    Chrome->>zap: SSLサーバー証明書を要求
-    zap-->>Chrome: 
-    Chrome->>OS: 証明書の信頼性を確認
-    OS-->>Chrome: 
-    Chrome->>zap: HTTPSでAPIにリクエスト
-    zap->>3rd: HTTPSでAPIにリクエスト
-    3rd-->>zap: 
-    zap-->>Chrome: 
- -->
+
+![](/images/2023-05-26-09-48-21.png)
 
 ```mermaid
 sequenceDiagram
@@ -44,7 +35,14 @@ sequenceDiagram
     local-->>zap: 
     zap-->>Chrome: Webサイトを返却
     Chrome->>Chrome: JavaScriptが外部サーバーへのHTTPS通信を要求
-    3rd->>3rd: 
+    Chrome->>zap: SSLサーバー証明書を要求
+    zap-->>Chrome: 
+    Chrome->>OS: 証明書の信頼性を確認
+    OS-->>Chrome: 
+    Chrome->>zap: HTTPSでAPIにリクエスト
+    zap->>3rd: HTTPSでAPIにリクエスト
+    3rd-->>zap: 
+    zap-->>Chrome: 
 ```
 
 ## 設定手順
