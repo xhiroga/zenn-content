@@ -44,7 +44,7 @@ sequenceDiagram
     local-->>zap: 
     zap-->>Chrome: Webサイトを返却
     Chrome->>Chrome: JavaScriptが外部サーバーへのHTTPS通信を要求
-    Chrome->>zap: 
+    3rd->>3rd: 
 ```
 
 ## 設定手順
