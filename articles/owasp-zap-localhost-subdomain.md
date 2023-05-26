@@ -44,6 +44,10 @@ published: false
 ```mermaid
 sequenceDiagram
     Chrome->>zap: HTTPでWebサイトをリクエスト
+    zap->>OS: DNS名前解決
+    OS-->>zap: 
+    zap->>local: HTTPでWebサイトをリクエスト
+    local-->>zap: 
     zap-->>Chrome: Webサイトを返却
 ```
 
