@@ -18,12 +18,6 @@ published: false
 
 ### シーケンス解説
 <!-- 
-    participant OS
-    participant Chrome
-    participant zap as OWASP ZAP
-    participant local as Local Server
-    participant 3rd as 外部サービス
-
     Chrome->>zap: HTTPでWebサイトをリクエスト
     zap->>OS: DNS名前解決
     OS-->>zap: 
@@ -43,6 +37,12 @@ published: false
 
 ```mermaid
 sequenceDiagram
+    participant OS
+    participant Chrome
+    participant zap as OWASP ZAP
+    participant local as Local Server
+    participant 3rd as 外部サービス
+
     Chrome->>zap: HTTPでWebサイトをリクエスト
     zap->>OS: DNS名前解決
     OS-->>zap: 
