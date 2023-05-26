@@ -3,7 +3,7 @@ title: "OWASP ZAPでサブドメイン&外部通信ありのlocalhostの通信�
 emoji: "🐘"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["owaspzap"]
-published: false
+published: true
 ---
 
 ## TL;DR
