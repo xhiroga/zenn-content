@@ -22,7 +22,7 @@ published: false
 sequenceDiagram
     participant OS
     participant Chrome
-    participant zap as OWASP_ZAP
+    participant zap as OWASP ZAP
     participant local as Local Server
     participant 3rd as 外部サービス
 
