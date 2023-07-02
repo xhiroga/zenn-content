@@ -8,7 +8,7 @@ published: true
 
 ## TL;DR
 
-- フォローするとフォロバして、タイムライン上のメンションとリプライに返信してくれるGPT-4
+- フォローするとフォロバして、メンションとリプライに返信してくれるBot
 - スレッドの文脈も考慮
 - **[@aibot.bsky.social](https://bsky.app/profile/hiroga.bsky.social) をフォローすれば誰でも利用OK!**
 
