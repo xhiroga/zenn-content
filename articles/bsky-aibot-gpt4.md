@@ -8,7 +8,7 @@ published: true
 
 ## TL;DR
 
-- フォローするとフォロバして、メンションとリプライに返信してくれるBot
+- メンションとリプライに返信してくれるBot
 - スレッドの文脈も考慮
 - **[@aibot.bsky.social](https://bsky.app/profile/hiroga.bsky.social) をフォローすれば誰でも利用OK!**
 
@@ -30,9 +30,10 @@ Blueskyではポストの取得方法が2つあります。XRPCとEvent Stream�
 XRPCは一般的なHTTPSのリクエストで、GraphQLのように独自の文法があるというだけなので、親しみやすいです。  
 Event Streamは、AWSユーザーならKinessis Firehorseといえば伝わるでしょうか。Websocketで接続して最新のポスト・Like・Unlike・Repost・etc...が爆速で流れ込んできます。これ一般ユーザーが無料で使えるの...!?
 
-Event Streamだと処理する投稿の量が多すぎるので、まずはXRPCを使うことにしました。スクショの通り、すごい勢いで投稿が流れてきます。
-
+スクショの通り、Event Streamだとすごい勢いで投稿が流れてきます。  
 ![](/images/2023-07-03-8-27-00.png)
+
+まずはXRPCで取得することにしました。
 
 ## 実装
 
@@ -40,27 +41,32 @@ Event Streamだと処理する投稿の量が多すぎるので、まずはXRPC�
 
 https://github.com/xhiroga/bsky-aibot
 
-一部抜粋すると次の通りで、タイムラインを取得し、投稿ごとにメンション or 自分の投稿へのリプライを判定し、TrueならChatGPTが返信します。  
-ただ、通知から取得したほうが早いかもしれません。この辺は改善ポイントです。
+一部抜粋すると次の通りで、通知を取得し、投稿ごとにメンション or 自分の投稿へのリプライを判定し、TrueならChatGPTが返信します。
 
 ```python
-    timeline = get_timeline(client)
-    # should check with latest reply, not last replied datetime
-    last_replied_datetime = get_last_replied_datetime()
-    new_feed = filter_and_sort_timeline(timeline.feed, last_replied_datetime)
+def read_notifications_and_reply(client: Client, last_seen_at: datetime = None) -> datetime:
+    logging.info(f"last_seen_at: {last_seen_at}")
+    did = client.me.did
 
-    for feed_view in new_feed:
-        mentioned = does_post_have_mention(feed_view.post, profile.did)
-        reply_to_me = is_reply_to_me(feed_view, profile.did)
-        if mentioned or reply_to_me:
-            if reply_to_me: # TODO: スレッド内で急にメンションされたときに対応できないので後で直す
-                thread = get_thread(client, feed_view.post.uri)
-                post_messages = thread_to_messages(thread, profile.did)
-            else:
-                post_messages = posts_to_sorted_messages([feed_view.post], profile.did)
-            reply = generate_reply(post_messages)
-            client.send_post(text=f"{reply}", reply_to=reply_to(feed_view.post))
-            update_last_replied_datetime(feed_view.post.record.createdAt)
+    # unread countで判断するアプローチは、たまたまbsky.appで既読をつけてしまった場合に弱い
+    ns = get_notifications(client)
+    seen_at = datetime.now(tz=timezone.utc)
+    ns = filter_mentions_and_replies_from_notifications(ns)
+    if last_seen_at is not None:
+        ns = filter_unread_notifications(ns, last_seen_at)
+
+    for notification in ns:
+        thread = get_thread(client, notification.uri)
+        if is_already_replied_to(thread, did):
+            logging.info(f"Already replied to {notification.uri}")
+            continue
+
+        post_messages = thread_to_messages(thread, did)
+        reply = generate_reply(post_messages)
+        client.send_post(text=f"{reply}", reply_to=reply_to(notification))
+
+    update_seen(client)
+    return seen_at
 ```
 
 プロンプトはかなりシンプルです。ただし、300文字を超えるとBlueskyに投稿できなくなるので、縮めてもらっています。  
