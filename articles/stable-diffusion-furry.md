@@ -2,7 +2,7 @@
 title: "Stable Diffusionで獣人になるための試行錯誤"
 emoji: "🐕"
 type: "tech" # 迷う...
-topics: []
+topics: ["stablediffusion", "automatic1111"]
 published: true
 ---
 
