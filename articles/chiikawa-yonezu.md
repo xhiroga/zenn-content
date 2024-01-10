@@ -34,7 +34,7 @@ https://huggingface.co/spaces/xhiroga/chiikawa-yonezu
 - 過学習を防ぐため、epochは1に設定している。
 - Tokenizer・BERTモデルともに、東北大学乾研究室のモデルを利用している。
 
-## 学習データ
+## 学習データの量
 
 とりあえず手動で、TwitterのキャラクターBotや歌詞のサイトから100件程度作成し、コードを実装しました。その後より洗練されたやり方でデータを2500件程度に増やしました。
 
