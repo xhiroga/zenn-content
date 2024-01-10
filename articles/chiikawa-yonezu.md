@@ -75,7 +75,7 @@ https://huggingface.co/spaces/xhiroga/chiikawa-yonezu
 Learning Rateを変えたことで過学習が起きる例。
 ![ちいかわ・米津玄師分類タスク（2024-01-10）Learning Rate](/images/chiikawa-yonezu-lr-overfitting.jpg)
 
-原因ですが、特徴を掴むためのデータの量が揃わないうちは、パラメータの調整には意味がなさそうです。
+特徴を掴むためのデータの量が揃わないうちは、パラメータの調整には意味がないのではと感じています。
 
 ## まとめ
 
