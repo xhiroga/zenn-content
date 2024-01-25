@@ -8,6 +8,8 @@ published: true
 
 AWS SESのアカウントレベルのサプレッションリストを全表示・サマリー・削除するCLIを作りました。
 
+https://github.com/xhiroga/aws-ses-suppression-list
+
 ## TL;DR
 
 - AWS SESのアカウントレベルのサプレッションリストは、AWSのコンソールからは10件づつしか表示できない
