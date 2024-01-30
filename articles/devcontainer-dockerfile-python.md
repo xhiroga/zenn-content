@@ -47,8 +47,8 @@ See 'docker run --help'.
 
 あれ？Pullできませんでした。`unsupported media type application/vnd.devcontainers`とはなんでしょうか？
 
-実は、OCI(Open Container Initiative)の定めるイメージフォーマットには、MediaTypeというプロパティがあります。コンテナイメージはManifestやIndexなど様々な要素で構成されており、どの要素かを示す値のようです。[^OCI Image Media Types]
-[^OCI Image Media Types]: [image-spec/media-types.md at main · opencontainers/image-spec](https://github.com/opencontainers/image-spec/blob/main/media-types.md)
+実は、OCI(Open Container Initiative)の定めるイメージフォーマットには、MediaTypeというプロパティがあります。コンテナイメージはManifestやIndexなど様々な要素で構成されており、どの要素かを示す値のようです。[^oci-image-media-types]
+[^oci-image-media-types]: [image-spec/media-types.md at main · opencontainers/image-spec](https://github.com/opencontainers/image-spec/blob/main/media-types.md)
 
 Dev ContainerのFeaturesは独自の形式を持っているため、Dockerイメージとして実行することはできなかったんですね。Dev ContainerのFeatureの定義を見たい場合、GitHubリポジトリを参照するのが早いようです。
 
