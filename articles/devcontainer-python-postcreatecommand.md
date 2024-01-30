@@ -1,5 +1,5 @@
 ---
-title: "なぜpip install -r requirements.txtをpostCreateCommandに書くべきか（オレオレDev Containers最強開発環境）"
+title: "devcontainerのためにDockerfileを書くべきか考察"
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["vscode","python"]
@@ -8,17 +8,13 @@ published: false
 
 ## TL;DR
 
-
+- Dockerfileで構築したPython環境をdevcontainerのFeatureで上書きしてしまい、`ModuleNotFoundError`が発生した
+- Dev ContainerのFeatureは、VSCodeの拡張機能だけでなく、ランタイムのインストールも行う
+- Dev Containerを使うときは、ランタイムの設定はDockerfile側かdevcontainer側のどちらかに統一するべき
 
 ## 動機
 
-Windows環境でPlaywrightを使ってスクレイピングをするにあたって、ローカルを汚さないようにDev Containersを使って開発環境を構築しました。その際、`pip install -r requirements.txt`をDockerfileに書いてしまい、結果`ModuleNotFoundError`が発生しました。
-
-## なにをしたか
-
-
-## なぜエラーが発生したか
-
+Windows環境でPlaywrightを使ってスクレイピングをするにあたって、ローカルを汚さないようにDev Containersを使って開発環境を構築しました。しかし、`docker run`では動くのに、VSCodeのデバッグで実行すると`ModuleNotFoundError`が発生してハマりました。
 
 ## そもそもDev Containersとは
 
@@ -54,21 +50,43 @@ See 'docker run --help'.
 実は、OCI(Open Container Initiative)の定めるイメージフォーマットには、MediaTypeというプロパティがあります。コンテナイメージはManifestやIndexなど様々な要素で構成されており、どの要素かを示す値のようです。[^OCI Image Media Types]
 [^OCI Image Media Types]: [image-spec/media-types.md at main · opencontainers/image-spec](https://github.com/opencontainers/image-spec/blob/main/media-types.md)
 
-Dev ContainerのFeaturesは独自の形式を持っているため、Dockerイメージとして実行することはできなかったんですね。Dev ContainerのFeatureの定義は、GitHubリポジトリを参照するのが早いようです。
+Dev ContainerのFeaturesは独自の形式を持っているため、Dockerイメージとして実行することはできなかったんですね。Dev ContainerのFeatureの定義を見たい場合、GitHubリポジトリを参照するのが早いようです。
 
 https://github.com/devcontainers/features/tree/main/src/python
 
-### なぜDev ContainersはPythonのパスを書き換えるのか
+## なにをしたか
 
-[features/src/python at main · devcontainers/features](https://github.com/devcontainers/features/tree/main/src/python)
+開発用のDockerイメージをDockerfileで定義した後、VSCodeでデバッグできるようにdevcontainerで指定しました。
+その際、Pythonの拡張機能を利用したかったので、Dev Container構築時のFeatureとしてPythonを選択しました。
 
-## 
+## なぜエラーが発生したか
 
+Dev ContainerのFeatureのPythonは、VSCodeのPythonの拡張機能だけでなく、Pythonのインストールも行います。その際、`/usr/local/python/current/bin`にPythonのパスを設定します。
 
+```terminal
+root@4d9eb819d46e:/workspaces/til/software-engineering/playwright/_src/docker-play
+wright# which python
+/usr/local/python/current/bin/python
+root@4d9eb819d46e:/workspaces/til/software-engineering/playwright/_src/
+docker-playwright# echo $PATH
+/vscode/vscode-server/bin/linux-x64/8b3775030ed1a69b13e4f4c628c612102e30a681/bin/remote-cli:/usr/local/python/current/bin:/usr/local/py-utils/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+root@4d9eb819d46e:/workspaces/til/software-engineering/playwright/_src/
+```
 
+https://github.com/devcontainers/features/blob/b08484e74f82ceaa35a48bef4b126b2c25343790/src/python/install.sh#L403
 
+## どうすればよいか
 
+Dev Containerによる環境構築は、次の2つに分けられると考えています。
 
+1. デプロイ用などのDockerイメージをDockerfileで定義し、開発用ツールをdevcontainerでインストールする
+2. ベースイメージやランタイムの選定をdevcontainerに任せる
+
+今回の場合、PlaywrightのFeatureがなかったので、1を選択します。
+
+## まとめ
+
+Dev Containerを利用する際は、ランタイムの設定はDockerfile側かdevcontainer側のどちらかに統一すると、トラブルを避けられます。
 
 ## 参考資料
 
