@@ -23,7 +23,7 @@ Windows環境でPlaywrightを使ってスクレイピングをするにあたっ
 
 Dev Containerには`Features reference`という機能があります。VSCodeのコマンドパレットからインタラクティブにDev Containerの設定を行う際、Select Featuresとして表示される機能の一覧のことです。
 
-![Select Features](devcontainer-select-features.png)
+![Select Features](/images/devcontainer-select-features.png)
 
 これらの機能が何かというと、`devcontainer-feature.json`と`install.sh`を含むフォルダです。
 
