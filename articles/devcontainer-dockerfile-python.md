@@ -1,5 +1,5 @@
 ---
-title: "devcontainerのためにDockerfileを書くべきか考察"
+title: "devcontainerのためにDockerfileを書くべきか"
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["vscode","python"]
