@@ -127,7 +127,7 @@ Continueのタブ補完は2024-05-02時点でβ版なので、自らconfig.json�
 
 設定後、VSCodeを再起動します。
 
-### タブ補完の実施とデバッグ
+### 3. タブ補完の実施とデバッグ
 
 任意のソースコードでタブ補完が有効になっていることを確認します。  
 なお、VSCodeの右下にもContinueのタブ補完の有効・無効を切り替えるスイッチがあるので、注意して下さい。
@@ -145,7 +145,7 @@ Ollamaのアイコンをクリック > View logs で、Ollamaのserver.logのフ
 
 エクスプローラから直接開く場合は `%USERPROFILE%\AppData\Local\Ollama` (私の場合は `C:\Users\hiroga\AppData\Local\Ollama`) です。
 
-補完が行われている場合、次のようなログがあるはずです。余談ですがOllamaって内部で[GIN(Go言語で書かれたWebサーバー)](https://github.com/gin-gonic/gin)を使ってるんですね。
+補完が行われている場合、次のようなログがあるはずです。余談ですがOllamaって内部で[GIN](https://github.com/gin-gonic/gin)(Go言語で書かれたWebサーバー)を使ってるんですね。
 
 ```log
 [GIN] 2024/05/02 - 10:44:09 | 200 |    1.2802042s |       127.0.0.1 | POST     "/api/generate"
