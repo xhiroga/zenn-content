@@ -20,8 +20,9 @@ https://www.youtube.com/watch?v=s_gf-4t2vZU
 
 ## 技術選定
 
-GitHub Copilotに代わるアシスタントとしては、CursorとContinueを比較しました。  
-今回は完全ローカルで動作するContinueを選択しました。Cursorは2024‐05‐01時点ではCursorのサーバーを経由してLLMにアクセスしているため、ngrokなどでプロキシしないとローカルLLMが利用できないためです。
+GitHub Copilotに代わるアシスタントとしては、[Cursor](https://cursor.sh/), [Continue](https://www.continue.dev/), [Tabby](https://tabby.tabbyml.com/) を比較しました。  
+今回は完全ローカルで動作するContinueを選択しました。
+Cursorは2024‐05‐02時点ではCursorのサーバーを経由してLLMにアクセスしているため、ngrokなどでプロキシしないとローカルLLMが利用できないためです。Tabbyは面白そうでしたが、Providerを動かすのにOllamaを使えないのがやや負担に感じて見送りました。
 
 https://zenn.dev/ryoppippi/articles/02c618452a1c9f
 
