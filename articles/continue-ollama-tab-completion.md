@@ -13,7 +13,7 @@ published: true
 ## TL;DR
 
 - Ollamaを起動し、API経由のアクセスが有効か確かめます
-- config.jsonの設定後、VSCodeを再起動します（2024-05-02時点では必要）
+- `~/.continue/config.json` の設定後、VSCodeを再起動します（2024-05-02時点では必要）
 - Continueのタブ補完実行時、VSCodeのOutputタブとOllamaのserver.logでデバッグを行います。
 
 https://www.youtube.com/watch?v=s_gf-4t2vZU
@@ -112,7 +112,7 @@ curl http://localhost:11434/api/tags
 
 ### 2. config.json の設定・VSCodeの再起動
 
-Continueのタブ補完は2024-05-02時点でβ版なので、自らconfig.jsonを編集する必要があります。
+Continueのタブ補完は2024-05-02時点でβ版なので、自ら `~/.continue/config.json` を編集する必要があります。
 
 私は[ドキュメント](https://docs.continue.dev/walkthroughs/tab-autocomplete)に従って次のように設定しました。
 
