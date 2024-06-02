@@ -3,7 +3,7 @@ title: "Stable Diffusionで獣人化するための試行錯誤"
 emoji: "🐕"
 type: "tech" # 迷う...
 topics: ["stablediffusion", "automatic1111"]
-published: true
+published: false
 ---
 
 Stable Diffusionで、自分の顔写真を元に獣人になるための試行錯誤です。
