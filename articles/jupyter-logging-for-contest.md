@@ -58,5 +58,7 @@ some_algorithm()
 ## まとめ
 
 - `basicConfig`を用いることで、セルの再実行に対しても冪等に`StreamHandler`を設定できました。
-- `get_ipython`がグローバル変数にあるかを見ることで、ライブラリのimportやエラーハンドリング無しに実行環境を判定することができました。
+- `get_ipython`がグローバル変数にあるかを見ることで、ライブラリのimportやエラーハンドリング無しに実行環境を判定することができました。[^sys_module]
 - `root`を使うことで、ルートロガーの利用を明示しました。
+
+[^sys_module]: `get_ipython`はJupyter Notebookのセル上で実行しない場合（import先に書いてあるなど）`False`になる。コード自体をコピペする今回のようなケースでのみ有用ということに注意。
