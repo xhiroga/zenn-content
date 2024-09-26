@@ -53,6 +53,9 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 3. 学習
    1. Chaabouni (2024)
    2. Lazaridou & Baroni (2020): その分析を高速化し一般化できる自動化ツールを開発すること
+4. 数理的な理解: 谷口ら日本の研究者の論文による（TODO）
+   1. https://www.anlp.jp/proceedings/annual_meeting/2024/pdf_dir/E7-5.pdf など？
+   2. Connected Paperにもあったはずだが後でよく探す
  -->
 
 1. 創発言語の分析と評価
@@ -66,6 +69,7 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 3. 学習
    1. 学習のスケールアップ
    2. 学習の効率化・自動化
+4. 数理的な理解
 
 ## 代表的な実験
 
@@ -84,17 +88,19 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 一方で、研究によって次のような観点で違いが見られます。続けて詳細を取り上げます。
 
 <!-- 
-Lazaridou & Baroni (2020) が網羅的。しかし、メッセージの長さなど比較的軽い要素が含まれる。
-影響が大きい観点に絞るため、 Brandizzi (2023) II. COMMON PROPERTIES に倣うのが良いかも
+- 全体
+  - Lazaridou & Baroni (2020) が網羅的。しかし、メッセージの長さなど比較的軽い要素が含まれる。
+  - 影響が大きい観点に絞るため、 Brandizzi (2023) II. COMMON PROPERTIES に倣うのが良いかも。
+- ゲームの種類
+  - Lazaridou et al. (2020) および Brandizzi (2023) にならって2分した。
 -->
 
-- コミュニケーションのタイプ
-  - 連続ベクトルを用いたコミュニケーション: DIALなど
-  - 離散的シンボルを用いたコミュニケーション: RIALなど
+- コミュニケーションの種類
+  - 連続的なコミュニケーション: DIALなど
+  - 離散的なコミュニケーション: RIALなど
 - ゲームの種類
-  - シグナリングゲーム / 参照ゲーム
-  - 指示ゲーム
-  - 交渉ゲーム
+  - コミュニケーション自体に焦点を当てたゲーム
+  - コミュニケーションを補助として用いるゲーム
 - 入力表現
   - 抽象的環境
   - 2D視覚環境・画像
@@ -121,7 +127,7 @@ Lazaridou & Baroni (2020) が網羅的。しかし、メッセージの長さな
 
 ### 連続的なコミュニケーション
 
-連続なコミュニケーションの例としては、Foerster et al. (2016)[^Foerster_2016]のDIAL（Differentiable Inter-Agent Learning, 微分可能エージェント間学習）があります。
+連続なコミュニケーションの代表例として、Foerster et al. (2016)[^Foerster_2016]のDIAL（Differentiable Inter-Agent Learning, 微分可能エージェント間学習）があります。
 
 人間の言語が離散的であるのに対して、DIALでは訓練時に連続的なベクトルを渡すことができます。大雑把に言えば、訓練時は「66.6%の確率で数字の8」というやり取りをするのに対して、実行時は「おそらく数字の8」という伝え方をするようなものです。
 実験では、訓練時に連続的なベクトルを渡すことは学習を促進するものの、連続的なべクトルに適切なノイズを加えることが離散的な値への移行を促すことが報告されています。
@@ -130,26 +136,44 @@ Lazaridou & Baroni (2020) が網羅的。しかし、メッセージの長さな
 
 ### 離散的なコミュニケーション
 
-離散的なコミュニケーションの代表的な例としては、Foerster et al. (2016)のRIAL（Reinforced Inter-Agent Learning）システムが挙げられます[8]。RIALでは、エージェントは離散的なシンボルを用いてコミュニケーションを行い、タスク報酬のみを用いて学習します。この方法では、エージェント間でエラー情報を連続的に伝播することはできませんが、自然言語のような離散的な構造を模倣することができます。
+離散てきなコミュニケーションの代表例として、同じくFoerster et al. (2016)[^Foerster_2016]のDIAL（Differentiable Inter-Agent Learning, 微分可能エージェント間学習）があります。
 
-<!-- 学習中に適切なノイズがあれば、必ずしもマルチエージェントである必要はないのか？ -->
-### シグナリングゲーム / 参照ゲーム
+エージェント間のコミュニケーションはシンボルを用いて行われます。したがって、コミュニケーションが離散的なボトルネックとなり、誤差を逆伝播させることが困難となりますが、強化学習の手法を用いて対処できます。
 
-シグナリングゲームとは、送信者が受信者に対して、複数の選択肢の中から特定のターゲットを伝えるゲームです。シグナリングゲームと参照ゲームは密接に関連しており、しばしば同じ文脈で使用されます。シグナリングゲームは、送信者と受信者の間の一般的な情報伝達を扱う広義の概念です。一方、参照ゲームは特定の対象物（参照物）についてコミュニケーションを行うシグナリングゲームの一種と考えることができます。
+### コミュニケーション自体に焦点を当てたゲーム
 
-典型的な例としては、Lazaridou et al. (2017)の実験が挙げられます[1]。この実験では、送信者は2つの画像を見て、そのうちの1つをターゲットとして選び、1つのシンボルを発信します。受信者は、そのシンボルと2つの画像（ランダムな順序で提示される）を見て、ターゲットの画像を当てるというタスクを行います。
+創発コミュニケーションの実験で用いられる、次のようなゲームをシグナリングゲーム(signaling game)と言います。
 
-### 指示ゲーム
+- 送信者と受信者からなる
+- 送信者はタイプを持つ。受信者は送信者のタイプを知らない
+- 送信者は受信者にメッセージを送る。受信者はメッセージを元に行動する
 
-指示ゲームもシグナリングゲームの一種です。シグナリングゲームが主に情報の伝達に焦点を当てているのに対し、指示ゲームではその情報に基づいて具体的な行動を取ることが求められます。Das et al. (2019)の研究[2]では、言語指示に基づいてナビゲーションを行うタスクを通じて、より複雑な状況での言語の使用と理解を調査しています。
+<!-- 
+- https://ja.wikipedia.org/wiki/シグナリングゲーム
+- 本来は Lewis, D. (1969) を引用すべきだが、時間があるときにする。
+-->
 
-指示ゲームとは、一方のエージェントが他方のエージェントに特定のタスクや行動を指示するゲームです。例えば、Das et al. (2019)の研究では、3D環境内でエージェントが協力してナビゲーションタスクを解決する実験を行っています[2]。この実験では、一方のエージェントが環境を観察し、もう一方のエージェントに移動の指示を与えます。
+シグナリングゲームの中でも、受信者が送信者のタイプを当てるシンプルなゲームを参照ゲーム(referential game)と言います。なお参照ゲームをシグナリングゲームと呼ぶこともあります。
 
-<!-- TODO: 指示ゲームになったことで、より複雑だったり構成性を持った言語が発現したのか？ -->
+参照ゲームの代表的な例として、Lazaridou et al. (2017)[^Lazaridou_et_al_2017]の実験があります。これは参照ゲームの中でも識別ゲーム(discrimination game)と呼ばれることがあります。
+実験では、送信者が2枚の画像から1枚を選び、受信者に1つの記号(10または100の語彙から選ばれた1語)を送信します。受信者にはシャッフルされた2枚の画像と送信された記号が提示されるので、どちらの画像を指しているかを当てるタスクを行います。
 
-### 交渉ゲーム
+<!-- https://claude.ai/chat/eb5f6938-d36d-42f3-af66-0f22a493cca6 -->
+<!-- Brandizzi (2023) は識別ゲーム以外の参照ゲームの例を挙げているが、あくまで参考程度なので省略する。 -->
 
-交渉ゲームとは、エージェント間で限られたリソースの分配を交渉するゲームです。Cao et al. (2018)の研究では、2つのエージェントが複数のオブジェクトの価値について交渉を行う実験を実施しています[3]。各エージェントには各オブジェクトの隠された価値が割り当てられ、エージェントはメッセージを交換しながら、オブジェクトの分割方法を提案し合います。
+### コミュニケーションを補助として用いるゲーム
+
+コミュニケーションを補助的な手段として用いることで、道案内や交渉などを成功させる種類のゲームがあります。参照ゲームではないシグナリングゲームの一種で、指示ゲームと呼ばれることがあります。
+
+<!-- Ueda et al. (2023) などに登場する「指示ゲーム」の英語表現を見つけることができなかった。 -->
+
+例えば、Das et al. (2019)[^Das_et_al_2024]の研究では、エージェントが協力して3D環境内で道案内などを実施します。研究では、中央集権的なアーキテクチャなどに比べても優れたパフォーマンスを示すことが報告されています。
+
+<!-- https://claude.ai/chat/0ab5ff3c-e112-4539-a30c-3202629c12b6 -->
+
+もっとも、創発言語の構成性や人間の言語との類似性を発現させるにあたって、参照ゲームよりも指示ゲームのような複雑なゲームの方が有利といった報告は見つけられませんでした。指示ゲームについてはより研究が必要な状況のようです。
+
+<!-- https://claude.ai/chat/08e448a1-e8d8-4624-9a0b-136b9cea62a5 -->
 
 ### 3D環境・マルチモーダル入力
 
@@ -215,25 +239,10 @@ LLMと創発言語の組み合わせ：Lu et al. (2020)は、反復学習のパ�
 [^Boldt_Mortensen_2024]: B. Boldt and D. R. Mortensen, “A Review of the Applications of Deep Learning-Based Emergent Communication,” Transactions on Machine Learning Research, Aug. 2023, Accessed: Sep. 24, 2024. [Online]. Available: https://openreview.net/forum?id=jesKcQxQ7j
 [^Brandizzi_2023]: N. Brandizzi, “Toward More Human-Like AI Communication: A Review of Emergent Communication Research,” IEEE Access, vol. 11, pp. 142317–142340, 2023, doi: 10.1109/ACCESS.2023.3339656.
 [^Chaabouni_2024]: R. Chaabouni et al., “Emergent Communication at Scale,” presented at the International Conference on Learning Representations, Oct. 2021. Accessed: Sep. 24, 2024. [Online]. Available: https://openreview.net/forum?id=AUGBfDIV9rL
+[^Das_et_al_2024]: A. Das et al., “TarMAC: Targeted Multi-Agent Communication,” in Proceedings of the 36th International Conference on Machine Learning, PMLR, May 2019, pp. 1538–1546. Accessed: Sep. 26, 2024. [Online]. Available: https://proceedings.mlr.press/v97/das19a.html
 [^Foerster_2016]: J. N. Foerster, Y. M. Assael, N. de Freitas, and S. Whiteson, “Learning to Communicate with Deep Multi-Agent Reinforcement Learning,” May 24, 2016, arXiv: arXiv:1605.06676. doi: 10.48550/arXiv.1605.06676.
 [^Lazaridou_et_al_2017]: A. Lazaridou, A. Peysakhovich, and M. Baroni, “Multi-Agent Cooperation and the Emergence of (Natural) Language,” arXiv.org. Accessed: Sep. 11, 2024. [Online]. Available: https://arxiv.org/abs/1612.07182v2
 [^Lazaridou_Baroni_2020]: A. Lazaridou and M. Baroni, “Emergent Multi-Agent Communication in the Deep Learning Era,” Jul. 14, 2020, arXiv: arXiv:2006.02419. Accessed: Sep. 19, 2024. [Online]. Available: http://arxiv.org/abs/2006.02419
 
 [^Okanohara_2020]: Okanohara D., “《日経Robotics》AIトップ国際会議では何が起きているか,” 日経Robotics（日経ロボティクス）. Accessed: Sep. 24, 2024. [Online]. Available: https://xtech.nikkei.com/atcl/nxt/mag/rob/18/00007/00022/
 [^Ueda_et_al_2023]: R. Ueda et al., “言語とコミュニケーションの創発に関する構成論的研究の展開,” Jun. 07, 2023, OSF. doi: 10.31234/osf.io/rz5ng.
-
-
-
-
-
-
-[1] A. Lazaridou, A. Peysakhovich, and M. Baroni, "Multi-Agent Cooperation and the Emergence of (Natural) Language," in International Conference on Learning Representations, 2017.
-[2] A. Das et al., "TarMAC: Targeted Multi-Agent Communication," in Proceedings of ICML, pp. 1538-1546, 2019.
-[3] K. Cao et al., "Emergent Communication through Negotiation," in Proceedings of ICLR Conference Track, 2018.
-[4] H. Brighton and S. Kirby, "Understanding Linguistic Evolution by Visualizing the Emergence of Topographic Mappings," Artificial Life, vol. 12, no. 2, pp. 229-242, 2006.
-[5] R. Chaabouni et al., "Compositionality and Generalization In Emergent Languages," in Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, pp. 4427-4442, 2020.
-[6] J. Andreas, "Measuring Compositionality in Representation Learning," in International Conference on Learning Representations, 2019.
-[7] A. Lazaridou, A. Potapenko, and O. Tieleman, "Multi-agent Communication Meets Natural Language: Synergies Between Functional and Structural Language Learning," in Association of Computational Linguistics, 2020.
-[8] J. Foerster et al., "Learning to Communicate with Deep Multi-Agent Reinforcement Learning," in Advances in Neural Information Processing Systems, pp. 2137-2145, 2016.
-[9] J. Lee, K. Cho, and D. Kiela, "Countering Language Drift via Visual Grounding," in Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), pp. 4376-4386, 2019.
-[10] Y. Lu et al., "Countering Language Drift with Seeded Iterated Learning," in International Conference on Machine Learning, 2020.
