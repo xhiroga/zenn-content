@@ -24,11 +24,10 @@ Lazaridou & Baroni (2020)[^Lazaridou_Baroni_2020] は代表的な実験である
 - B. Boldt and D. R. Mortensen, “A Review of the Applications of Deep Learning-Based Emergent Communication,” Transactions on Machine Learning Research, Aug. 2023, Accessed: Sep. 24, 2024. [Online]. Available: https://openreview.net/forum?id=jesKcQxQ7j[^Boldt_Mortensen_2024]
 - R. Ueda et al., “言語とコミュニケーションの創発に関する構成論的研究の展開,” Jun. 07, 2023, OSF. doi: 10.31234/osf.io/rz5ng.[^Ueda_et_al_2023]
 
-<!-- 
-- Brandizzi (2023) はこの分野の初心者向けに書かれている印象がある。
-- Boldt & Mortensen (2024) は Lazaridou(2024) を踏まえた上で、応用（ロボットを含む）を扱っている（その中で谷口らも取り上げている）
-- Ueda et al. (2023) は日本語のサーベイとして一読した。
- -->
+
+<!-- Brandizzi (2023) はこの分野の初心者向けに書かれている印象がある。 -->
+<!-- Boldt & Mortensen (2024) は Lazaridou(2024) を踏まえた上で、応用（ロボットを含む）を扱っている（その中で谷口らも取り上げている） -->
+<!-- Ueda et al. (2023) は日本語のサーベイとして一読した。 -->
 
 また、特に技術的な課題については Chaabouni (2024)[^Chaabouni_2024]を参考にしました。
 
@@ -47,16 +46,11 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 
 言語・記号創発の分野では、深層ニューラルネットワークによるエージェント同士のコミュニケーションを研究します。中でも、次のような課題があります。
 
-<!-- それぞれ次の章に相当
-1. Lazaridou & Baroni (2020): 3. 創発的な言葉を理解する
-2. Lazaridou & Baroni (2020): 4. より良いAIのための創発的コミュニケーション
-3. 学習
-   1. Chaabouni (2024)
-   2. Lazaridou & Baroni (2020): その分析を高速化し一般化できる自動化ツールを開発すること
-4. 数理的な理解: 谷口ら日本の研究者の論文による（TODO）
-   1. https://www.anlp.jp/proceedings/annual_meeting/2024/pdf_dir/E7-5.pdf など？
-   2. Connected Paperにもあったはずだが後でよく探す
- -->
+<!-- 1. Lazaridou & Baroni (2020): 3. 創発的な言葉を理解する -->
+<!-- 2. Lazaridou & Baroni (2020): 4. より良いAIのための創発的コミュニケーション -->
+<!-- 3-1. Chaabouni (2024) -->
+<!-- 3-2. Lazaridou & Baroni (2020): その分析を高速化し一般化できる自動化ツールを開発すること -->
+<!-- 4. 数理的な理解: https://www.anlp.jp/proceedings/annual_meeting/2024/pdf_dir/E7-5.pdf など？ -->
 
 1. 創発言語の分析と評価
    1. 創発プロトコルの一般的特徴の理解
@@ -74,10 +68,9 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 ## 代表的な実験
 
 創発コミュニケーションの課題の詳細の前に、それらの実験の共通の性質と違いについて確認します。
-<!-- 
-- Boldt & Mortensen (2024): 1.2 Scope に相当
-- Brandizzi (2023) から引用した
--->
+
+<!-- 主に Brandizzi (2023) から引用 -->
+<!-- Boldt & Mortensen (2024): 1.2 Scope に相当 -->
 
 共通の性質は次のとおりです。
 
@@ -87,13 +80,9 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 
 一方で、研究によって次のような観点で違いが見られます。続けて詳細を取り上げます。
 
-<!-- 
-- 全体
-  - Lazaridou & Baroni (2020) が網羅的。しかし、メッセージの長さなど比較的軽い要素が含まれる。
-  - 影響が大きい観点に絞るため、 Brandizzi (2023) II. COMMON PROPERTIES に倣うのが良いかも。
-- ゲームの種類
-  - Lazaridou et al. (2020) および Brandizzi (2023) にならって2分した。
--->
+<!-- 構成: Lazaridou & Baroni (2020) が網羅的。しかし、メッセージの長さなど比較的軽い要素が含まれる。しかし影響が大きい観点に絞るため、 Brandizzi (2023) II. COMMON PROPERTIES に倣うのが良いかも。 -->
+<!-- ゲームの種類: Lazaridou et al. (2020) および Brandizzi (2023) にならって2分した。 -->
+<!-- 入力表現:  -->
 
 - コミュニケーションの種類
   - 連続的なコミュニケーション: DIALなど
@@ -125,7 +114,9 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
   - 単一のコミュニティ
   - 複数のコミュニティ
 
-### 連続的なコミュニケーション
+### コミュニケーションの種類
+
+#### 連続的なコミュニケーション
 
 連続なコミュニケーションの代表例として、Foerster et al. (2016)[^Foerster_2016]のDIAL（Differentiable Inter-Agent Learning, 微分可能エージェント間学習）があります。
 
@@ -134,13 +125,13 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 
 <!-- https://claude.ai/chat/d7a065b3-faa9-4a2c-80eb-23c0e5fa12ff -->
 
-### 離散的なコミュニケーション
+#### 離散的なコミュニケーション
 
 離散てきなコミュニケーションの代表例として、同じくFoerster et al. (2016)[^Foerster_2016]のDIAL（Differentiable Inter-Agent Learning, 微分可能エージェント間学習）があります。
 
 エージェント間のコミュニケーションはシンボルを用いて行われます。したがって、コミュニケーションが離散的なボトルネックとなり、誤差を逆伝播させることが困難となりますが、強化学習の手法を用いて対処できます。
 
-### コミュニケーション自体に焦点を当てたゲーム
+### ゲームの種類
 
 創発コミュニケーションの実験で用いられる、次のようなゲームをシグナリングゲーム(signaling game)と言います。
 
@@ -148,10 +139,10 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 - 送信者はタイプを持つ。受信者は送信者のタイプを知らない
 - 送信者は受信者にメッセージを送る。受信者はメッセージを元に行動する
 
-<!-- 
-- https://ja.wikipedia.org/wiki/シグナリングゲーム
-- 本来は Lewis, D. (1969) を引用すべきだが、時間があるときにする。
--->
+<!-- https://ja.wikipedia.org/wiki/シグナリングゲーム -->
+<!-- 本来は Lewis, D. (1969) を引用すべきだが、時間があるときにする。 -->
+
+#### コミュニケーション自体に焦点を当てたゲーム
 
 シグナリングゲームの中でも、受信者が送信者のタイプを当てるシンプルなゲームを参照ゲーム(referential game)と言います。なお参照ゲームをシグナリングゲームと呼ぶこともあります。
 
@@ -161,7 +152,7 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 <!-- https://claude.ai/chat/eb5f6938-d36d-42f3-af66-0f22a493cca6 -->
 <!-- Brandizzi (2023) は識別ゲーム以外の参照ゲームの例を挙げているが、あくまで参考程度なので省略する。 -->
 
-### コミュニケーションを補助として用いるゲーム
+#### コミュニケーションを補助として用いるゲーム
 
 コミュニケーションを補助的な手段として用いることで、道案内や交渉などを成功させる種類のゲームがあります。参照ゲームではないシグナリングゲームの一種で、指示ゲームと呼ばれることがあります。
 
@@ -175,11 +166,13 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 
 <!-- https://claude.ai/chat/08e448a1-e8d8-4624-9a0b-136b9cea62a5 -->
 
-### 3D環境・マルチモーダル入力
+### 入力表現
 
-3D環境を用いた実験では、エージェントはより現実的な状況でコミュニケーションを行います。Das et al. (2019)の研究では、エージェントは3D家屋環境内を移動しながら、視覚情報と言語情報を組み合わせてタスクを解決します[2]。このような環境では、エージェントは空間的な関係や物体の属性など、より豊富な情報を扱う必要があります。
+創発コミュニケーションのためのシグナリングゲームにおいて、様々な入力表現が用いられます。単なる数字のセット、Bag of Featureとして特徴を抽出したセット、画像、3Dオブジェクトなどです。
 
-<!-- TODO: 実論文を読んでブラッシュアップ -->
+Yuan et al. (2021)[^Yuan_et_al_2021]の実験では、参照ゲームの入力表現として単なる数字のセットと3Dオブジェクトを比較している。実験の結果、3Dオブジェクトを用いた方が学習の収束が早いことが分かった。入力表現が色や形などの構造化された情報を持つことが、学習の収束につながったと考えられている。
+
+<!-- TODO: 入力空間が広い際に自然に汎化が行われる可能性が示されている。 -->
 
 ## 創発言語の分析と評価に関する取り組みと課題
 
@@ -243,6 +236,7 @@ LLMと創発言語の組み合わせ：Lu et al. (2020)は、反復学習のパ�
 [^Foerster_2016]: J. N. Foerster, Y. M. Assael, N. de Freitas, and S. Whiteson, “Learning to Communicate with Deep Multi-Agent Reinforcement Learning,” May 24, 2016, arXiv: arXiv:1605.06676. doi: 10.48550/arXiv.1605.06676.
 [^Lazaridou_et_al_2017]: A. Lazaridou, A. Peysakhovich, and M. Baroni, “Multi-Agent Cooperation and the Emergence of (Natural) Language,” arXiv.org. Accessed: Sep. 11, 2024. [Online]. Available: https://arxiv.org/abs/1612.07182v2
 [^Lazaridou_Baroni_2020]: A. Lazaridou and M. Baroni, “Emergent Multi-Agent Communication in the Deep Learning Era,” Jul. 14, 2020, arXiv: arXiv:2006.02419. Accessed: Sep. 19, 2024. [Online]. Available: http://arxiv.org/abs/2006.02419
+[^Yuan_et_al_2021]: L. Yuan, Z. Fu, J. Shen, L. Xu, J. Shen, and S.-C. Zhu, “Emergence of Pragmatics from Referential Game between Theory of Mind Agents,” Sep. 30, 2021, arXiv: arXiv:2001.07752. doi: 10.48550/arXiv.2001.07752.
 
 [^Okanohara_2020]: Okanohara D., “《日経Robotics》AIトップ国際会議では何が起きているか,” 日経Robotics（日経ロボティクス）. Accessed: Sep. 24, 2024. [Online]. Available: https://xtech.nikkei.com/atcl/nxt/mag/rob/18/00007/00022/
 [^Ueda_et_al_2023]: R. Ueda et al., “言語とコミュニケーションの創発に関する構成論的研究の展開,” Jun. 07, 2023, OSF. doi: 10.31234/osf.io/rz5ng.
