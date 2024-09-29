@@ -28,7 +28,7 @@ Lazaridou & Baroni (2020)[^Lazaridou_Baroni_2020] は代表的な実験である
 <!-- Boldt & Mortensen (2024) は Lazaridou(2024) を踏まえた上で、応用（ロボットを含む）を扱っている（その中で谷口らも取り上げている） -->
 <!-- Ueda et al. (2023) は日本語のサーベイとして一読した。 -->
 
-また、特に技術的な課題については Chaabouni (2024)[^Chaabouni_2024]を参考にしました。
+また、特に技術的な課題については Chaabouni (2024)[^Chaabouni_et_al_2024]を参考にしました。
 
 ### コミュニティ
 
@@ -40,29 +40,6 @@ Lazaridou & Baroni (2020)[^Lazaridou_Baroni_2020] は代表的な実験である
 - ICML: 機械学習のアルゴリズムや理論に重点を置いている
 
 EmeCom WorkShopの名称から分かるように、この分野はEmergent Communication = EmeCom と呼ばれることがあります。
-
-## 言語・記号創発の課題
-
-言語・記号創発の分野では、深層ニューラルネットワークによるエージェント同士のコミュニケーションを研究します。中でも、次のような課題があります。
-
-<!-- 1. Lazaridou & Baroni (2020): 3. 創発的な言葉を理解する -->
-<!-- 2. Lazaridou & Baroni (2020): 4. より良いAIのための創発的コミュニケーション -->
-<!-- 3-1. Chaabouni (2024) -->
-<!-- 3-2. Lazaridou & Baroni (2020): その分析を高速化し一般化できる自動化ツールを開発すること -->
-<!-- 4. 数理的な理解: https://www.anlp.jp/proceedings/annual_meeting/2024/pdf_dir/E7-5.pdf など？ -->
-
-1. 創発言語の分析と評価
-   1. 創発プロトコルの一般的特徴の理解
-   2. 構成性をどのように発現させるか・評価するか
-   3. 人間の言語との類似性をどのように分析・評価するか
-2. 創発言語の応用
-   1. 機械-機械間コミュニケーションの改善
-   2. 機械-人間間コミュニケーションの改善
-   3. LLMと創発言語の組み合わせ
-3. 学習
-   1. 学習のスケールアップ
-   2. 学習の効率化・自動化
-4. 数理的な理解
 
 ## 代表的な実験
 
@@ -180,40 +157,60 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 <!-- https://claude.ai/chat/1c000ba6-8b01-403f-b6e6-e8d1fec05366 -->
 
-## 創発言語の分析と評価に関する取り組みと課題
+## 課題
 
-創発言語の分析と評価について、主な取り組みと課題は以下の通り。
+言語・記号創発の分野では、深層ニューラルネットワークによるエージェント同士のコミュニケーションを研究します。中でも、次のような課題があります。
 
-1. コミュニケーションの効果
-2. トポグラフィック類似性 & ダイエンタングルメント & 言語の圧縮性
-3. 人間の言語との比較
+<!-- 1. Lazaridou & Baroni (2020): 3. 創発的な言葉を理解する -->
+<!-- 2. Lazaridou & Baroni (2020): 4. より良いAIのための創発的コミュニケーション -->
+<!-- 3. 数理的な理解: https://www.anlp.jp/proceedings/annual_meeting/2024/pdf_dir/E7-5.pdf など？ -->
 
-### コミュニケーションの効果
+1. 創発言語の分析と評価
+   1. 効果的なコミュニケーションの度合い
+   2. 構成性
+   3. 人間の言語との類似性
+2. 創発言語の応用
+   1. 機械どうしのコミュニケーション
+   2. 機械と人間のコミュニケーション
 
-送信者と受信者それぞれの分析手段がある。
+### 創発言語の分析と評価
 
-実験の形式に注意しないと、メッセージではなくターン数などのメタ的な要素でコミュニケーションを取る可能性がある。
+<!-- TODO: 簡単に説明 -->
+
+#### コミュニケーションの効果
+
+<!-- Lazaridou & Baroni (2020): 3.1 Measuring the Degree of Effective Communication および 2) Brandizzi (2023): INPUT REPRESENTATION -> C) OPEN CHALLENGES を参考に -->
+
+- 送信者と受信者それぞれの分析手段がある。
+- 実験の形式に注意しないと、メッセージではなくターン数などのメタ的な要素でコミュニケーションを取る可能性がある。
 
 <!-- Lazaridou & Baroni (2020): 今後の研究が取り組むべきさらに深刻な問題は、現在のシミュレーションの大部分において、訓練段階とテスト段階におけるエージェントのコミュニケーション・パートナーが同じであること、 すなわち、一緒に訓練されたエージェント間のコミュニケーションを評価することである。 -->
 
-### トポグラフィック類似性 & ダイエンタングルメント & 言語の圧縮性
+#### 構成性
+
+<!-- Lazaridou & Baroni (2020): 3.2 Compositionality を参考に -->
+
+<!-- TODO: トポグラフィック類似性 [^Brighton_Kirby_2006] -->
+<!-- TODO: ダイエンタングルメント -->
+<!-- TODO: 言語の圧縮性 -->
+<!-- TODO: Emergent Communication at Scale で提案された手法 -->
 
 Brighton & Kirby (2006)によって導入された指標で、意味空間と形式空間の間の構造的類似性を測定します[4]。この指標は言語の構成性を間接的に評価しますが、具体的な構成過程を明らかにすることはできません。
 
-ダイエンタングルメントは、表現学習において、データの生成過程における独立した要因を分離して表現することを目指す概念です。Andreas (2019)[6]は、この概念を創発言語の分析に適用しました。具体的には、言語の異なる側面（例えば、文法的機能と意味内容）を独立した表現として分離することを試みています。これにより、創発言語のどの部分がどのような機能を担っているかをより詳細に分析することが可能になります。
-なので予め文法が分かっていないと性質が分からない。
+ダイエンタングルメントは、表現学習において、データの生成過程における独立した要因を分離して表現することを目指す概念です。Andreas (2019)[6]は、この概念を創発言語の分析に適用しました。具体的には、言語の異なる側面（例えば、文法的機能と意味内容）を独立した表現として分離することを試みています。これにより、創発言語のどの部分がどのような機能を担っているかをより詳細に分析することが可能になります。なので予め文法が分かっていないと性質が分からない。
 
 Chaabouni et al. (2020)は、創発言語の構成性を評価するために、表現の圧縮性を利用する方法を提案しています[5]。構成的な言語はより効率的に圧縮できるという考えに基づいています。
 
 課題: どのような建築的バイアスや環境的圧力が構成性の出現を促すかはかなり大雑把な理解。世代を経たり、話者数が多いと構成的になる傾向があるらしい。
 また一般性も課題となっている
-一方で Chaabouni et al. (2021)では、大きな母集団が高い汎化性能を持つ頑健なプロトコルを誘因「しない」ことを報告している。
+一方で Chaabouni et al. (2024)では、大きな母集団が高い汎化性能を持つ頑健なプロトコルを誘因「しない」ことを報告している。
+<!-- TODO: このような直感に反する箇所に注目したい。他にもあれば取り上げる。 -->
 
-### 人間の言語との比較
+#### 人間の言語との比較
 
 <!-- TODO: 出現した言語が直感に反する性質を持つケースと、その理由の分析 -->
 
-Lazaridou et al. (2020)[7]は、事前学習された言語モデルを用いて創発言語と自然言語の類似性を評価する方法を提案しています。具体的には、以下のようなアプローチを取っています：
+Lazaridou et al. (2020)は、事前学習された言語モデルを用いて創発言語と自然言語の類似性を評価する方法を提案しています。具体的には、以下のようなアプローチを取っています：
 
 1. 大規模な自然言語コーパスで事前学習された言語モデルを用意する。
 2. このモデルを創発言語のタスクに適応させる。
@@ -221,20 +218,26 @@ Lazaridou et al. (2020)[7]は、事前学習された言語モデルを用いて
 
 このアプローチにより、創発言語が自然言語のどのような特性を獲得し、どのような点で異なっているかを定量的に評価することが可能になります。ただし、この方法にはまだ課題があり、例えば使用する事前学習モデルの選択や、評価指標の設計などにさらなる研究が必要です。
 
-## 創発言語の応用に関する取り組みと課題
+### 創発言語の応用
 
-創発言語の応用に関する取り組みと課題は次のとおりです。
+#### 機械どうしのコミュニケーション
 
-機械-機械間コミュニケーションの改善：Foerster et al. (2016)のDIALシステムなど、連続的なコミュニケーションチャネルを用いることで、エージェント間の協調をより効果的に行う研究が進められています[8]。
-機械-人間間コミュニケーションの改善：Lee et al. (2019)は、創発コミュニケーションと教師あり学習を組み合わせることで、人間の言語に近い創発言語を生成する方法を提案しています[9]。
-LLMと創発言語の組み合わせ：Lu et al. (2020)は、反復学習のパラダイムを用いて、事前学習された言語モデルと創発言語学習を組み合わせる手法を提案しています[10]。これにより、タスク特化型の言語を生成しつつ、自然言語との類似性を保つことを目指しています。
+<!-- Lazaridou & Baroni (2020): 4.1 Communication Facilitating Inter-Agent Coordination および 4.2 Beyond Cooperation: Self-interested and Competing Agents を参考に -->
 
-TODO: 人間の子どもがそうであるように、言語を進化させつつスコアを引き上げられると良い。論文ではタスクのスコアと中間表現の英語としてのBLUEスコアで計測している。
+#### 機械と人間のコミュニケーション
+
+<!-- Lazaridou & Baroni (2020): 4.3 Machines Cooperating with Humans を参考に -->
+
+- Lu et al. (2020)[^Lu_et_al_2020]は、創発コミュニケーションと教師あり学習を組み合わせることで、人間の言語に近い創発言語を生成する方法を提案しています[9]。
+- 言語ドリフトについて触れる
 
 <!-- SIL successfully counters language drift in the translation game while optimizing for task-completion. -->
 
 <!-- https://claude.ai/chat/f532a165-ad61-47ad-b628-bf1c4e7440d8 -->
 <!-- Lu et al. (2020) https://claude.ai/chat/aacd8dae-b571-496f-add1-b262f88cf3a4 -->
+
+TODO: 人間の子どもがそうであるように、言語を進化させつつスコアを引き上げられると良い。論文ではタスクのスコアと中間表現の英語としてのBLUEスコアで計測している。そのような、言語としての要求を満たしつつ言語を進化させるところに創造性がある、みたいなことを主張する
+
 
 ## まとめ
 
@@ -244,13 +247,15 @@ TODO: 人間の子どもがそうであるように、言語を進化させつ�
 
 [^Boldt_Mortensen_2024]: B. Boldt and D. R. Mortensen, “A Review of the Applications of Deep Learning-Based Emergent Communication,” Transactions on Machine Learning Research, Aug. 2023, Accessed: Sep. 24, 2024. [Online]. Available: <https://openreview.net/forum?id=jesKcQxQ7j>
 [^Brandizzi_2023]: N. Brandizzi, “Toward More Human-Like AI Communication: A Review of Emergent Communication Research,” IEEE Access, vol. 11, pp. 142317–142340, 2023, doi: 10.1109/ACCESS.2023.3339656.
+[^Brighton_Kirby_2006]: H. Brighton and S. Kirby, “Understanding Linguistic Evolution by Visualizing the Emergence of Topographic Mappings”.
 [^Chaabouni_et_al_2020]: R. Chaabouni, E. Kharitonov, D. Bouchacourt, E. Dupoux, and M. Baroni, “Compositionality and Generalization In Emergent Languages,” in Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, D. Jurafsky, J. Chai, N. Schluter, and J. Tetreault, Eds., Online: Association for Computational Linguistics, Jul. 2020, pp. 4427–4442. doi: 10.18653/v1/2020.acl-main.407.
-[^Chaabouni_2024]: R. Chaabouni et al., “Emergent Communication at Scale,” presented at the International Conference on Learning Representations, Oct. 2021. Accessed: Sep. 24, 2024. [Online]. Available: <https://openreview.net/forum?id=AUGBfDIV9rL>
+[^Chaabouni_et_al_2024]: R. Chaabouni et al., “Emergent Communication at Scale,” presented at the International Conference on Learning Representations, Oct. 2021. Accessed: Sep. 24, 2024. [Online]. Available: <https://openreview.net/forum?id=AUGBfDIV9rL>
 [^Das_et_al_2024]: A. Das et al., “TarMAC: Targeted Multi-Agent Communication,” in Proceedings of the 36th International Conference on Machine Learning, PMLR, May 2019, pp. 1538–1546. Accessed: Sep. 26, 2024. [Online]. Available: <https://proceedings.mlr.press/v97/das19a.html>
 [^Foerster_2016]: J. N. Foerster, Y. M. Assael, N. de Freitas, and S. Whiteson, “Learning to Communicate with Deep Multi-Agent Reinforcement Learning,” May 24, 2016, arXiv: arXiv:1605.06676. doi: 10.48550/arXiv.1605.06676.
 [^Lazaridou_et_al_2017]: A. Lazaridou, A. Peysakhovich, and M. Baroni, “Multi-Agent Cooperation and the Emergence of (Natural) Language,” arXiv.org. Accessed: Sep. 11, 2024. [Online]. Available: <https://arxiv.org/abs/1612.07182v2>
 [^Lazaridou_Baroni_2020]: A. Lazaridou and M. Baroni, “Emergent Multi-Agent Communication in the Deep Learning Era,” Jul. 14, 2020, arXiv: arXiv:2006.02419. Accessed: Sep. 19, 2024. [Online]. Available: <http://arxiv.org/abs/2006.02419>
 [^Liang_et_al_2020]: P. P. Liang, J. Chen, R. Salakhutdinov, L.-P. Morency, and S. Kottur, “On Emergent Communication in Competitive Multi-Agent Teams,” Jul. 16, 2020, arXiv: arXiv:2003.01848. doi: 10.48550/arXiv.2003.01848.
+[^Lu_et_al_2020]: Y. Lu, S. Singhal, F. Strub, A. Courville, and O. Pietquin, “Countering Language Drift with Seeded Iterated Learning,” in Proceedings of the 37th International Conference on Machine Learning, PMLR, Nov. 2020, pp. 6437–6447. Accessed: Sep. 26, 2024. [Online]. Available: https://proceedings.mlr.press/v119/lu20c.html
 [^Yuan_et_al_2021]: L. Yuan, Z. Fu, J. Shen, L. Xu, J. Shen, and S.-C. Zhu, “Emergence of Pragmatics from Referential Game between Theory of Mind Agents,” Sep. 30, 2021, arXiv: arXiv:2001.07752. doi: 10.48550/arXiv.2001.07752.
 
 [^Okanohara_2020]: Okanohara D., “《日経Robotics》AIトップ国際会議では何が起きているか,” 日経Robotics（日経ロボティクス）. Accessed: Sep. 24, 2024. [Online]. Available: <https://xtech.nikkei.com/atcl/nxt/mag/rob/18/00007/00022/>
