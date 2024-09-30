@@ -1,34 +1,40 @@
 ---
-title: "言語・記号創発に関するサーベイの私的まとめ"
+title: "創発コミュニケーションに関するサーベイの私的まとめ"
 emoji: "🐘"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: []
 published: false
+
+# レビュー観点
+# 1. 一般的なソフトウェアエンジニアが知らない用語には、具体的な値を伴う例が示されていること
+# 2. 文体が統一されているか
+# 3. 引用方法が統一されているか
+# 4. 複数行のコメントアウトをしていないこと（zenn.devが対応していない）
+
+# レビュー方法
+# 1. 
+# . 
 ---
+
+## TL;DR
+
+2人以上のプレイヤーが、道案内のようなゲームに協力して取り組むとき、プレイヤー間で考えていることを伝えるために新たな意味を持った記号が生まれます。こうしたコミュニケーションを創発コミュニケーションと呼びます。創発コミュニケーションに関するサーベイを読んでまとめました。
 
 ## 動機
 
-イラストを生成ではなく創発するエージェントについて考えています。
+Stable Diffusionのような生成AIは、画像を教師データから学んでいます。見た目の良いイラストを生成できる一方で、指の本数のように人間がしづらい間違いをすることがあります。
 
-そのようなエージェントは、自らの判断で伝えたい内容に合わせて強調・省略したイラストを描く能力があるはずです。
+そこで、もし2体のエージェントが「3Dオブジェクトで作られた環境で、絵で道案内をする」ようなタスクに取り組むことで、ゼロからイラストを学んだらどうなるかが気になりました。
 
-考え方のヒントを求めて、言語・記号創発の分野の研究を初心者なりにサーベイしました。
+調べると、イラストではなく記号や言語の分野で同じ発想の研究があり、創発コミュニケーション (EmCom, Emergent Communication)と呼ばれているようです。そこで、どのような実験や課題があるのかを調べました。
 
 ## 対象の論文
 
-主に Lazaridou & Baroni (2020)[^Lazaridou_Baroni_2020] をまとめました。
-Lazaridou & Baroni (2020)[^Lazaridou_Baroni_2020] は代表的な実験である Lazaridou et al. (2017)[^Lazaridou_et_al_2017]の著者が執筆しているほか、他のサーベイでも言及されているため、最初に読むべき内容として適切だと考えています。
-ほかに、キーワードを拾ったり個別の観点を補強するために、次のサーベイを簡単に読みました。
+主に Brandizzi (2023)[^Brandizzi_2023] と Lazaridou & Baroni (2020)[^Lazaridou_Baroni_2020] を読みました。Brandizzi (2023)を選んだのは、最近書かれていること、私にとって構成が分かりやすかったことが理由です。また、Lazaridou & Baroni (2020) を選んだのは、この分野で先駆的な実験であるLazaridou et al. (2017)[^Lazaridou_et_al_2017]の著者によって書かれていることが理由です。
 
-- N. Brandizzi, “Toward More Human-Like AI Communication: A Review of Emergent Communication Research,” IEEE Access, vol. 11, pp. 142317–142340, 2023, doi: 10.1109/ACCESS.2023.3339656.[^Brandizzi_2023]
-- B. Boldt and D. R. Mortensen, “A Review of the Applications of Deep Learning-Based Emergent Communication,” Transactions on Machine Learning Research, Aug. 2023, Accessed: Sep. 24, 2024. [Online]. Available: <https://openreview.net/forum?id=jesKcQxQ7j>[^Boldt_Mortensen_2024]
-- R. Ueda et al., “言語とコミュニケーションの創発に関する構成論的研究の展開,” Jun. 07, 2023, OSF. doi: 10.31234/osf.io/rz5ng.[^Ueda_et_al_2023]
+ほか、Boldt & Mortensen (2024)[^Boldt_Mortensen_2024]とUeda et al.(2024)を参照しました。前者は特に日本で盛んな「記号創発ロボティクス」をEmComの文脈で紹介していたことが、後者は構成性（compositionality, 複雑な意味が、その要素の意味＋組み合わせのルールから生まれるような性質）に関する研究を俯瞰的に紹介していたことが理由です。
 
-<!-- Brandizzi (2023) はこの分野の初心者向けに書かれている印象がある。 -->
-<!-- Boldt & Mortensen (2024) は Lazaridou(2024) を踏まえた上で、応用（ロボットを含む）を扱っている（その中で谷口らも取り上げている） -->
-<!-- Ueda et al. (2023) は日本語のサーベイとして一読した。 -->
-
-また、特に技術的な課題については Chaabouni (2024)[^Chaabouni_et_al_2024]を参考にしました。
+その他に参照した論文については、都度紹介します。
 
 ### コミュニティ
 
@@ -39,26 +45,19 @@ Lazaridou & Baroni (2020)[^Lazaridou_Baroni_2020] は代表的な実験である
 - NeurIPS: 神経科学や人工知能もカバーしており、強化学習にも重きをおいている
 - ICML: 機械学習のアルゴリズムや理論に重点を置いている
 
-EmeCom WorkShopの名称から分かるように、この分野はEmergent Communication = EmeCom と呼ばれることがあります。
-
 ## 代表的な実験
 
-創発コミュニケーションの課題の詳細の前に、それらの実験の共通の性質と違いについて確認します。
+<!-- 参考 -->
+<!-- Brandizzi (2023): II. COMMON PROPRIETIES -->
+<!-- Boldt & Mortensen (2024): 1.2 Scope -->
 
-<!-- 主に Brandizzi (2023) から引用 -->
-<!-- Boldt & Mortensen (2024): 1.2 Scope に相当 -->
-
-共通の性質は次のとおりです。
+創発コミュニケーションの分野の実験を紹介します。次の特徴が共通しています。
 
 - 強化学習を用いることが多い
 - 複数のエージェントが記号などを送信し合う
 - ゲームの開始時、エージェントが送信する記号は意味を持たない（ゲームを通じて意味や構文が生まれる）
 
-一方で、研究によって次のような観点で違いが見られます。続けて詳細を取り上げます。
-
-<!-- 構成: Lazaridou & Baroni (2020) が網羅的。しかし、メッセージの長さなど比較的軽い要素が含まれる。しかし影響が大きい観点に絞るため、 Brandizzi (2023) II. COMMON PROPERTIES に倣うのが良いかも。 -->
-<!-- ゲームの種類: Lazaridou et al. (2020) および Brandizzi (2023) にならって2分した。 -->
-<!-- 入力表現:  -->
+一方で、次のような観点で違いが見られます。続けて詳細を取り上げます。
 
 - ゲームの種類
   - コミュニケーション自体に焦点を当てたゲーム
@@ -73,30 +72,17 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 - エージェント間の関係
   - 完全協力
   - 部分的協力/競争
-- メッセージの長さ
-  - 固定長: Lazaridou et al. (2017) など
-  - 可変長: Havrylov & Titov など
-  - ほか、単一か複数かといった切り口もある
-- ターン
-  - 単一ターン
-  - マルチターン: Evtimova...
-- エージェント数
-  - 2エージェント
-  - 多エージェント
-- コミュニティ数
-  - 単一のコミュニティ
-  - 複数のコミュニティ
 
 ### ゲームの種類
+
+<!-- https://ja.wikipedia.org/wiki/シグナリングゲーム -->
+<!-- 本来は Lewis, D. (1969) を引用すべきだが、時間があるときにする。 -->
 
 創発コミュニケーションの実験で用いられる、次のようなゲームをシグナリングゲーム(signaling game)と言います。
 
 - 送信者と受信者からなる
 - 送信者はタイプを持つ。受信者は送信者のタイプを知らない
 - 送信者は受信者にメッセージを送る。受信者はメッセージを元に行動する
-
-<!-- https://ja.wikipedia.org/wiki/シグナリングゲーム -->
-<!-- 本来は Lewis, D. (1969) を引用すべきだが、時間があるときにする。 -->
 
 #### コミュニケーション自体に焦点を当てたゲーム
 
@@ -106,8 +92,8 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 
 実験では、送信者が2枚の画像から1枚を選び、受信者に1つの記号(10または100の語彙から選ばれた1語)を送信します。受信者にはシャッフルされた2枚の画像と送信された記号が提示されるので、どちらの画像を指しているかを当てるタスクを行います。
 
-<!-- https://claude.ai/chat/eb5f6938-d36d-42f3-af66-0f22a493cca6 -->
 <!-- Brandizzi (2023) は識別ゲーム以外の参照ゲームの例を挙げているが、あくまで参考程度なので省略する。 -->
+<!-- https://claude.ai/chat/eb5f6938-d36d-42f3-af66-0f22a493cca6 -->
 
 #### コミュニケーションを補助として用いるゲーム
 
@@ -119,7 +105,7 @@ EmeCom WorkShopの名称から分かるように、この分野はEmergent Commu
 
 <!-- https://claude.ai/chat/0ab5ff3c-e112-4539-a30c-3202629c12b6 -->
 
-もっとも、創発言語の構成性や人間の言語との類似性を発現させるにあたって、参照ゲームよりも指示ゲームのような複雑なゲームの方が有利といった報告は見つけられませんでした。指示ゲームについてはより研究が必要な状況のようです。
+もっとも、創発言語の構成性や人間の言語との類似性を発現させるにあたって、参照ゲームよりも指示ゲームのような複雑なゲームの方が効果的といった報告は見つけられませんでした。指示ゲームについてはより研究が必要な状況のようです。
 
 <!-- https://claude.ai/chat/08e448a1-e8d8-4624-9a0b-136b9cea62a5 -->
 
@@ -151,9 +137,9 @@ Yuan et al. (2021)[^Yuan_et_al_2021]の実験では、参照ゲームの入力�
 
 ### エージェント間の関係
 
-複数のエージェントが協力してタスクに取り組むことが、コミュニケーションの創発を促す。しかし、複数のエージェントからなるチームを競争させることで、より情報量が多く構成的な創発言語が発現する可能性がある。
+複数のエージェントが協力してタスクに取り組むことが、コミュニケーションの創発を促します。しかし、複数のエージェントからなるチームを競争させることで、より情報量が多く構成的な創発言語が発現する可能性があります。
 
-Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間での参照ゲームにおいて、他チームの創発言語を盗み聞きした場合、他チームのタスクやインスタンスを知らない場合であっても、自チームのゲームの正解率がより早く収束するようになったことが報告されている。
+Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間での参照ゲームにおいて、他チームの創発言語を盗み聞きした場合、他チームのタスクやインスタンスを知らない場合であっても、自チームのゲームの正解率がより早く収束するようになったことが報告されています。
 
 <!-- https://claude.ai/chat/1c000ba6-8b01-403f-b6e6-e8d1fec05366 -->
 
@@ -166,21 +152,22 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 <!-- 3. 数理的な理解: https://www.anlp.jp/proceedings/annual_meeting/2024/pdf_dir/E7-5.pdf など？ -->
 
 1. 創発言語の分析と評価
-   1. 効果的なコミュニケーションの度合い
+   1. コミュニケーションの効果
    2. 構成性
 2. 創発言語の応用
    1. 機械どうしのコミュニケーション
    2. 機械と人間のコミュニケーション
+3. 数学的な解釈
 
 <!-- https://aistudio.google.com/app/prompts/1B07r2OCU-duu9Py64sqTPmFHNRKTQyd6 -->
 
 ### 創発言語の分析と評価
 
-<!-- TODO: 簡単に説明 -->
-
 #### コミュニケーションの効果
 
-<!-- Lazaridou & Baroni (2020): 3.1 Measuring the Degree of Effective Communication および 2) Brandizzi (2023): INPUT REPRESENTATION -> C) OPEN CHALLENGES を参考に -->
+<!-- 参考 -->
+<!-- Lazaridou & Baroni (2020): 3.1 Measuring the Degree of Effective Communication -->
+<!-- Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> A. MACHINE-CENTERED EMCOM -> 1) CHARACTERISTICS -->
 
 創発コミュニケーションの研究において、エージェントが実際にコミュニケーションを取れているのか、その効果をどのように測るかは重要な課題です。
 
@@ -228,7 +215,9 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 #### 構成性
 
-<!-- Lazaridou & Baroni (2020): 3.2 Compositionality を参考に -->
+<!-- 参考 -->
+<!-- Lazaridou & Baroni (2020): 3.2 Compositionality -->
+<!-- Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> A. MACHINE-CENTERED EMCOM -> 2) HUNT FOR GENERALIZATION -->
 
 **構成性 (Compositionality)** は、複雑な表現の意味が、その構成要素の意味とそれらを組み合わせる規則によって決定されるという性質です。自然言語においては、単語の意味と文法規則から文の意味を理解できることが構成性の例として挙げられます。
 
@@ -284,28 +273,73 @@ Chaabouni et al. (2020) [^Chaabouni_2020] は、創発言語の構成性を評�
 
 #### 機械どうしのコミュニケーション
 
-<!-- Lazaridou & Baroni (2020): 4.1 Communication Facilitating Inter-Agent Coordination および 4.2 Beyond Cooperation: Self-interested and Competing Agents を参考に -->
+<!-- 参考 -->
+<!-- Lazaridou & Baroni (2020): 4.1 Communication Facilitating Inter-Agent Coordination, 4.2 Beyond Cooperation: Self-interested and Competing Agents -->
+<!-- Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> A. MACHINE-CENTERED EMCOM -->
+
+<!-- 
+TODO:
+- コミュニケーションそのものではなく、様々なタスクでより良い成果を達成するにはどうしたら良いか？（コミュニケーションはその補助）という課題の問いかけ
+- 学習を促進するアプローチ。DIALなど。しかし非現実的。
+- 環境の複雑さについて
+- 言語外のチャンネルを使い出すことについて。パフォーマンスは上がるかもしれないがパフォーマンスは上がるかもしれないが、総発言後には寄与しないかも
+
+MEMO:
+- 
+ -->
 
 #### 機械と人間のコミュニケーション
 
-<!-- Lazaridou & Baroni (2020): 4.3 Machines Cooperating with Humans を参考に -->
+<!-- 参考 -->
+<!-- Lazaridou & Baroni (2020): 4.3 Machines Cooperating with Humans -->
+<!-- Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> B. HUMAN-CENTERED EmCom -->
 
-- Lu et al. (2020)[^Lu_et_al_2020]は、創発コミュニケーションと教師あり学習を組み合わせることで、人間の言語に近い創発言語を生成する方法を提案しています[9]。
-- 言語ドリフトについて触れる
+工知能（AI）が私たちの日常生活に浸透するにつれて、AIと人間が自然言語で円滑にコミュニケーションをとれるようになる ことは、AI技術の真価を発揮するために非常に重要です。この分野の研究は、AIエージェントが人間の言語を理解し、人間と協力してタスクを解決したり、人間に役立つ情報を提供したりすることを目指しています。
 
-<!-- SIL successfully counters language drift in the translation game while optimizing for task-completion. -->
+人間中心型EmCom： 人間との対話を目指して
+創発コミュニケーションの研究分野において、人間中心型EmCom (Human-centered EmCom) は、まさにAIと人間の自然な対話を実現することを目標としています。人間中心型EmComでは、AIエージェントに人間の自然言語 (HNL) を理解させ、それを用いて人間とコミュニケーションをとる能力を学習させます。
+
+言語ドリフト：人間言語からの乖離という課題
+人間中心型EmComにおいて、大きな課題の一つとして 言語ドリフト (Language Drift) が挙げられます。言語ドリフトとは、AIエージェントがタスクを効率的に解決しようとするあまり、学習した言語が人間の言語から徐々に乖離していく現象です。これは、エージェントが人間の言語の複雑さやニュアンスを完全に理解できていないために起こると考えられています。
+
+言語ドリフトには、大きく分けて以下の3つのタイプがあります。1
+
+構造的ドリフト (Structural Drift): 文法的な構造が単純化され、人間にとって不自然な文になる。例えば、「猫ですか？」が「猫？」になるなど。
+
+意味的ドリフト (Semantic Drift): 単語の意味が本来の意味から変化してしまう。例えば、「古い教え」が「老人」という意味になるなど。
+
+機能的ドリフト (Functional Drift): 言語が意図した行動を引き起こさなくなる。例えば、交渉で合意したにもかかわらず、エージェントが別の取引を行ってしまうなど。
+
+教師あり学習と強化学習のバランス
+言語ドリフトを防ぎ、人間が理解しやすい言語を学習させるために、人間中心型EmComでは、教師あり学習 (Supervised Learning) と 強化学習 (Reinforcement Learning) を組み合わせる方法が広く用いられています。
+
+教師あり学習: 大規模なテキストデータを用いて、人間の言語の文法や語彙を学習させます。
+
+強化学習: 特定のタスクを通して、人間とコミュニケーションをとるための適切な言語の使い方を学習させます。
+
+しかし、この二つの学習方法のバランスをどのように取るかが課題となっています。教師あり学習に偏ると、エージェントは一般的な言語能力は獲得できるものの、特定のタスクに合わせた柔軟なコミュニケーションが難しくなります。一方、強化学習に偏ると、言語ドリフトが発生しやすくなります。
+
+Seeded Iterated Learning (SIL)
+Lu et al. (2020) 2 は、言語ドリフトに対抗するために、Seeded Iterated Learning (SIL) と呼ばれる手法を提案しています。SILは、人間の言語データで事前学習されたエージェントを初期状態とし、教師エージェントと生徒エージェントを交互に学習させることで、言語ドリフトを防ぎながらタスクの性能を向上させることを目指します。
+
+言語進化とタスク性能の両立
+人間の子どもが言語を学習する過程では、言語能力を向上させながら、同時に周りの世界を理解し、様々なタスクをこなせるようにもなります。同様に、AIエージェントも、言語を進化させながらタスクの性能を向上させる ことができれば、より人間らしいコミュニケーション能力を獲得できると考えられます。
+
+Chaabouni et al. (2022) 3 は、タスクのスコアと中間表現の英語としての BLEUスコア を用いて、言語進化とタスク性能の両立を評価しています。これは、エージェントが学習した言語が、タスクを効率的に解決できるだけでなく、人間にとっても理解しやすいものであることを保証するための指標となります。
+
+機械と人間のコミュニケーション： 今後の展望
+AIと人間が自然にコミュニケーションをとれるようになることは、AI研究における究極の目標の一つと言えるでしょう。そのためには、言語ドリフトの問題を克服し、人間のように文脈を理解し、意図を読み取り、適切な表現を選択できるAIエージェントを開発することが不可欠です。
 
 <!-- https://claude.ai/chat/f532a165-ad61-47ad-b628-bf1c4e7440d8 -->
 <!-- Lu et al. (2020) https://claude.ai/chat/aacd8dae-b571-496f-add1-b262f88cf3a4 -->
 
-TODO: 人間の子どもがそうであるように、言語を進化させつつスコアを引き上げられると良い。論文ではタスクのスコアと中間表現の英語としてのBLUEスコアで計測している。そのような、言語としての要求を満たしつつ言語を進化させるところに創造性がある、みたいなことを主張する
+### 数理
 
+<!-- [1] “指示ゲームの生成モデル的な再解釈”. -->
 
 ## まとめ
 
 <!-- TODO -->
-
-## 参考文献
 
 [^Boldt_Mortensen_2024]: B. Boldt and D. R. Mortensen, “A Review of the Applications of Deep Learning-Based Emergent Communication,” Transactions on Machine Learning Research, Aug. 2023, Accessed: Sep. 24, 2024. [Online]. Available: <https://openreview.net/forum?id=jesKcQxQ7j>
 [^Brandizzi_2023]: N. Brandizzi, “Toward More Human-Like AI Communication: A Review of Emergent Communication Research,” IEEE Access, vol. 11, pp. 142317–142340, 2023, doi: 10.1109/ACCESS.2023.3339656.
