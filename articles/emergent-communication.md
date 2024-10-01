@@ -10,6 +10,7 @@ published: false
 # 2. 文体が統一されているか
 # 3. 引用方法が統一されているか
 # 4. 複数行のコメントアウトをしていないこと（zenn.devが対応していない）
+# 5. 可能なら漢語ではなく和語を用いること（例: ✗測定する ◯測る）
 
 # レビュー方法
 # 1. 
@@ -22,7 +23,7 @@ published: false
 
 ## 動機
 
-Stable Diffusionのような生成AIは、画像を教師データから学んでいます。見た目の良いイラストを生成できる一方で、指の本数のように人間がしづらい間違いをすることがあります。
+Stable Diffusionのような生成AIは、画像を教師データから学んでいます。見た目の良いイラストを生成できる一方で、学習には元になる画像が必要です。
 
 そこで、もし2体のエージェントが「3Dオブジェクトで作られた環境で、絵で道案内をする」ようなタスクに取り組むことで、ゼロからイラストを学んだらどうなるかが気になりました。
 
@@ -72,6 +73,8 @@ Stable Diffusionのような生成AIは、画像を教師データから学ん�
 - エージェント間の関係
   - 完全協力
   - 部分的協力/競争
+
+その他、メッセージの長さ、単一ターンか複数ターンか、エージェントの数、など様々な違いがあります。
 
 ### ゲームの種類
 
@@ -173,45 +176,19 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 最もシンプルな指標としては、**タスク成功率** が挙げられます。例えば、画像を説明するゲームで、聞き手が正しく画像を識別できた割合を見る方法です。しかし、タスク成功率は、エージェントが意図したとおりにコミュニケーションを取れているかどうかを必ずしも反映しません。
 
-例えば、エージェントがメッセージの内容ではなく、メッセージを送信するターン数などのメタ的な情報に基づいてタスクをクリアしてしまう可能性があります。[^Brandizzi_2023] これは、私たち人間がコミュニケーションにおいて想定するような、意味に基づいたやり取りが行われていないことを意味します。
+例えば、エージェントがメッセージの内容ではなく、メッセージを送信するターン数などのメタ的な情報に基づいてタスクをクリアしてしまう可能性があります。
 
-このような問題に対処するために、様々な分析・評価方法が提案されていますが、それぞれにまだ未解決の課題も残されています。
+もしメタ的な情報に基づいてタスクをクリアしているなら、言語が意味を持たない可能性があります。そこで、**相互理解可能性**や**話者一貫性**を測ることが考えられます。
 
-#### 相互理解度 (Mutual Intelligibility)
+**相互理解可能性 (Mutual Intelligibility)**[^Graesser_et_al_2020]は、エージェントが自分自身とコミュニケーションができるかどうかを測る指標です。実験では単純な参照ゲームを行います。ただし、送信者と受信者のネットワークは、実際に送信・受信に関わる部分を除いて共通の設計になっています。これによって訓練した送信者自身を受信者として使えます。そのような場合でもタスクが成功するなら、意味を持った言語が出現していると言えそうです。
 
-**相互理解度**は、エージェントが自分自身とコミュニケーションを取ることができるかどうかを測定する指標です。[^Brandizzi_2023] もしエージェントが共有されたコミュニケーションプロトコルを学習していれば、自分自身とゲームをプレイしても問題なくタスクをこなせるはずです。これは、エージェントが学習した言語が一貫性を持っているかどうかを評価するのに役立ちます。
+<!-- https://claude.ai/chat/100c90b3-d33a-454c-870b-a970c8912adc -->
 
-* **課題:** 送信者と受信者の役割が固定されているエージェントにしか適用できない。また、言語の複雑さ（例えば、文法や語彙の豊かさ）を捉えきれていない可能性がある。
+**話者一貫性 (Speaker Consistency)**は、エージェントが特定の行動をとる際に、どの程度一貫して同じメッセージを発信するかを測定します。[^Jaques_et_al_2018]例えば、「右に移動」という行動をとる際に、常に "move right" というメッセージを発信するエージェントは、話し手の一貫性が高いと言えます。
 
-#### ゼロショット性能 (Zero-Shot Performance)
+また、メッセージと行動の関係性を直接測定することも考えられます。Casual Inference of Communication[^Lowe_et_al_2019]では、メッセージとその後の行動の相互情報量を求め、その値が高いほどメッセージが行動に影響を及ぼしていると考えます。
 
-**ゼロショット性能**は、訓練データに含まれていない未知の入力に対して、エージェントがどのように対応できるかを評価する指標です。[^Brandizzi_2023]  創発コミュニケーションにおいては、エージェントが未知の状況にも対応できる汎用的な言語を学習しているかどうかを判断するのに役立ちます。
-
-* **課題:**  適切な評価データセットを準備することが難しい。また、タスクやドメインに特化した評価になりがちで、言語の汎用的な能力を測ることが難しい。
-
-#### 話し手の一貫性 (Speaker Consistency)
-
-**話し手の一貫性**は、エージェントが特定の行動をとる際に、どの程度一貫して同じメッセージを発信するかを測定します。[^Brandizzi_2023] 例えば、「右に移動」という行動をとる際に、常に "move right" というメッセージを発信するエージェントは、話し手の一貫性が高いと言えます。
-
-単純なタスク成功率では、このようなメッセージと行動の一貫性を評価することができません。話し手の一貫性を測定することで、エージェントが意味のある方法で言語を使用しているかどうかをより深く理解することができます。
-
-* **課題:**  聞き手の行動を考慮していないため、コミュニケーション全体における一貫性を捉えきれていない。
-
-同様に、**話し手とメッセージの一貫性**や**聞き手とメッセージの一貫性**を測定することで、コミュニケーションにおけるそれぞれの役割において、エージェントがどの程度一貫して言語を使用しているかを評価できます。
-
-#### 因果的影響 (Causal Influence)
-
-**因果的影響**は、送信者のメッセージが受信者の行動にどの程度影響を与えているかを測定します。[^Lazaridou_Baroni_2020] この指標は、エージェント間のコミュニケーションが実際にタスクの成功に貢献しているかどうかを判断するのに役立ちます。
-
-* **課題:** 計算コストが高く、実装が複雑であるため、大規模な実験への適用が難しい。
-
-#### 転移学習 (Ease and Transfer Learning / ETL)
-
-**転移学習 (ETL)** は、創発言語が、異なるタスクを実行する新しいリスナーにどの程度速く、そしてうまく伝達されるかを捉える指標です。[^Chaabouni_2022] これは、エージェントが学習した言語が、特定のタスクに特化したものではなく、より汎用的なコミュニケーション能力を獲得しているかどうかを評価するのに役立ちます。
-
-* **課題:** 特定のタスクにおける有用性しか評価できないため、言語の汎用性や人間とのコミュニケーションにおける有用性については、さらなる分析が必要となる。
-
-これらの分析・評価方法は、創発コミュニケーション研究において重要な役割を果たしていますが、未解決の課題も存在します。今後、これらの課題を克服し、より洗練された評価指標を開発することで、人間のようにコミュニケーションできるAIの実現に近づくことができると期待されます。
+<!-- https://claude.ai/chat/6301eaa9-2b8b-49e5-8bc5-af6961d3a693 -->
 
 #### 構成性
 
@@ -220,6 +197,8 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 <!-- Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> A. MACHINE-CENTERED EMCOM -> 2) HUNT FOR GENERALIZATION -->
 
 **構成性 (Compositionality)** は、複雑な表現の意味が、その構成要素の意味とそれらを組み合わせる規則によって決定されるという性質です。自然言語においては、単語の意味と文法規則から文の意味を理解できることが構成性の例として挙げられます。
+
+これらの分析・評価方法は、創発コミュニケーション研究において重要な役割を果たしていますが、未解決の課題も存在します。今後、これらの課題を克服し、より洗練された評価指標を開発することで、人間のようにコミュニケーションできるAIの実現に近づくことができると期待されます。
 
 創発コミュニケーションにおいても、エージェントが学習した言語が構成的であるかどうかは重要な関心事です。構成的な言語は、新しい概念やアイデアを表現する能力が高く、未知の状況にも柔軟に対応できる可能性を秘めているからです。
 
@@ -239,6 +218,18 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 * **課題:** トポグラフィック類似性は、言語の全体的な構造を捉えることはできますが、具体的な構成プロセス（例えば、どのような規則で要素を組み合わせているか）を明らかにすることはできません。
 * **課題:** Chaabouni et al. (2022) では、大規模な自然画像データセットを用いた実験において、トポグラフィック類似性とエージェントの汎化性能の間に相関が見られないことを報告しており、自然画像を扱う際には、トポグラフィック類似性だけでは構成性を十分に評価できない可能性が示唆されています。
+
+#### ゼロショット性能 (Zero-Shot Performance)
+
+**ゼロショット性能**は、訓練データに含まれていない未知の入力に対して、エージェントがどのように対応できるかを評価する指標です。[^Brandizzi_2023]  創発コミュニケーションにおいては、エージェントが未知の状況にも対応できる汎用的な言語を学習しているかどうかを判断するのに役立ちます。
+
+* **課題:**  適切な評価データセットを準備することが難しい。また、タスクやドメインに特化した評価になりがちで、言語の汎用的な能力を測ることが難しい。
+
+#### 転移学習 (Ease and Transfer Learning / ETL)
+
+**転移学習 (ETL)** は、創発言語が、異なるタスクを実行する新しいリスナーにどの程度速く、そしてうまく伝達されるかを捉える指標です。[^Chaabouni_et_al_2021] これは、エージェントが学習した言語が、特定のタスクに特化したものではなく、より汎用的なコミュニケーション能力を獲得しているかどうかを評価するのに役立ちます。
+
+* **課題:** 特定のタスクにおける有用性しか評価できないため、言語の汎用性や人間とのコミュニケーションにおける有用性については、さらなる分析が必要となる。
 
 #### ダイエンタングルメント (Disentanglement)
 
@@ -265,7 +256,7 @@ Chaabouni et al. (2020) [^Chaabouni_2020] は、創発言語の構成性を評�
 * **話者数の増加:** 話者数が多いほど、より体系的で構成的な言語が進化する傾向があることが、人間の実験およびシミュレーションによって示されています。[^Raviv_2019a] [^Raviv_2019b] 
 * **環境の複雑さ:**  単純なタスクや環境では、エージェントは構成的でない言語を使ってもタスクを達成できてしまうため、構成性が発現しにくい傾向があります。[^Kottur_2017] より複雑なタスクや環境を設定することで、エージェントは構成的な言語を学習する必要性に迫られ、構成性が発現しやすくなると考えられています。
 
-しかし、Chaabouni et al. (2022) [^Chaabouni_2022] は、大きな母集団が高い汎化性能を持つ頑健なプロトコルを誘因「しない」ことを報告しています。
+しかし、Chaabouni et al. (2021) [^Chaabouni_et_al_2021] は、大きな母集団が高い汎化性能を持つ頑健なプロトコルを誘因「しない」ことを報告しています。
 
 このように、どのような建築的バイアスや環境的圧力が構成性の出現を促すかは、まだ完全には解明されていません。今後の研究によって、これらの要因がどのように相互作用し、構成性の発現に影響を与えるのかを明らかにすることが期待されます。
 
@@ -345,14 +336,19 @@ AIと人間が自然にコミュニケーションをとれるようになるこ
 [^Brandizzi_2023]: N. Brandizzi, “Toward More Human-Like AI Communication: A Review of Emergent Communication Research,” IEEE Access, vol. 11, pp. 142317–142340, 2023, doi: 10.1109/ACCESS.2023.3339656.
 [^Brighton_Kirby_2006]: H. Brighton and S. Kirby, “Understanding Linguistic Evolution by Visualizing the Emergence of Topographic Mappings”.
 [^Chaabouni_et_al_2020]: R. Chaabouni, E. Kharitonov, D. Bouchacourt, E. Dupoux, and M. Baroni, “Compositionality and Generalization In Emergent Languages,” in Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, D. Jurafsky, J. Chai, N. Schluter, and J. Tetreault, Eds., Online: Association for Computational Linguistics, Jul. 2020, pp. 4427–4442. doi: 10.18653/v1/2020.acl-main.407.
-[^Chaabouni_et_al_2024]: R. Chaabouni et al., “Emergent Communication at Scale,” presented at the International Conference on Learning Representations, Oct. 2021. Accessed: Sep. 24, 2024. [Online]. Available: <https://openreview.net/forum?id=AUGBfDIV9rL>
+[^Chaabouni_et_al_2021]: R. Chaabouni et al., “Emergent Communication at Scale,” presented at the International Conference on Learning Representations, Oct. 2021. Accessed: Sep. 24, 2024. [Online]. Available: <https://openreview.net/forum?id=AUGBfDIV9rL>
 [^Das_et_al_2024]: A. Das et al., “TarMAC: Targeted Multi-Agent Communication,” in Proceedings of the 36th International Conference on Machine Learning, PMLR, May 2019, pp. 1538–1546. Accessed: Sep. 26, 2024. [Online]. Available: <https://proceedings.mlr.press/v97/das19a.html>
 [^Foerster_2016]: J. N. Foerster, Y. M. Assael, N. de Freitas, and S. Whiteson, “Learning to Communicate with Deep Multi-Agent Reinforcement Learning,” May 24, 2016, arXiv: arXiv:1605.06676. doi: 10.48550/arXiv.1605.06676.
+[^Graesser_et_al_2020]: L. Graesser, K. Cho, and D. Kiela, “Emergent Linguistic Phenomena in Multi-Agent Communication Games,” Feb. 28, 2020, arXiv: arXiv:1901.08706. Accessed: Oct. 01, 2024. [Online]. Available: <http://arxiv.org/abs/1901.08706>
+[^Jaques_et_al_2018]: N. Jaques et al., “Intrinsic Social Motivation via Causal Influence in Multi-Agent RL,” Sep. 2018, Accessed: Oct. 01, 2024. [Online]. Available: <https://openreview.net/forum?id=B1lG42C9Km>
 [^Lazaridou_et_al_2017]: A. Lazaridou, A. Peysakhovich, and M. Baroni, “Multi-Agent Cooperation and the Emergence of (Natural) Language,” arXiv.org. Accessed: Sep. 11, 2024. [Online]. Available: <https://arxiv.org/abs/1612.07182v2>
 [^Lazaridou_Baroni_2020]: A. Lazaridou and M. Baroni, “Emergent Multi-Agent Communication in the Deep Learning Era,” Jul. 14, 2020, arXiv: arXiv:2006.02419. Accessed: Sep. 19, 2024. [Online]. Available: <http://arxiv.org/abs/2006.02419>
+[^Lowe_et_al_2019] R. Lowe, J. Foerster, Y.-L. Boureau, J. Pineau, and Y. Dauphin, “On the Pitfalls of Measuring Emergent Communication,” arXiv.org. Accessed: Oct. 01, 2024. [Online]. Available: <https://arxiv.org/abs/1903.05168v1>
 [^Liang_et_al_2020]: P. P. Liang, J. Chen, R. Salakhutdinov, L.-P. Morency, and S. Kottur, “On Emergent Communication in Competitive Multi-Agent Teams,” Jul. 16, 2020, arXiv: arXiv:2003.01848. doi: 10.48550/arXiv.2003.01848.
 [^Lu_et_al_2020]: Y. Lu, S. Singhal, F. Strub, A. Courville, and O. Pietquin, “Countering Language Drift with Seeded Iterated Learning,” in Proceedings of the 37th International Conference on Machine Learning, PMLR, Nov. 2020, pp. 6437–6447. Accessed: Sep. 26, 2024. [Online]. Available: https://proceedings.mlr.press/v119/lu20c.html
 [^Yuan_et_al_2021]: L. Yuan, Z. Fu, J. Shen, L. Xu, J. Shen, and S.-C. Zhu, “Emergence of Pragmatics from Referential Game between Theory of Mind Agents,” Sep. 30, 2021, arXiv: arXiv:2001.07752. doi: 10.48550/arXiv.2001.07752.
+
+
 
 [^Okanohara_2020]: Okanohara D., “《日経Robotics》AIトップ国際会議では何が起きているか,” 日経Robotics（日経ロボティクス）. Accessed: Sep. 24, 2024. [Online]. Available: <https://xtech.nikkei.com/atcl/nxt/mag/rob/18/00007/00022/>
 [^Ueda_et_al_2023]: R. Ueda et al., “言語とコミュニケーションの創発に関する構成論的研究の展開,” Jun. 07, 2023, OSF. doi: 10.31234/osf.io/rz5ng.
