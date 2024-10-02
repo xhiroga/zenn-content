@@ -136,6 +136,8 @@ Yuan et al. (2021)[^Yuan_et_al_2021]の実験では、参照ゲームの入力�
 
 <!-- https://claude.ai/chat/d7a065b3-faa9-4a2c-80eb-23c0e5fa12ff -->
 
+さらに一歩進んで、創発コミュニケーションを1つの表現学習と見なした上で、シグナリングゲームを変分推論として捉えた研究もあります。[^Ueda_Taniguchi_2023]
+
 エージェントの言語を人間の言語に似せることを目的として、教師あり学習による事前学習が用いられることもあります。
 
 ### エージェント間の関係
@@ -159,7 +161,6 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
    2. 一般化と構成性の評価
    3. 一般化と構成性の分析
 2. 自然言語を組み込んだ創発コミュニケーション
-3. 数学的な解釈
 
 <!-- https://aistudio.google.com/app/prompts/1B07r2OCU-duu9Py64sqTPmFHNRKTQyd6 -->
 
@@ -281,10 +282,6 @@ AIエージェントが創発する言語を分析することで、私たちは
 <!-- https://claude.ai/chat/f532a165-ad61-47ad-b628-bf1c4e7440d8 -->
 <!-- Lu et al. (2020) https://claude.ai/chat/aacd8dae-b571-496f-add1-b262f88cf3a4 -->
 
-### 数理
-
-<!-- [1] “指示ゲームの生成モデル的な再解釈”. -->
-
 ## まとめ
 
 <!-- TODO -->
@@ -303,9 +300,7 @@ AIエージェントが創発する言語を分析することで、私たちは
 [^Lowe_et_al_2019] R. Lowe, J. Foerster, Y.-L. Boureau, J. Pineau, and Y. Dauphin, “On the Pitfalls of Measuring Emergent Communication,” arXiv.org. Accessed: Oct. 01, 2024. [Online]. Available: <https://arxiv.org/abs/1903.05168v1>
 [^Liang_et_al_2020]: P. P. Liang, J. Chen, R. Salakhutdinov, L.-P. Morency, and S. Kottur, “On Emergent Communication in Competitive Multi-Agent Teams,” Jul. 16, 2020, arXiv: arXiv:2003.01848. doi: 10.48550/arXiv.2003.01848.
 [^Lu_et_al_2020]: Y. Lu, S. Singhal, F. Strub, A. Courville, and O. Pietquin, “Countering Language Drift with Seeded Iterated Learning,” in Proceedings of the 37th International Conference on Machine Learning, PMLR, Nov. 2020, pp. 6437–6447. Accessed: Sep. 26, 2024. [Online]. Available: https://proceedings.mlr.press/v119/lu20c.html
-[^Yuan_et_al_2021]: L. Yuan, Z. Fu, J. Shen, L. Xu, J. Shen, and S.-C. Zhu, “Emergence of Pragmatics from Referential Game between Theory of Mind Agents,” Sep. 30, 2021, arXiv: arXiv:2001.07752. doi: 10.48550/arXiv.2001.07752.
-
-
-
 [^Okanohara_2020]: Okanohara D., “《日経Robotics》AIトップ国際会議では何が起きているか,” 日経Robotics（日経ロボティクス）. Accessed: Sep. 24, 2024. [Online]. Available: <https://xtech.nikkei.com/atcl/nxt/mag/rob/18/00007/00022/>
+[^Yuan_et_al_2021]: L. Yuan, Z. Fu, J. Shen, L. Xu, J. Shen, and S.-C. Zhu, “Emergence of Pragmatics from Referential Game between Theory of Mind Agents,” Sep. 30, 2021, arXiv: arXiv:2001.07752. doi: 10.48550/arXiv.2001.07752.
+[^Ueda_Taniguchi_2023]: R. Ueda and T. Taniguchi, “Lewis’s Signaling Game as beta-VAE For Natural Word Lengths and Segments,” presented at the The Twelfth International Conference on Learning Representations, Oct. 2023. Accessed: Oct. 02, 2024. [Online]. Available: https://openreview.net/forum?id=HC0msxE3sf
 [^Ueda_et_al_2023]: R. Ueda et al., “言語とコミュニケーションの創発に関する構成論的研究の展開,” Jun. 07, 2023, OSF. doi: 10.31234/osf.io/rz5ng.
