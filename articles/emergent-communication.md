@@ -10,22 +10,27 @@ published: false
 # 2. 文体が統一されているか
 # 3. 引用方法が統一されているか
 # 4. 複数行のコメントアウトをしていないこと（zenn.devが対応していない）
-# 5. 可能なら漢語ではなく和語を用いること（例: ✗測定する ◯測る）
-# 6. 長文は分割すること
+# 5. 太字は最後の*の後にスペースまたは引用が含まれること (zenn.devのパースのため)
+# 6. 可能なら漢語ではなく和語を用いること（例: ✗測定する ◯測る）
+# 7. 長文は分割すること
+# 8. 論文や公式ドキュメントでは明示されていないことを、誤って断言していないか
 ---
 
 ## この記事は？
 
 2人以上のプレイヤーが、道案内のようなゲームに協力して取り組むとき、プレイヤー間で考えていることを伝えるために新たな意味を持った記号が生まれます。こうしたコミュニケーションを創発コミュニケーションと呼びます。創発コミュニケーションに関する論文を読んでまとめました。
 
-> [!CAUTION]
-> 筆者 ([@xhiroga](https://zenn.dev/hiroga/))はこの分野の専門家ではありません。論文の解釈は誤っている可能性があるため、ご了承ください。
+:::message
+筆者 ([@xhiroga](https://zenn.dev/hiroga/))はこの分野の専門家ではありません。論文の解釈は誤っている可能性があるため、ご了承ください。
+:::
 
 ## TL;DR
 
-1. 
-2. 
-
+1. 創発コミュニケーションの研究では、参照ゲームや指示ゲームなどを複数エージェントによる強化学習で解くことで、タスクの成功率や創発される記号・言語の特徴を評価・分析している
+2. 創発された記号・言語の一般化の度合いは、訓練に含まれない新たなデータセット・タスクへの適応度合いで測る
+3. 創発された記号・言語の構成性（自然言語のように、文の意味が単語の意味とその組み合わせ方からなる性質）は、主にその記号・言語の分布で測るが、実験の規模を問わず普遍的に使えるような指標はまだ無い
+4. 構成性を引き上げるためにはタスクやデータセットの複雑さ、複数のエージェント間の学習を上手く設計することが貢献すると考えられているが、測定方法が確立していないために予想に留まっている
+5. 自然言語を事前学習したエージェントがタスクを実行することで言語が自然言語から離れていくこと（言語ドリフト）が知られている。これを抑制する方法は提案されている一方で、言語の進化として肯定的に評価するためには、やはり構成性の指標が不十分と思われる
 
 ## 動機
 
@@ -33,13 +38,13 @@ published: false
 
 そこで、もし「複数のエージェントが、自ら絵を描いて道案内をする中で、絵の訓練をする」ようなタスクを通して、ゼロからイラストを学習させることが可能かが気になりました。
 
-調べると、この分野は創発コミュニケーション (EmCom, Emergent Communication)と呼ばれているようです。主に記号や言語を対象として研究が進んでいるほか、イラストを描く研究もあるようです。そこで、どのような実験や課題があるかをまとめました。
+調べると、この分野は創発コミュニケーション (EmCom, Emergent Communication)と呼ばれているようです。主に記号や言語を対象として研究が進んでいるほか、イラストを描く研究もあるようです。そこで、この記事ではイラストを含まない創発コミュニケーションに限って、どのような実験や課題があるかをまとめました。
 
 ## 対象の論文
 
 主に Brandizzi (2023)[^Brandizzi_2023] と Lazaridou & Baroni (2020)[^Lazaridou_Baroni_2020] を読みました。Brandizzi (2023)を選んだのは、書かれたのが最近であること、私にとって構成が分かりやすかったことが理由です。また、Lazaridou & Baroni (2020) を選んだのは、この分野で先駆的な実験であるLazaridou et al. (2017)[^Lazaridou_et_al_2017]の著者によって書かれていることが理由です。
 
-ほか、Boldt & Mortensen (2024)[^Boldt_Mortensen_2024]とUeda et al.(2024)[^Ueda_et_al_2023]を参照しました。前者は特に日本で盛んな「記号創発ロボティクス」をEmComの文脈で紹介していたことが、後者は構成性（compositionality, 複雑な意味が、その要素の意味＋組み合わせのルールから生まれるような性質）に関する研究を俯瞰的に紹介していたことが理由です。
+ほか、Boldt & Mortensen (2024)[^Boldt_Mortensen_2024]とUeda et al.(2024)[^Ueda_et_al_2023]を参照しました。前者は特に日本で盛んな「記号創発ロボティクス」をEmComの文脈で紹介していたことが、後者は構成性（compositionality）に関する研究を俯瞰的に紹介していたことが理由です。
 
 その他に参照した論文については、都度紹介します。
 
@@ -166,7 +171,7 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 **相互理解可能性 (Mutual Intelligibility)**[^Graesser_et_al_2020]は、エージェントが自分自身とコミュニケーションができるかどうかを測る指標です。実験では単純な参照ゲームを行います。ただし、送信者と受信者のネットワークは、実際に送信・受信に関わる部分を除いて共通の設計になっています。これによって訓練した送信者自身を受信者として使えます。そのような場合でもタスクが成功するなら、意味を持った言語が出現していると言えそうです。
 <!-- https://claude.ai/chat/100c90b3-d33a-454c-870b-a970c8912adc -->
 
-**話者一貫性 (Speaker Consistency)**は、エージェントが特定の行動をとる際に、どの程度一貫して同じメッセージを発信するかを測定します。[^Jaques_et_al_2018]例えば、「右に移動」という行動をとる際に、常に "move right" というメッセージを発信するエージェントは、話し手の一貫性が高いと言えます。
+**話者一貫性 (Speaker Consistency)** は、エージェントが特定の行動をとる際に、どの程度一貫して同じメッセージを発信するかを測定します。[^Jaques_et_al_2018]例えば、「右に移動」という行動をとる際に、常に "move right" というメッセージを発信するエージェントは、話し手の一貫性が高いと言えます。
 
 また、メッセージと行動の関係性を直接測定することも考えられます。Casual Inference of Communication[^Lowe_et_al_2019]では、メッセージとその後の行動の相互情報量を求め、その値が高いほどメッセージが行動に影響を及ぼしていると考えます。
 <!-- https://claude.ai/chat/6301eaa9-2b8b-49e5-8bc5-af6961d3a693 -->
@@ -175,7 +180,7 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 創発言語がコミュニケーションを可能にしている場合でも、訓練データやタスクに対して過学習してしまっては、自然言語から離れてしまうと考えられます。創発言語を一般化するための指標がいくつか提案されています。
 
-**ゼロショット性能 (Zero-Shot Performance)**は、訓練データに含まれていない未知の入力に対して、エージェントがどのように対応できるかを評価する指標です。創発コミュニケーションにおいては、エージェントが未知の状況にも対応できる汎用的な言語を学習しているかどうかを判断するのに役立ちます。ただし、適切な評価データセットを用意することが難しいと考えられます。
+**ゼロショット性能 (Zero-Shot Performance)** は、訓練データに含まれていない未知の入力に対して、エージェントがどのように対応できるかを評価する指標です。創発コミュニケーションにおいては、エージェントが未知の状況にも対応できる汎用的な言語を学習しているかどうかを判断するのに役立ちます。ただし、適切な評価データセットを用意することが難しいと考えられます。
 
 **転移学習 (ETL, Ease and transfer learning)** は、創発言語が、異なるタスクを実行する新しい受信者にどの程度速く、そしてうまく伝達されるかを捉える指標です。[^Chaabouni_et_al_2021]はじめに、何らかのタスクを用いて創発言語を求め、その言語を固定します。次に異なるタスクと新たな受信者を用意し、タスクの正解率が特定の閾値を超えるまでのステップ数や、逆に特定のステップ数時点でどれだけの正解率が出るかを測定します。個別のタスクに依存しない能力を測ると言えますが、自然言語ほどの汎用性を求められているとは言えないかもしれません。
 <!-- https://claude.ai/chat/480c664a-6c5d-421c-82a3-f4678266dfe1 -->
@@ -186,7 +191,7 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 **構成性 (Compositionality)** は、複雑な意味が、その構成要素の意味とそれらを組み合わせる規則によって決定されるという性質です。自然言語では、単語の意味と文法規則から文の意味を理解できることが構成性の例として挙げられます。
 
-創発言語の構成性を評価する方法の多くは、その分布に注目しています。例えば、自然言語において単語の出現頻度とその順位の間に反比例の関係がある、という**ジップの法則 (Zipf's law)**への適合度を測る方法があります。ジップの法則では、出現頻度が$k$番目の単語の頻度は、1位の頻度の$1/k$倍になるとされています。
+創発言語の構成性を評価する方法の多くは、その分布に注目しています。例えば、自然言語において単語の出現頻度とその順位の間に反比例の関係がある、という**ジップの法則 (Zipf's law)** への適合度を測る方法があります。ジップの法則では、出現頻度が$k$番目の単語の頻度は、1位の頻度の$1/k$倍になるとされています。
 
 言語だけでなく、意味の分布と似ている度合いを評価する方法として**トポグラフィック類似性 (TopSim, Topographic Similarity)**[^Brighton_Kirby_2006]が挙げられます。例えば、意味空間では「犬」と「猫」、「自動車」と「飛行機」は他の意味に比べて近くにあるはずです。このとき、創発言語が構成的なら、単語同士の距離も近くなるはずです。
 
@@ -246,8 +251,6 @@ Brandizzi (2023) [^Brandizzi_2023] は、言語ドリフトを以下の3つの�
 自己教師あり学習によって訓練された大規模言語モデルが、近年目覚ましい成果を上げています。この流れを踏まえると、自然言語を組み込んだ創発コミュニケーションの研究は、単に人間とコミュニケーションできるAIを作るという目標だけでなく、**言語進化のメカニズムを解明するためのツール** として、より重要な役割を担っていく可能性があります。
 
 AIエージェントが創発する言語を分析することで、私たちは人間の言語の起源や進化、そして言語が思考に与える影響について、より深い理解を得ることができるかもしれません。
-
-<!-- https://claude.ai/chat/f532a165-ad61-47ad-b628-bf1c4e7440d8 -->
 <!-- Lu et al. (2020) https://claude.ai/chat/aacd8dae-b571-496f-add1-b262f88cf3a4 -->
 
 ## まとめ
@@ -265,7 +268,7 @@ AIエージェントが創発する言語を分析することで、私たちは
 [^Jaques_et_al_2018]: N. Jaques et al., “Intrinsic Social Motivation via Causal Influence in Multi-Agent RL,” Sep. 2018, Accessed: Oct. 01, 2024. [Online]. Available: <https://openreview.net/forum?id=B1lG42C9Km>
 [^Lazaridou_et_al_2017]: A. Lazaridou, A. Peysakhovich, and M. Baroni, “Multi-Agent Cooperation and the Emergence of (Natural) Language,” arXiv.org. Accessed: Sep. 11, 2024. [Online]. Available: <https://arxiv.org/abs/1612.07182v2>
 [^Lazaridou_Baroni_2020]: A. Lazaridou and M. Baroni, “Emergent Multi-Agent Communication in the Deep Learning Era,” Jul. 14, 2020, arXiv: arXiv:2006.02419. Accessed: Sep. 19, 2024. [Online]. Available: <http://arxiv.org/abs/2006.02419>
-[^Lowe_et_al_2019] R. Lowe, J. Foerster, Y.-L. Boureau, J. Pineau, and Y. Dauphin, “On the Pitfalls of Measuring Emergent Communication,” arXiv.org. Accessed: Oct. 01, 2024. [Online]. Available: <https://arxiv.org/abs/1903.05168v1>
+[^Lowe_et_al_2019]: R. Lowe, J. Foerster, Y.-L. Boureau, J. Pineau, and Y. Dauphin, “On the Pitfalls of Measuring Emergent Communication,” arXiv.org. Accessed: Oct. 01, 2024. [Online]. Available: <https://arxiv.org/abs/1903.05168v1>
 [^Liang_et_al_2020]: P. P. Liang, J. Chen, R. Salakhutdinov, L.-P. Morency, and S. Kottur, “On Emergent Communication in Competitive Multi-Agent Teams,” Jul. 16, 2020, arXiv: arXiv:2003.01848. doi: 10.48550/arXiv.2003.01848.
 [^Lu_et_al_2020]: Y. Lu, S. Singhal, F. Strub, A. Courville, and O. Pietquin, “Countering Language Drift with Seeded Iterated Learning,” in Proceedings of the 37th International Conference on Machine Learning, PMLR, Nov. 2020, pp. 6437–6447. Accessed: Sep. 26, 2024. [Online]. Available: <https://proceedings.mlr.press/v119/lu20c.html>
 [^Okanohara_2020]: Okanohara D., “《日経Robotics》AIトップ国際会議では何が起きているか,” 日経Robotics（日経ロボティクス）. Accessed: Sep. 24, 2024. [Online]. Available: <https://xtech.nikkei.com/atcl/nxt/mag/rob/18/00007/00022/>
