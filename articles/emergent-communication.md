@@ -101,12 +101,14 @@ published: false
 実験では、送信者が2枚の画像から1枚を選び、受信者に1つの記号(10または100の語彙から選ばれた1語)を送信します。受信者にはシャッフルされた2枚の画像と送信された記号が提示されるので、どちらの画像を指しているかを当てるタスクを行います。
 <!-- https://claude.ai/chat/eb5f6938-d36d-42f3-af66-0f22a493cca6 -->
 
+![Lazaridou et al. (2017) による参照ゲームのアーキテクチャ](https://ar5iv.labs.arxiv.org/html/1612.07182/assets/x1.png)
+
 #### コミュニケーションを補助として用いるゲーム
 
 コミュニケーションを補助的な手段として用いることで、道案内や交渉などを成功させる種類のゲームがあります。参照ゲームではないシグナリングゲームの一種で、 **指示ゲーム** と呼ばれることがあります。
 <!-- Ueda et al. (2023) などに登場する「指示ゲーム」の英語表現を見つけることができなかった。 -->
 
-例えば、Das et al. (2019)[^Das_et_al_2024]の研究では、エージェントが協力して3D環境内で道案内などを実施します。他には交渉ゲーム、社会的役割を演じるゲームなどがあります。
+例えば、Das et al. (2019)[^Das_et_al_2019]の研究では、エージェントが協力して3D環境内で道案内などを実施します。他には交渉ゲーム、社会的役割を演じるゲームなどがあります。
 <!-- https://claude.ai/chat/0ab5ff3c-e112-4539-a30c-3202629c12b6 -->
 
 ゲームの違いと生じた創発コミュニケーションの質の違いの関係については、[一般化と構成性の分析](#一般化と構成性の分析)で改めて触れます。
@@ -171,7 +173,7 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 **話者一貫性 (Speaker Consistency)** は、エージェントが特定の行動をとる際に、どの程度一貫して同じメッセージを発信するかを測定します。[^Jaques_et_al_2018]例えば、「右に移動」という行動をとる際に、常に "move right" というメッセージを発信するエージェントは、話し手の一貫性が高いと言えます。
 
-また、メッセージと行動の関係性を直接測定することも考えられます。Casual Inference of Communication[^Lowe_et_al_2019]では、メッセージとその後の行動の相互情報量を求め、その値が高いほどメッセージが行動に影響を及ぼしていると考えます。
+また、メッセージと行動の関係性を直接測ることも考えられます。Casual Inference of Communication[^Lowe_et_al_2019]では、メッセージとその後の行動の相互情報量を求め、その値が高いほどメッセージが行動に影響を及ぼしていると考えます。
 <!-- https://claude.ai/chat/6301eaa9-2b8b-49e5-8bc5-af6961d3a693 -->
 
 #### 一般化と構成性の評価
@@ -180,11 +182,10 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 **ゼロショット性能 (Zero-Shot Performance)** は、訓練データに含まれていない未知の入力に対して、エージェントがどのように対応できるかを評価する指標です。創発コミュニケーションにおいては、エージェントが未知の状況にも対応できる汎用的な言語を学習しているかどうかを判断するのに役立ちます。ただし、適切な評価データセットを用意することが難しいと考えられます。
 
-**転移学習 (ETL, Ease and transfer learning)** は、創発言語が、異なるタスクを実行する新しい受信者にどの程度速く、そしてうまく伝達されるかを捉える指標です。[^Chaabouni_et_al_2021]はじめに、何らかのタスクを用いて創発言語を求め、その言語を固定します。次に異なるタスクと新たな受信者を用意し、タスクの正解率が特定の閾値を超えるまでのステップ数や、逆に特定のステップ数時点でどれだけの正解率が出るかを測定します。個別のタスクに依存しない能力を測ると言えますが、自然言語ほどの汎用性を求められているとは言えないかもしれません。
+**転移学習 (ETL, Ease and transfer learning)** は、創発言語が、異なるタスクを実行する新しい受信者にどの程度速く、そしてうまく伝達されるかを捉える指標です。[^Chaabouni_et_al_2021]はじめに、何らかのタスクを用いて創発言語を求め、その言語を固定します。次に異なるタスクと新たな受信者を用意し、タスクの正解率が特定の閾値を超えるまでのステップ数や、逆に特定のステップ数時点でどれだけの正解率が出るかを測ります。個別のタスクに依存しない能力を測ると言えますが、自然言語ほどの汎用性を求められているとは言えないかもしれません。
 <!-- https://claude.ai/chat/480c664a-6c5d-421c-82a3-f4678266dfe1 -->
 
 ただし、創発言語が一般化されているからといって、構成性を持つとは言えません。実際に、構成性を持たない言語が訓練時に含まれなかった属性についてのコミュニケーションを高い精度で成功させている実験があります。[^Chaabouni_et_al_2020]
-
 <!-- Lazaridou & Baroni (2020): 3.2 Compositionality, Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> A. MACHINE-CENTERED EMCOM -> 2) HUNT FOR GENERALIZATION -->
 
 **構成性 (Compositionality)** は、複雑な意味が、その構成要素の意味とそれらを組み合わせる規則によって決定されるという性質です。自然言語では、単語の意味と文法規則から文の意味を理解できることが構成性の例として挙げられます。
@@ -231,6 +232,8 @@ Chaabouni et al. (2021)[^Chaabouni_et_al_2021]は、データセットの規模�
 
 創発コミュニケーションの実験において、エージェントが言語の代わりにイラストを描くものとしてはFernando (2020)が挙げられます。Mihai & Hare (2021)[^Mihai_Hare_2021]では、微分可能なスケッチのレンダリングとテクスチャ・形状バイアスを用いてイラストのフィードバックを与えることで、人間が解釈できるイラストの生成に成功しました。
 
+![Mihai & Hare (2021)によるバイアスを加えてイラストの解釈可能性を引き上げた例](https://ar5iv.labs.arxiv.org/html/2106.02067/assets/images/texture-shape-bias/sketches_imnet_highres2.png)
+
 また、Qiu et al. (2022)[^Qiu_et_al_2022]は、エージェントが描いたイラストのIconic性 (写実的な度合い), Symbolic性 (特定の概念を表すときに同じイラストが用いられる一貫性), Semantic性 (近い概念のイラストが似通っている度合い)を評価する指標を提案しました。このように、イラストによる創発コミュニケーションの分野は始まったばかりであり、イラストの解釈しやすさの向上など未解決の課題が多くあるようです。
 
 ## まとめ
@@ -242,7 +245,7 @@ Chaabouni et al. (2021)[^Chaabouni_et_al_2021]は、データセットの規模�
 [^Brighton_Kirby_2006]: H. Brighton and S. Kirby, “Understanding Linguistic Evolution by Visualizing the Emergence of Topographic Mappings”.
 [^Chaabouni_et_al_2020]: R. Chaabouni, E. Kharitonov, D. Bouchacourt, E. Dupoux, and M. Baroni, “Compositionality and Generalization In Emergent Languages,” in Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, D. Jurafsky, J. Chai, N. Schluter, and J. Tetreault, Eds., Online: Association for Computational Linguistics, Jul. 2020, pp. 4427–4442. doi: 10.18653/v1/2020.acl-main.407.
 [^Chaabouni_et_al_2021]: R. Chaabouni et al., “Emergent Communication at Scale,” presented at the International Conference on Learning Representations, Oct. 2021. Accessed: Sep. 24, 2024. [Online]. Available: <https://openreview.net/forum?id=AUGBfDIV9rL>
-[^Das_et_al_2024]: A. Das et al., “TarMAC: Targeted Multi-Agent Communication,” in Proceedings of the 36th International Conference on Machine Learning, PMLR, May 2019, pp. 1538–1546. Accessed: Sep. 26, 2024. [Online]. Available: <https://proceedings.mlr.press/v97/das19a.html>
+[^Das_et_al_2019]: A. Das et al., “TarMAC: Targeted Multi-Agent Communication,” in Proceedings of the 36th International Conference on Machine Learning, PMLR, May 2019, pp. 1538–1546. Accessed: Sep. 26, 2024. [Online]. Available: <https://proceedings.mlr.press/v97/das19a.html>
 [^Foerster_2016]: J. N. Foerster, Y. M. Assael, N. de Freitas, and S. Whiteson, “Learning to Communicate with Deep Multi-Agent Reinforcement Learning,” May 24, 2016, arXiv: arXiv:1605.06676. doi: 10.48550/arXiv.1605.06676.
 [^Graesser_et_al_2020]: L. Graesser, K. Cho, and D. Kiela, “Emergent Linguistic Phenomena in Multi-Agent Communication Games,” Feb. 28, 2020, arXiv: arXiv:1901.08706. Accessed: Oct. 01, 2024. [Online]. Available: <http://arxiv.org/abs/1901.08706>
 [^Jaques_et_al_2018]: N. Jaques et al., “Intrinsic Social Motivation via Causal Influence in Multi-Agent RL,” Sep. 2018, Accessed: Oct. 01, 2024. [Online]. Available: <https://openreview.net/forum?id=B1lG42C9Km>
@@ -252,7 +255,7 @@ Chaabouni et al. (2021)[^Chaabouni_et_al_2021]は、データセットの規模�
 [^Lowe_et_al_2019]: R. Lowe, J. Foerster, Y.-L. Boureau, J. Pineau, and Y. Dauphin, “On the Pitfalls of Measuring Emergent Communication,” arXiv.org. Accessed: Oct. 01, 2024. [Online]. Available: <https://arxiv.org/abs/1903.05168v1>
 [^Liang_et_al_2020]: P. P. Liang, J. Chen, R. Salakhutdinov, L.-P. Morency, and S. Kottur, “On Emergent Communication in Competitive Multi-Agent Teams,” Jul. 16, 2020, arXiv: arXiv:2003.01848. doi: 10.48550/arXiv.2003.01848.
 [^Lu_et_al_2020]: Y. Lu, S. Singhal, F. Strub, A. Courville, and O. Pietquin, “Countering Language Drift with Seeded Iterated Learning,” in Proceedings of the 37th International Conference on Machine Learning, PMLR, Nov. 2020, pp. 6437–6447. Accessed: Sep. 26, 2024. [Online]. Available: <https://proceedings.mlr.press/v119/lu20c.html>
-[^Mihai_Hare_2021]: D. Mihai and J. Hare, “Learning to Draw: Emergent Communication through Sketching,” in Advances in Neural Information Processing Systems, Curran Associates, Inc., 2021, pp. 7153–7166. Accessed: Sep. 30, 2024. [Online]. Available: <https://proceedings.neurips.cc/paper_files/paper/2021/hash/>39d0a8908fbe6c18039ea8227f827023-Abstract.html
+[^Mihai_Hare_2021]: D. Mihai and J. Hare, “Learning to Draw: Emergent Communication through Sketching,” in Advances in Neural Information Processing Systems, Curran Associates, Inc., 2021, pp. 7153–7166. Accessed: Sep. 30, 2024. [Online]. Available: <https://proceedings.neurips.cc/paper_files/paper/2021/hash/39d0a8908fbe6c18039ea8227f827023-Abstract.html/>
 [^Mihai_2022]: A. D. Mihai, “Emergent visual communication,” phd, University of Southampton, 2022. Accessed: Oct. 01, 2024. [Online]. Available: <https://eprints.soton.ac.uk/469905/>
 [^Okanohara_2020]: Okanohara D., “《日経Robotics》AIトップ国際会議では何が起きているか,” 日経Robotics（日経ロボティクス）. Accessed: Sep. 24, 2024. [Online]. Available: <https://xtech.nikkei.com/atcl/nxt/mag/rob/18/00007/00022/>
 [^Qiu_et_al_2022]: S. Qiu et al., “Emergent Graphical Conventions in a Visual Communication Game,” arXiv.org. Accessed: Oct. 01, 2024. [Online]. Available: <https://arxiv.org/abs/2111.14210v4>
@@ -260,9 +263,6 @@ Chaabouni et al. (2021)[^Chaabouni_et_al_2021]は、データセットの規模�
 [^Ueda_Taniguchi_2023]: R. Ueda and T. Taniguchi, “Lewis’s Signaling Game as beta-VAE For Natural Word Lengths and Segments,” presented at the The Twelfth International Conference on Learning Representations, Oct. 2023. Accessed: Oct. 02, 2024. [Online]. Available: <https://openreview.net/forum?id=HC0msxE3sf>
 [^Ueda_et_al_2023]: R. Ueda et al., “言語とコミュニケーションの創発に関する構成論的研究の展開,” Jun. 07, 2023, OSF. doi: 10.31234/osf.io/rz5ng.
 
-
 <!-- 機械どうしのコミュニケーションについては、既に取り上げた内容と被るので省略する。 -->
 <!-- Lazaridou & Baroni (2020): 4.1 Communication Facilitating Inter-Agent Coordination, 4.2 Beyond Cooperation: Self-interested and Competing Agents -->
 <!-- Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> A. MACHINE-CENTERED EMCOM -->
-
-
