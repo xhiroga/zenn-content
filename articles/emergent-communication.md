@@ -14,15 +14,18 @@ published: false
 # 6. 長文は分割すること
 ---
 
-
-
 ## この記事は？
 
-2人以上のプレイヤーが、道案内のようなゲームに協力して取り組むとき、プレイヤー間で考えていることを伝えるために新たな意味を持った記号が生まれます。こうしたコミュニケーションを創発コミュニケーションと呼びます。創発コミュニケーションに関するサーベイを読んでまとめました。
+2人以上のプレイヤーが、道案内のようなゲームに協力して取り組むとき、プレイヤー間で考えていることを伝えるために新たな意味を持った記号が生まれます。こうしたコミュニケーションを創発コミュニケーションと呼びます。創発コミュニケーションに関する論文を読んでまとめました。
+
+> [!CAUTION]
+> 筆者 ([@xhiroga](https://zenn.dev/hiroga/))はこの分野の専門家ではありません。論文の解釈は誤っている可能性があるため、ご了承ください。
 
 ## TL;DR
 
-<!-- TODO -->
+1. 
+2. 
+
 
 ## 動機
 
@@ -50,10 +53,9 @@ published: false
 - ICML: 機械学習のアルゴリズムや理論に重点を置いている
 
 ## 代表的な実験
-
 <!-- Brandizzi (2023): II. COMMON PROPRIETIES, Boldt & Mortensen (2024): 1.2 Scope -->
 
-初めに、創発コミュニケーションの代表的な実験を紹介します。次の特徴が共通しています。
+初めに、創発コミュニケーションの代表的な実験を紹介します。次のような特徴があります。
 
 - 強化学習を用いることが多い
 - 複数のエージェントが記号などを送信し合う
@@ -78,7 +80,6 @@ published: false
 その他、メッセージの長さ、単一ターンか複数ターンか、エージェントの数、など様々な違いがあります。
 
 ### ゲームの種類
-
 <!-- https://ja.wikipedia.org/wiki/シグナリングゲーム, 本来は Lewis, D. (1969) を引用すべきだが、時間があるときにする。 -->
 
 創発コミュニケーションの実験で用いられる、次のようなゲームを**シグナリングゲーム(signaling game)**と言います。
@@ -102,16 +103,14 @@ published: false
 コミュニケーションを補助的な手段として用いることで、道案内や交渉などを成功させる種類のゲームがあります。参照ゲームではないシグナリングゲームの一種で、**指示ゲーム**と呼ばれることがあります。
 <!-- Ueda et al. (2023) などに登場する「指示ゲーム」の英語表現を見つけることができなかった。 -->
 
-例えば、Das et al. (2019)[^Das_et_al_2024]の研究では、エージェントが協力して3D環境内で道案内などを実施します。研究では、中央集権的なアーキテクチャなどに比べても優れたパフォーマンスを示すことが報告されています。
+例えば、Das et al. (2019)[^Das_et_al_2024]の研究では、エージェントが協力して3D環境内で道案内などを実施します。他には交渉ゲーム、社会的役割を演じるゲームなどがあります。
 <!-- https://claude.ai/chat/0ab5ff3c-e112-4539-a30c-3202629c12b6 -->
 
-もっとも、創発言語の構成性や人間の言語との類似性を発現させるにあたって、参照ゲームよりも指示ゲームのような複雑なゲームの方が効果的といった報告は見つけられませんでした。指示ゲームについてはより研究が必要な状況のようです。
-<!-- https://claude.ai/chat/08e448a1-e8d8-4624-9a0b-136b9cea62a5 -->
+ゲームの違いと生じた創発コミュニケーションの質の違いの関係については、[一般化と構成性の分析](#一般化と構成性の分析)で改めて触れます。
 
 ### 入力表現
 
 創発コミュニケーションのためのシグナリングゲームにおいて、様々な入力表現が用いられます。単なる数字のセット、Bag of Featureとして特徴を抽出したセット、画像、3Dオブジェクトなどです。
-
 <!-- https://claude.ai/chat/75748675-15c9-47c0-a791-1c533818624a -->
 
 Yuan et al. (2021)[^Yuan_et_al_2021]の実験では、参照ゲームの入力表現として単なる数字のセットと3Dオブジェクトを比較しています。実験の結果、3Dオブジェクトを用いた方が学習の収束が早いことが分かっています。入力表現が色や形などの構造化された情報を持つことが、学習の収束につながったと考えられています。
@@ -123,7 +122,7 @@ Yuan et al. (2021)[^Yuan_et_al_2021]の実験では、参照ゲームの入力�
 創発コミュニケーションでは主に強化学習が用いられます。アルゴリズムとしてはREINFORCEが用いられるほか、学習を効率化する目的でGumbel Softmaxなどが用いられます。[^Brandizzi_2023]
 <!-- Havrylov & Titov (2017) https://chatgpt.com/c/66f53b2c-3680-8010-84de-fcdcd5e7557f, Brandizzi (2023) https://claude.ai/chat/74c875b5-af8e-4bb9-a25a-6778dd92f7e4 -->
 
-エージェント間の通信を微分可能にする試みとしては、他にDIAL（Differentiable Inter-Agent Learning, 微分可能エージェント間学習）[^Foerster_2016]があります。
+エージェント間の通信を微分可能にする試みとしては、Gumbel Softmaxの他にDIAL（Differentiable Inter-Agent Learning, 微分可能エージェント間学習）[^Foerster_2016]があります。
 
 人間の言語が離散的であるのに対して、DIALでは訓練時に連続的なベクトルを渡すことができます。大雑把に言えば、訓練時は「66.6%の確率で数字の8」というやり取りをするのに対して、実行時は「おそらく数字の8」という伝え方をするようなものです。
 実験では、訓練時に連続的なベクトルを渡すことは学習を促進するものの、連続的なべクトルに適切なノイズを加えることが離散的な値への移行を促すことが報告されています。
@@ -135,14 +134,14 @@ Yuan et al. (2021)[^Yuan_et_al_2021]の実験では、参照ゲームの入力�
 
 ### エージェント間の関係
 
-複数のエージェントが協力してタスクに取り組むことが、コミュニケーションの創発を促します。しかし、複数のエージェントからなるチームを競争させることで、より情報量が多く構成的な創発言語が発現する可能性があります。
+複数のエージェントが協力してタスクに取り組むことが、コミュニケーションの創発を促します。しかし、それらのタスクに取り組むチームどうしを競争させることで、より情報量が多く構成的な創発言語が発現する可能性があります。
 
 Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間での参照ゲームにおいて、他チームの創発言語を盗み聞きした場合、他チームのタスクやインスタンスを知らない場合であっても、自チームのゲームの正解率がより早く収束するようになったことが報告されています。
 <!-- https://claude.ai/chat/1c000ba6-8b01-403f-b6e6-e8d1fec05366 -->
 
 ## 課題
 
-言語・記号創発の分野では、深層ニューラルネットワークによるエージェント同士のコミュニケーションを研究します。中でも、次のような課題があります。
+ここまで、創発コミュニケーションの実験についてまとめました。次に、創発コミュニケーションの分野にどのような課題があるかを調べました。
 <!-- https://aistudio.google.com/app/prompts/1B07r2OCU-duu9Py64sqTPmFHNRKTQyd6 -->
 
 1. 創発言語の評価と分析
@@ -154,7 +153,6 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 ### 創発言語の評価と分析
 
 #### コミュニケーションの効果
-
 <!-- Lazaridou & Baroni (2020): 3.1 Measuring the Degree of Effective Communication, Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> A. MACHINE-CENTERED EMCOM -> 1) CHARACTERISTICS -->
 
 創発コミュニケーションの研究において、エージェントが実際にコミュニケーションを取れているのか、その効果をどのように測るかは重要な課題です。
@@ -192,7 +190,7 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 言語だけでなく、意味の分布と似ている度合いを評価する方法として**トポグラフィック類似性 (TopSim, Topographic Similarity)**[^Brighton_Kirby_2006]が挙げられます。例えば、意味空間では「犬」と「猫」、「自動車」と「飛行機」は他の意味に比べて近くにあるはずです。このとき、創発言語が構成的なら、単語同士の距離も近くなるはずです。
 
-このように、トポグラフィック類似性は意味と言語の似ている度合いを捉えることはできますが、具体的な組み合わせの規則（文法）を測ることはできません。
+このように、トポグラフィック類似性は意味と言語の似ている度合いを捉えることはできますが、具体的な組み合わせの規則（文法）を評価することはできません。
 <!-- https://claude.ai/chat/a41ea4da-52c3-404a-b366-08a09a23502f -->
 
 創発言語の構成を評価するための方法としては、**positional disentanglement (posdis)**と**bag-of-symbols disentanglement (bosdis)**[^Chaabouni_et_al_2020]が挙げられます。posdisは、特定の位置にある記号が特定の属性の値に一致する度合いを測ります。例えば、送信者のメッセージが「AX」や「BY」であり、Aが赤、Bが青を示している場合、1文字目であることが色を表している可能性が高いです。逆にbosdisは、位置関係にかかわらず、ある文字とある属性が同時に出現する度合いを見ます。
@@ -208,7 +206,6 @@ Chaabouni et al. (2021)[^Chaabouni_et_al_2021]は、データセットの規模�
 <!-- https://claude.ai/chat/26e4ac40-3c84-403d-8e65-f165eeba49dc -->
 
 ### 自然言語を組み込んだ創発コミュニケーション
-
 <!-- Lazaridou & Baroni (2020): 4.3 Machines Cooperating with Humans, Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> B. HUMAN-CENTERED EmCom -->
 
 機械どうしのコミュニケーションでは、エージェントが独自の言語を創発させていました。一方で、人間とコミュニケーションを取るためには、エージェントが **人間の自然言語 (HNL)** を理解し、生成できるようになることが重要です。これは、AIが人間にとってより身近で、使いやすい存在になるために欠かせない要素です。
@@ -270,10 +267,10 @@ AIエージェントが創発する言語を分析することで、私たちは
 [^Lazaridou_Baroni_2020]: A. Lazaridou and M. Baroni, “Emergent Multi-Agent Communication in the Deep Learning Era,” Jul. 14, 2020, arXiv: arXiv:2006.02419. Accessed: Sep. 19, 2024. [Online]. Available: <http://arxiv.org/abs/2006.02419>
 [^Lowe_et_al_2019] R. Lowe, J. Foerster, Y.-L. Boureau, J. Pineau, and Y. Dauphin, “On the Pitfalls of Measuring Emergent Communication,” arXiv.org. Accessed: Oct. 01, 2024. [Online]. Available: <https://arxiv.org/abs/1903.05168v1>
 [^Liang_et_al_2020]: P. P. Liang, J. Chen, R. Salakhutdinov, L.-P. Morency, and S. Kottur, “On Emergent Communication in Competitive Multi-Agent Teams,” Jul. 16, 2020, arXiv: arXiv:2003.01848. doi: 10.48550/arXiv.2003.01848.
-[^Lu_et_al_2020]: Y. Lu, S. Singhal, F. Strub, A. Courville, and O. Pietquin, “Countering Language Drift with Seeded Iterated Learning,” in Proceedings of the 37th International Conference on Machine Learning, PMLR, Nov. 2020, pp. 6437–6447. Accessed: Sep. 26, 2024. [Online]. Available: https://proceedings.mlr.press/v119/lu20c.html
+[^Lu_et_al_2020]: Y. Lu, S. Singhal, F. Strub, A. Courville, and O. Pietquin, “Countering Language Drift with Seeded Iterated Learning,” in Proceedings of the 37th International Conference on Machine Learning, PMLR, Nov. 2020, pp. 6437–6447. Accessed: Sep. 26, 2024. [Online]. Available: <https://proceedings.mlr.press/v119/lu20c.html>
 [^Okanohara_2020]: Okanohara D., “《日経Robotics》AIトップ国際会議では何が起きているか,” 日経Robotics（日経ロボティクス）. Accessed: Sep. 24, 2024. [Online]. Available: <https://xtech.nikkei.com/atcl/nxt/mag/rob/18/00007/00022/>
 [^Yuan_et_al_2021]: L. Yuan, Z. Fu, J. Shen, L. Xu, J. Shen, and S.-C. Zhu, “Emergence of Pragmatics from Referential Game between Theory of Mind Agents,” Sep. 30, 2021, arXiv: arXiv:2001.07752. doi: 10.48550/arXiv.2001.07752.
-[^Ueda_Taniguchi_2023]: R. Ueda and T. Taniguchi, “Lewis’s Signaling Game as beta-VAE For Natural Word Lengths and Segments,” presented at the The Twelfth International Conference on Learning Representations, Oct. 2023. Accessed: Oct. 02, 2024. [Online]. Available: https://openreview.net/forum?id=HC0msxE3sf
+[^Ueda_Taniguchi_2023]: R. Ueda and T. Taniguchi, “Lewis’s Signaling Game as beta-VAE For Natural Word Lengths and Segments,” presented at the The Twelfth International Conference on Learning Representations, Oct. 2023. Accessed: Oct. 02, 2024. [Online]. Available: <https://openreview.net/forum?id=HC0msxE3sf>
 [^Ueda_et_al_2023]: R. Ueda et al., “言語とコミュニケーションの創発に関する構成論的研究の展開,” Jun. 07, 2023, OSF. doi: 10.31234/osf.io/rz5ng.
 
 <!-- 機械どうしのコミュニケーションについては、既に取り上げた内容と被るので省略する。 -->
