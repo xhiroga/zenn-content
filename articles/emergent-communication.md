@@ -3,7 +3,7 @@ title: "創発コミュニケーションについての自分用まとめ"
 emoji: "🐘"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["AI", "機械学習", "ディープラーニング", "survey"]
-published: false
+published: true
 
 # レビュー観点
 # 1. 一般的なソフトウェアエンジニアが知らない用語には、具体的な値を伴う例が示されていること
