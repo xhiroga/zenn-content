@@ -1,8 +1,8 @@
 ---
 title: "創発コミュニケーションについての自分用まとめ"
-emoji: "👨‍⚕️"
+emoji: "🐘"
 type: "idea" # tech: 技術記事 / idea: アイデア
-topics: []
+topics: ["AI", "機械学習", "ディープラーニング", "survey"]
 published: false
 
 # レビュー観点
@@ -38,7 +38,7 @@ published: false
 
 そこで、もし「複数のエージェントが、自ら絵を描いて道案内をする中で、絵の訓練をする」ようなタスクを通して、ゼロからイラストを学習させることが可能かが気になりました。
 
-調べると、この分野は創発コミュニケーション (EmCom, Emergent Communication)と呼ばれているようです。主に記号や言語を対象として研究が進んでいるほか、イラストを描く研究もあるようです。そこで、この記事ではイラストを含まない創発コミュニケーションに限って、どのような実験や課題があるかをまとめました。
+調べると、この分野は創発コミュニケーション (EmCom, Emergent Communication)と呼ばれているようです。主に記号や言語を対象として研究が進んでいるほか、イラストを描く研究もあるようです。対象となる論文が多いため、今回は記号・言語の創発コミュニケーションに絞り、代表的な実験や課題をまとめました。ただし、イラストに関する研究も最後に簡単に紹介します。
 
 ## 対象の論文
 
@@ -87,7 +87,7 @@ published: false
 ### ゲームの種類
 <!-- https://ja.wikipedia.org/wiki/シグナリングゲーム, 本来は Lewis, D. (1969) を引用すべきだが、時間があるときにする。 -->
 
-創発コミュニケーションの実験で用いられる、次のようなゲームを**シグナリングゲーム(signaling game)**と言います。
+創発コミュニケーションの実験で用いられる、次のようなゲームを **シグナリングゲーム(signaling game)** と言います。
 
 - 送信者と受信者からなる
 - 送信者はタイプを持つ。受信者は送信者のタイプを知らない
@@ -95,9 +95,9 @@ published: false
 
 #### コミュニケーション自体に焦点を当てたゲーム
 
-シグナリングゲームの中でも、受信者が送信者のタイプを当てるシンプルなゲームを**参照ゲーム(referential game)**と言います。なお参照ゲームをシグナリングゲームと呼ぶこともあります。
+シグナリングゲームの中でも、受信者が送信者のタイプを当てるシンプルなゲームを **参照ゲーム(referential game)** と言います。なお参照ゲームをシグナリングゲームと呼ぶこともあります。
 
-参照ゲームの代表的な例として、Lazaridou et al. (2017)[^Lazaridou_et_al_2017]の実験があります。これは参照ゲームの中でも**識別ゲーム(discrimination game)**と呼ばれることがあります。
+参照ゲームの代表的な例として、Lazaridou et al. (2017)[^Lazaridou_et_al_2017]の実験があります。これは参照ゲームの中でも **識別ゲーム(discrimination game)** と呼ばれることがあります。
 <!-- Brandizzi (2023) は識別ゲーム以外の参照ゲームの例を挙げているが、あくまで参考程度なので省略する。 -->
 
 実験では、送信者が2枚の画像から1枚を選び、受信者に1つの記号(10または100の語彙から選ばれた1語)を送信します。受信者にはシャッフルされた2枚の画像と送信された記号が提示されるので、どちらの画像を指しているかを当てるタスクを行います。
@@ -105,7 +105,7 @@ published: false
 
 #### コミュニケーションを補助として用いるゲーム
 
-コミュニケーションを補助的な手段として用いることで、道案内や交渉などを成功させる種類のゲームがあります。参照ゲームではないシグナリングゲームの一種で、**指示ゲーム**と呼ばれることがあります。
+コミュニケーションを補助的な手段として用いることで、道案内や交渉などを成功させる種類のゲームがあります。参照ゲームではないシグナリングゲームの一種で、 **指示ゲーム** と呼ばれることがあります。
 <!-- Ueda et al. (2023) などに登場する「指示ゲーム」の英語表現を見つけることができなかった。 -->
 
 例えば、Das et al. (2019)[^Das_et_al_2024]の研究では、エージェントが協力して3D環境内で道案内などを実施します。他には交渉ゲーム、社会的役割を演じるゲームなどがあります。
@@ -166,7 +166,7 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 例えば、エージェントがメッセージの内容ではなく、メッセージを送信するターン数などのメタ的な情報に基づいてタスクをクリアしてしまう可能性があります。
 
-もしメタ的な情報に基づいてタスクをクリアしているなら、言語が意味を持たない可能性があります。そこで、**相互理解可能性**や**話者一貫性**を測ることが考えられます。
+もしメタ的な情報に基づいてタスクをクリアしているなら、言語が意味を持たない可能性があります。そこで、**相互理解可能性** や **話者一貫性** を測ることが考えられます。
 
 **相互理解可能性 (Mutual Intelligibility)**[^Graesser_et_al_2020]は、エージェントが自分自身とコミュニケーションができるかどうかを測る指標です。実験では単純な参照ゲームを行います。ただし、送信者と受信者のネットワークは、実際に送信・受信に関わる部分を除いて共通の設計になっています。これによって訓練した送信者自身を受信者として使えます。そのような場合でもタスクが成功するなら、意味を持った言語が出現していると言えそうです。
 <!-- https://claude.ai/chat/100c90b3-d33a-454c-870b-a970c8912adc -->
@@ -191,14 +191,14 @@ Liang et al. (2020)[^Liang_et_al_2020]の研究によれば、複数チーム間
 
 **構成性 (Compositionality)** は、複雑な意味が、その構成要素の意味とそれらを組み合わせる規則によって決定されるという性質です。自然言語では、単語の意味と文法規則から文の意味を理解できることが構成性の例として挙げられます。
 
-創発言語の構成性を評価する方法の多くは、その分布に注目しています。例えば、自然言語において単語の出現頻度とその順位の間に反比例の関係がある、という**ジップの法則 (Zipf's law)** への適合度を測る方法があります。ジップの法則では、出現頻度が$k$番目の単語の頻度は、1位の頻度の$1/k$倍になるとされています。
+創発言語の構成性を評価する方法の多くは、その分布に注目しています。例えば、自然言語において単語の出現頻度とその順位の間に反比例の関係がある、という **ジップの法則 (Zipf's law)** への適合度を測る方法があります。ジップの法則では、出現頻度が$k$番目の単語の頻度は、1位の頻度の$1/k$倍になるとされています。
 
-言語だけでなく、意味の分布と似ている度合いを評価する方法として**トポグラフィック類似性 (TopSim, Topographic Similarity)**[^Brighton_Kirby_2006]が挙げられます。例えば、意味空間では「犬」と「猫」、「自動車」と「飛行機」は他の意味に比べて近くにあるはずです。このとき、創発言語が構成的なら、単語同士の距離も近くなるはずです。
+言語だけでなく、意味の分布と似ている度合いを評価する方法として **トポグラフィック類似性 (TopSim, Topographic Similarity)**[^Brighton_Kirby_2006]が挙げられます。例えば、意味空間では「犬」と「猫」、「自動車」と「飛行機」は他の意味に比べて近くにあるはずです。このとき、創発言語が構成的なら、単語同士の距離も近くなるはずです。
 
 このように、トポグラフィック類似性は意味と言語の似ている度合いを捉えることはできますが、具体的な組み合わせの規則（文法）を評価することはできません。
 <!-- https://claude.ai/chat/a41ea4da-52c3-404a-b366-08a09a23502f -->
 
-創発言語の構成を評価するための方法としては、**positional disentanglement (posdis)**と**bag-of-symbols disentanglement (bosdis)**[^Chaabouni_et_al_2020]が挙げられます。posdisは、特定の位置にある記号が特定の属性の値に一致する度合いを測ります。例えば、送信者のメッセージが「AX」や「BY」であり、Aが赤、Bが青を示している場合、1文字目であることが色を表している可能性が高いです。逆にbosdisは、位置関係にかかわらず、ある文字とある属性が同時に出現する度合いを見ます。
+創発言語の構成を評価するための方法としては、**positional disentanglement (posdis)** と **bag-of-symbols disentanglement (bosdis)**[^Chaabouni_et_al_2020]が挙げられます。posdisは、特定の位置にある記号が特定の属性の値に一致する度合いを測ります。例えば、送信者のメッセージが「AX」や「BY」であり、Aが赤、Bが青を示している場合、1文字目であることが色を表している可能性が高いです。逆にbosdisは、位置関係にかかわらず、ある文字とある属性が同時に出現する度合いを見ます。
 
 研究では、構成性を持った言語は新たなエージェントにとっても学習しやすい一方で、posdisやbosdisの理論値までは幅がある、つまり創発言語の構成性にはかなり改善の余地が残されていることが示唆されています。
 <!-- https://claude.ai/chat/7e9cf0ab-9640-44ba-b409-4e3f73195701 -->
@@ -213,45 +213,27 @@ Chaabouni et al. (2021)[^Chaabouni_et_al_2021]は、データセットの規模�
 ### 自然言語を組み込んだ創発コミュニケーション
 <!-- Lazaridou & Baroni (2020): 4.3 Machines Cooperating with Humans, Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> B. HUMAN-CENTERED EmCom -->
 
-機械どうしのコミュニケーションでは、エージェントが独自の言語を創発させていました。一方で、人間とコミュニケーションを取るためには、エージェントが **人間の自然言語 (HNL)** を理解し、生成できるようになることが重要です。これは、AIが人間にとってより身近で、使いやすい存在になるために欠かせない要素です。
+機械どうしのコミュニケーションでは、エージェントは独自の言語を用いていました。一方で、人間とコミュニケーションを取ったり、言語の進化を観察するためには、エージェントが **人間の自然言語 (HNL)** を理解できると良さそうです。
 
-自然言語を組み込んだ創発コミュニケーションは、従来の画像キャプション生成タスクと似ていますが、学習方法が大きく異なります。
+画像を用いた参照ゲームを自然言語で行う場合、やっていることは画像のキャプション生成タスクと似ているように思えます。画像のキャプション生成が教師あり学習であるのに対して、参照ゲームは強化学習である点が異なるでしょう。
 
-* **画像キャプション生成:**  大量の画像とキャプションのペアを用いた教師あり学習によって、画像の内容を説明する自然言語文を生成するモデルを学習します。
-* **自然言語を組み込んだ創発コミュニケーション:**  エージェントは、強化学習を通して、特定のタスクを達成するために必要な自然言語を、人間とのやり取りを通して学習していきます。
+自然言語を事前学習したエージェントを用いて創発コミュニケーションの実験を行うと、言語の意味がタスクに最適化されて変わってくることがあります。これを **言語ドリフト** と言います。Lazaridou et al. (2020) [^Lazaridou_et_al_2020] は、言語ドリフトを以下の3つのタイプに分類しています。
+<!-- https://claude.ai/chat/84175e73-1521-49f4-a00c-b0e2a0a851b7 -->
 
-#### 言語ドリフト：自然言語からのズレ
+- **構造的ドリフト (Structural drift)** : 文法的な構造が単純化され、人間にとって不自然な文になる。例えば、「猫ですか？」が「猫？」になるなど。
+- **意味的ドリフト (Semantic drift)** : 単語の意味が本来の意味から変化してしまう。例えば、「木」が「地面」という意味を表すようになるなど
+- **語用論的ドリフト (Pragmatic drift)** : エージェント同士が学習を重ねる中で、独自の解釈を持つ。例えば「帽子」という単語が「黄色い帽子」を指すようになるなど。
 
-自然言語を組み込んだ創発コミュニケーションにおいても、**言語ドリフト**は大きな課題です。エージェントがタスクを効率的に解決することに集中するあまり、学習した言語が人間の自然言語から徐々に乖離してしまう現象です。
+言語ドリフトを抑制するための様々な手法が提案されています。[^Lu_et_al_2020]一方で、言語ドリフトを自然言語の進化を観察するためのモデルとして扱うこともできます。教師あり学習をベースとするLLMがエージェントとして成功を収めていることを踏まえると、今後そうした側面はより重視されるかもしれません。
 
-言語ドリフトは、AIエージェントが人間の言語の複雑さやニュアンスを完全に理解できていないために起こります。例えば、エージェントは、文法的に正しくない文章や、人間には理解できない単語の組み合わせを生成してしまうことがあります。
+## イラストによる創発コミュニケーション
+<!-- https://aistudio.google.com/app/prompts/1W6oVJE9fkHKwdTaO0p94i8suzyNrXuZA -->
 
-#### 言語ドリフトの種類と抑制
+最後に、イラストによる創発コミュニケーションについても簡単に紹介します。より詳細なサーベイはMihai (2022)[^Mihai_2022]が詳しいです。
 
-Brandizzi (2023) [^Brandizzi_2023] は、言語ドリフトを以下の3つのタイプに分類しています。
+創発コミュニケーションの実験において、エージェントが言語の代わりにイラストを描くものとしてはFernando (2020)が挙げられます。Mihai & Hare (2021)[^Mihai_Hare_2021]では、微分可能なスケッチのレンダリングとテクスチャ・形状バイアスを用いてイラストのフィードバックを与えることで、人間が解釈できるイラストの生成に成功しました。
 
-* **構造的ドリフト (Structural Drift):** 文法的な構造が単純化され、人間にとって不自然な文になる。例えば、「猫ですか？」が「猫？」になるなど。
-* **意味的ドリフト (Semantic Drift):** 単語の意味が本来の意味から変化してしまう。例えば、「古い教え」が「老人」という意味になるなど。
-* **機能的ドリフト (Functional Drift):**  言語が意図した行動を引き起こさなくなる。例えば、交渉で合意したにもかかわらず、エージェントが別の取引を行ってしまうなど。
-
-言語ドリフトを抑制するために、以下のようないくつかの手法が提案されています。
-
-* **教師あり学習による事前学習:** 大規模なテキストデータを用いて、エージェントに自然言語の文法や語彙に関する知識を事前に学習させます。
-* **反復学習 (Iterated Learning):**  エージェントの世代交代をシミュレートすることで、言語の安定性を高め、ドリフトを抑制します。
-* **言語モデルの正則化:**  エージェントが生成する言語が、事前学習された言語モデルの出力と大きく乖離しないように、正則化項を導入します。
-
-#### 言語ドリフト：進化の可能性
-
-一方で、言語ドリフトは必ずしも負の側面だけを持つわけではありません。言語ドリフトは、エージェントが新しい表現や概念を発明する **言語進化** のプロセスと捉えることもできます。
-
-例えば、エージェントがタスクをより効率的に解決するために、新しい単語や文法規則を創発させることがあるかもしれません。これは、人間の言語進化の歴史においても、新しい単語や表現が生まれてきた過程と似ています。
-
-#### 自然言語を組み込んだ創発コミュニケーション： 今後の展望
-
-自己教師あり学習によって訓練された大規模言語モデルが、近年目覚ましい成果を上げています。この流れを踏まえると、自然言語を組み込んだ創発コミュニケーションの研究は、単に人間とコミュニケーションできるAIを作るという目標だけでなく、**言語進化のメカニズムを解明するためのツール** として、より重要な役割を担っていく可能性があります。
-
-AIエージェントが創発する言語を分析することで、私たちは人間の言語の起源や進化、そして言語が思考に与える影響について、より深い理解を得ることができるかもしれません。
-<!-- Lu et al. (2020) https://claude.ai/chat/aacd8dae-b571-496f-add1-b262f88cf3a4 -->
+また、Qiu et al. (2022)[^Qiu_et_al_2022]は、エージェントが描いたイラストのIconic性 (写実的な度合い), Symbolic性 (特定の概念を表すときに同じイラストが用いられる一貫性), Semantic性 (近い概念のイラストが似通っている度合い)を評価する指標を提案しました。このように、イラストによる創発コミュニケーションの分野は始まったばかりであり、イラストの解釈しやすさの向上など未解決の課題が多くあるようです。
 
 ## まとめ
 
@@ -267,15 +249,22 @@ AIエージェントが創発する言語を分析することで、私たちは
 [^Graesser_et_al_2020]: L. Graesser, K. Cho, and D. Kiela, “Emergent Linguistic Phenomena in Multi-Agent Communication Games,” Feb. 28, 2020, arXiv: arXiv:1901.08706. Accessed: Oct. 01, 2024. [Online]. Available: <http://arxiv.org/abs/1901.08706>
 [^Jaques_et_al_2018]: N. Jaques et al., “Intrinsic Social Motivation via Causal Influence in Multi-Agent RL,” Sep. 2018, Accessed: Oct. 01, 2024. [Online]. Available: <https://openreview.net/forum?id=B1lG42C9Km>
 [^Lazaridou_et_al_2017]: A. Lazaridou, A. Peysakhovich, and M. Baroni, “Multi-Agent Cooperation and the Emergence of (Natural) Language,” arXiv.org. Accessed: Sep. 11, 2024. [Online]. Available: <https://arxiv.org/abs/1612.07182v2>
+[^Lazaridou_et_al_2020]: A. Lazaridou, A. Potapenko, and O. Tieleman, “Multi-agent Communication meets Natural Language: Synergies between Functional and Structural Language Learning,” in Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, D. Jurafsky, J. Chai, N. Schluter, and J. Tetreault, Eds., Online: Association for Computational Linguistics, Jul. 2020, pp. 7663–7674. doi: 10.18653/v1/2020.acl-main.685.
 [^Lazaridou_Baroni_2020]: A. Lazaridou and M. Baroni, “Emergent Multi-Agent Communication in the Deep Learning Era,” Jul. 14, 2020, arXiv: arXiv:2006.02419. Accessed: Sep. 19, 2024. [Online]. Available: <http://arxiv.org/abs/2006.02419>
 [^Lowe_et_al_2019]: R. Lowe, J. Foerster, Y.-L. Boureau, J. Pineau, and Y. Dauphin, “On the Pitfalls of Measuring Emergent Communication,” arXiv.org. Accessed: Oct. 01, 2024. [Online]. Available: <https://arxiv.org/abs/1903.05168v1>
 [^Liang_et_al_2020]: P. P. Liang, J. Chen, R. Salakhutdinov, L.-P. Morency, and S. Kottur, “On Emergent Communication in Competitive Multi-Agent Teams,” Jul. 16, 2020, arXiv: arXiv:2003.01848. doi: 10.48550/arXiv.2003.01848.
 [^Lu_et_al_2020]: Y. Lu, S. Singhal, F. Strub, A. Courville, and O. Pietquin, “Countering Language Drift with Seeded Iterated Learning,” in Proceedings of the 37th International Conference on Machine Learning, PMLR, Nov. 2020, pp. 6437–6447. Accessed: Sep. 26, 2024. [Online]. Available: <https://proceedings.mlr.press/v119/lu20c.html>
+[^Mihai_Hare_2021]: D. Mihai and J. Hare, “Learning to Draw: Emergent Communication through Sketching,” in Advances in Neural Information Processing Systems, Curran Associates, Inc., 2021, pp. 7153–7166. Accessed: Sep. 30, 2024. [Online]. Available: <https://proceedings.neurips.cc/paper_files/paper/2021/hash/>39d0a8908fbe6c18039ea8227f827023-Abstract.html
+[^Mihai_2022]: A. D. Mihai, “Emergent visual communication,” phd, University of Southampton, 2022. Accessed: Oct. 01, 2024. [Online]. Available: <https://eprints.soton.ac.uk/469905/>
 [^Okanohara_2020]: Okanohara D., “《日経Robotics》AIトップ国際会議では何が起きているか,” 日経Robotics（日経ロボティクス）. Accessed: Sep. 24, 2024. [Online]. Available: <https://xtech.nikkei.com/atcl/nxt/mag/rob/18/00007/00022/>
+[^Qiu_et_al_2022]: S. Qiu et al., “Emergent Graphical Conventions in a Visual Communication Game,” arXiv.org. Accessed: Oct. 01, 2024. [Online]. Available: <https://arxiv.org/abs/2111.14210v4>
 [^Yuan_et_al_2021]: L. Yuan, Z. Fu, J. Shen, L. Xu, J. Shen, and S.-C. Zhu, “Emergence of Pragmatics from Referential Game between Theory of Mind Agents,” Sep. 30, 2021, arXiv: arXiv:2001.07752. doi: 10.48550/arXiv.2001.07752.
 [^Ueda_Taniguchi_2023]: R. Ueda and T. Taniguchi, “Lewis’s Signaling Game as beta-VAE For Natural Word Lengths and Segments,” presented at the The Twelfth International Conference on Learning Representations, Oct. 2023. Accessed: Oct. 02, 2024. [Online]. Available: <https://openreview.net/forum?id=HC0msxE3sf>
 [^Ueda_et_al_2023]: R. Ueda et al., “言語とコミュニケーションの創発に関する構成論的研究の展開,” Jun. 07, 2023, OSF. doi: 10.31234/osf.io/rz5ng.
 
+
 <!-- 機械どうしのコミュニケーションについては、既に取り上げた内容と被るので省略する。 -->
 <!-- Lazaridou & Baroni (2020): 4.1 Communication Facilitating Inter-Agent Coordination, 4.2 Beyond Cooperation: Self-interested and Competing Agents -->
 <!-- Brandizzi (2023): III. DICHOTOMY OF EMERGENT COMMUNICATION -> A. MACHINE-CENTERED EMCOM -->
+
+
