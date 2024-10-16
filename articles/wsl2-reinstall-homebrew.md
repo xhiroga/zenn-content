@@ -32,8 +32,7 @@ WSL2環境のHomebrewを再インストールすることにしました。
 
 `brew list`, `brew config` および `brew doctor` の出力を控えておきます。
 
-<details>
-<summary>アウトプット全体</summary>
+:::details アウトプット全体
 
 ```shell
 /mnt/c/Users/hiroga$ brew config
@@ -86,9 +85,9 @@ Try to figure out the problem yourself and submit a fix as a pull request.
 We will review it but may or may not accept it.
 ```
 
-</details>
+:::
 
-## カスタムプレフィックスにインストールしたHomebrewの削除
+### カスタムプレフィックスにインストールしたHomebrewの削除
 
 [公式のガイド](https://github.com/homebrew/install?tab=readme-ov-file#uninstall-homebrew)に従ってHomebrewをアンインストールします。ただし、カスタムプレフィックスのパスによってはスクリプトが失敗します。
 
@@ -96,8 +95,7 @@ We will review it but may or may not accept it.
 
 ここでは、`uninstall.sh`の実行後に`sudo rm -rf /usr/local/Homebrew`を実行するに留めました。
 
-<details>
-<summary>アウトプット全体</summary>
+:::details アウトプット全体
 
 ```shell
 curl -fsSLO https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh
@@ -175,9 +173,9 @@ The following possible Homebrew files were not deleted:
 You may wish to remove them yourself.
 ```
 
-</details>
+:::
 
-## デフォルトのプレフィックスに対してHomebrewを再インストール
+### デフォルトのプレフィックスに対してHomebrewを再インストール
 
 念のためにWSL2を再起動してから、公式のガイドに従ってHomebrewを再インストールします。
 
@@ -187,8 +185,7 @@ wsl
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-<details>
-<summary>アウトプット全体</summary>
+:::details アウトプット全体
 
 ```shell
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -268,7 +265,7 @@ No analytics data has been sent yet (nor will any be during this install run).
     https://docs.brew.sh
 ```
 
-</details>
+:::
 
 インストール後に`brew config`と`brew doctor`を実行し、警告が出ていないことを確認します。
 
@@ -278,8 +275,7 @@ brew config
 brew doctor
 ```
 
-<details>
-<summary>アウトプット全体</summary>
+:::details アウトプット全体
 
 ```shell
 $ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -336,7 +332,7 @@ $ brew doctor
 Your system is ready to brew.
 ```
 
-</details>
+:::
 
 次に、Next stepsに従って次の3アクションを実施します。
 

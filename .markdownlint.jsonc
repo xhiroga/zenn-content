@@ -1,5 +1,4 @@
 {
   "default": true,
-  "MD013": false,
-  "MD033": false // <details> を利用するため
+  "MD013": false
 }
