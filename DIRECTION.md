@@ -130,6 +130,26 @@ Zenn.devは複数行のコメントアウトに対応していません。1つ�
 <!-- コメント1, コメント2 -->
 ```
 
+### コードブロック
+
+- ターミナルのコードブロックのLanguage Identifierには`shell`を利用します。また、プロンプトの記号は`$`に統一します。
+- ターミナルの出力に個人情報やクレデンシャルが残っている場合、その部分を元の文字数に関わらず`******`(*6つ)に置換します。
+- ただし、ブログ執筆者のユーザー名が`hiroga`であることは公開情報なので、隠さなくてよいです。
+
+#### Bad
+
+```terminal
+hiroga@hiroga-air zenn-content % pwd
+/Users/hiroga/Documents/GitHub/zenn-content
+```
+
+#### Good
+
+```shell
+$ pwd
+/Users/hiroga/Documents/GitHub/zenn-content
+```
+
 ## 参考URL
 
 この指示にあたり、以下のURLを参考にした。
