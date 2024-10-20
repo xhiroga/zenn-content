@@ -34,7 +34,7 @@ uvでPyTorchをインストールしようとした際、「No solution found」
 
 ### Pythonパッケージのバージョンの仕様
 
-私は調べるまで知らなかったのですが、`torch-2.1.2+cu118-cp310-cp310-win_amd64.whl`のうちバージョン番号なのは`torch-2.1.2+cu118`の部分だけです。したがって、次のようなパッケージの指定は誤りということになります。
+私は調べるまで知らなかったのですが、`torch-2.1.2+cu118-cp310-cp310-win_amd64.whl`のうち**バージョン番号は`torch-2.1.2+cu118`の部分だけ**です。したがって、次のようなパッケージの指定は誤りということになります。
 
 ```shell
 uv add torch==2.1.2+cu118-cp310 --index https://download.pytorch.org/whl/cu118 # 失敗します
@@ -46,7 +46,7 @@ Pythonのパッケージを共有する特別な形式のZipファイルをwheel
 
 `{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl`
 
-更に、バージョンは次のような内訳になっています。[^python_version]
+その内、バージョンは次の仕様です。[^python_version]
 [^python_version]: <https://packaging.python.org/en/latest/specifications/version-specifiers/#local-version-identifiers>
 
 `<public version identifier>[+<local version label>]`
@@ -61,9 +61,9 @@ uv add torch==2.1.2+cu118 --index https://download.pytorch.org/whl/cu118
 
 ### インデックスサーバー
 
-pipがパッケージを探す際は、すべてのインデックスサーバー（デフォルトまたは--index-urlで指定されたサーバー + --extra-index-urlで指定されたサーバー）から最新のバージョンを探します。一方で、uvはデフォルトで、最初にそのパッケージが見つかったインデックスサーバーの中の最新のバージョンを探します。
+pipがパッケージを探す際は、すべてのインデックスサーバー（デフォルトまたは`--index-url`で指定されたサーバー + `--extra-index-url`で指定されたサーバー）から最新のバージョンを探します。一方で、uvはデフォルトで、最初にそのパッケージが見つかったインデックスサーバーの中の最新のバージョンを探します。
 
-:::pipとuvのインデックス戦略の違い
+:::details pipとuvのインデックス戦略の違い
 
 ```shell
 hiroga@hiroga-air .local % mkdir pip-spec
@@ -103,7 +103,8 @@ Installed 1 package in 3ms
 したがって`--index`オプションでPyPI以外のインデックスサーバーを指定すればよいわけです。ただし1点だけ注意事項があり、uvはインデックスサーバーのURLが不正な場合でも警告を出してくれません。
 
 ```shell
-uv add tqdm --index https://download.pytorch.org/whl/cu999 # 明らかに存在しないインデックスサーバー
+uv add tqdm --index https://download.pytorch.org/whl/cu999
+# 明らかに存在しないインデックスサーバーを指定したが、警告なくPyPIが使われている
 Resolved 3 packages in 1.07s
 Installed 1 package in 2ms
  + tqdm==4.66.5
