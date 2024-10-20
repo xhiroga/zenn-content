@@ -6,152 +6,132 @@ topics: ["python", "uv", "rye", "pytorch"]
 published: false
 ---
 
-## Pythonのパッケージのバージョンについて
+## TL;DR
 
-Pythonのパッケージは特別な形式のZipファイルとして共有されており、その形式やファイルをwheel（ホイール）という。
-モンティ・パイソンのコメディより、お店にストックしてあった円盤型のチーズが由来。https://qiita.com/misohagi/items/21d5f383f3087118eda0
-（勝手に車輪の再発明の「車輪」から来ているのかと思ってた）
+uvでPyTorchをインストールする際に私が遭遇したエラーと、その対処法は次のとおりです。
 
-以下を具体例としてフォーマットについて解説
+1. "No solution found when resolving dependencies"
+   1. パッケージのバージョン識別子がpublic+localの形式になっているか確認
+   2. オプションに`index`（0.4.22までは`extra-index-url`）を加える。
+2. "it doesn't have a source distribution or wheel for the current platform"
+   1. uv 0.4.4以上を用いて、`uv init`時に意図せず最新バージョンが用いられないようにする
 
-torch==2.1.2+cu118-cp310-cp310-win_amd64
-[numpy-2.1.2-pp310-pypy310_pp73-win_amd64.whl](https://files.pythonhosted.org/packages/c0/ec/0c04903b48dfea6be1d7b47ba70f98709fb7198fd970784a1400c391d522/numpy-2.1.2-pp310-pypy310_pp73-win_amd64.whl)
+## 動機
 
-## ホイールの名前のスペック
+uvでPyTorchをインストールしようとした際、「No solution found」を含む複数のエラーに遭遇しました。同じ問題で困っている人の助けになれば幸いです。
 
-https://packaging.python.org/en/latest/specifications/binary-distribution-format/#file-format
+## No solution found when resolving dependencies
 
-### バージョン番号
+次のような状況で発生するエラーです。
 
-https://packaging.python.org/en/latest/specifications/version-specifiers/
+- 最も優先度の高いインデックスサーバーに存在するパッケージの中に、指定したバージョンがない
+- すべてのインデックスサーバーを検索するpip互換のオプションが有効だが、どのサーバーにも指定したバージョンがない
 
-2.1.2 public version identifier
-+cu118 local version label
+### すること
 
-+cu118まで含めてバージョン番号というのが誤解しやすそうなので注意。私は誤解していた。
+1. Pythonパッケージのバージョンの仕様を正しく指定する
+2. インデックスサーバーを正しく指定する
 
-### ビルドタグ
+### Pythonパッケージのバージョンの仕様
 
--cp310-cp310-win_amd64
-
-## (インストール関連: 後でタイトル考える）
-
-### pip install
-
-そもそもpip installで指定する対象
-https://pip.pypa.io/en/stable/cli/pip_install/
-
-requirement specifierに従う
-https://pip.pypa.io/en/stable/reference/requirement-specifiers/
-
-requirement specifierがversion specifierに従う
-
-## uv add
-
-hiroga@HIROGA-RTX4090:/mnt/c/Users/hiroga/Documents/GitHub/zenn-content/.local/test$ uv add torch
-"torch>=2.4.1",
-何もしなくても最低限のバージョンを記録するようになっている
-
-実はPyPI（パイピーアイ）にもある
-[[package]]
-name = "torch"
-version = "2.4.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
+私は調べるまで知らなかったのですが、`torch-2.1.2+cu118-cp310-cp310-win_amd64.whl`のうちバージョン番号なのは`torch-2.1.2+cu118`の部分だけです。したがって、次のようなパッケージの指定は誤りということになります。
 
 ```shell
-> uv add torch --index-url https://download.pytorch.org/whl/cu118
-Resolved 23 packages in 2.15s
-error: Failed to prepare distributions
-  Caused by: Failed to fetch wheel: test @ file:///C:/Users/hiroga/Documents/GitHub/zenn-content/.local/test
-  Caused by: Failed to install requirements from build-system.requires (resolve)
-  Caused by: No solution found when resolving: setuptools>=40.8.0, wheel
-  Caused by: Because wheel was not found in the package registry and you require wheel, we can conclude that your requirements are unsatisfiable.
+uv add torch==2.1.2+cu118-cp310 --index https://download.pytorch.org/whl/cu118 # 失敗します
+# Because there is no version of torch==2.1.2+cu118.cp310...
 ```
+
+Pythonのパッケージを共有する特別な形式のZipファイルをwheel（ホイール）と呼び、その形式は次のようになっています。[^python_binary_file]
+[^python_binary_file]: <https://packaging.python.org/en/latest/specifications/binary-distribution-format/#file-format>
+
+`{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl`
+
+更に、バージョンは次のような内訳になっています。[^python_version]
+[^python_version]: <https://packaging.python.org/en/latest/specifications/version-specifiers/#local-version-identifiers>
+
+`<public version identifier>[+<local version label>]`
+
+なので、次のように指定する必要があったんですね。
 
 ```shell
-uv add torch==2.1.2 --index-url https://download.pytorch.org/whl/cu118 --verbose
-DEBUG No cache entry for: https://download.pytorch.org/whl/cu118/torch/
-DEBUG Searching for a compatible version of torch (==2.1.2)
-DEBUG No compatible version found for: torch
-DEBUG Searching for a compatible version of test @ file:///C:/Users/hiroga/Documents/GitHub/zenn-content/.local/test (<0.1.0 | >0.1.0)
-DEBUG No compatible version found for: test
-  × No solution found when resolving dependencies:
-  ╰─▶ Because there is no version of torch==2.1.2 and your project depends on torch==2.1.2, we can conclude that your project's requirements are unsatisfiable.
-  help: If this is intentional, run `uv add --frozen` to skip the lock and sync steps.
+uv add torch==2.1.2 --index https://download.pytorch.org/whl/cu118
+または
+uv add torch==2.1.2+cu118 --index https://download.pytorch.org/whl/cu118
 ```
+
+### インデックスサーバー
+
+pipがパッケージを探す際は、すべてのインデックスサーバー（デフォルトまたは--index-urlで指定されたサーバー + --extra-index-urlで指定されたサーバー）から最新のバージョンを探します。一方で、uvはデフォルトで、最初にそのパッケージが見つかったインデックスサーバーの中の最新のバージョンを探します。
+
+:::pipとuvのインデックス戦略の違い
 
 ```shell
-uv add torch==2.1.2 --index-url https://download.pytorch.org/whl/cu118 --verbose --index-strategy unsafe-best-match
-DEBUG No cache entry for: https://download.pytorch.org/whl/cu118/torch/
-DEBUG Searching for a compatible version of torch (==2.1.2)
-DEBUG No compatible version found for: torch
-DEBUG Searching for a compatible version of test @ file:///C:/Users/hiroga/Documents/GitHub/zenn-content/.local/test (<0.1.0 | >0.1.0)
-DEBUG No compatible version found for: test
-  × No solution found when resolving dependencies:
-  ╰─▶ Because there is no version of torch==2.1.2 and your project depends on torch==2.1.2, we can conclude that your project's requirements are unsatisfiable.
-  help: If this is intentional, run `uv add --frozen` to skip the lock and sync steps.
+hiroga@hiroga-air .local % mkdir pip-spec
+hiroga@hiroga-air .local % cd pip-spec 
+hiroga@hiroga-air pip-spec % python -m venv .venv
+hiroga@hiroga-air pip-spec % source ./.venv/bin/activate                            
+(.venv) hiroga@hiroga-air pip-spec % pip install tqdm --extra-index-url https://download.pytorch.org/whl/cu118  
+Looking in indexes: https://pypi.org/simple, https://download.pytorch.org/whl/cu118
+Collecting tqdm
+  Using cached tqdm-4.66.5-py3-none-any.whl.metadata (57 kB)
+Using cached tqdm-4.66.5-py3-none-any.whl (78 kB)
+Installing collected packages: tqdm
+Successfully installed tqdm-4.66.5
 
+hiroga@hiroga-air uv-spec % uv --version
+uv 0.4.24 (Homebrew 2024-10-17)
+hiroga@hiroga-air .local % mkdir uv-spec
+hiroga@hiroga-air .local % cd uv-spec 
+hiroga@hiroga-air uv-spec % uv init
+Initialized project `uv-spec`
+(.venv) hiroga@hiroga-air uv-spec % uv add tqdm --extra-index-url https://download.pytorch.org/whl/cu118
+warning: Indexes specified via `--extra-index-url` will not be persisted to the `pyproject.toml` file; use `--index` instead.
+warning: `VIRTUAL_ENV=/Users/hiroga/Documents/GitHub/zenn-content/.local/pip-spec/.venv` does not match the project environment path `.venv` and will be ignored
+Using CPython 3.12.7 interpreter at: /opt/homebrew/opt/python@3.12/bin/python3.12
+Creating virtual environment at: .venv
+Resolved 3 packages in 1.25s
+Prepared 1 package in 29ms
+Installed 1 package in 3ms
+ + tqdm==4.64.1
 ```
+
+:::
+
+なお、これまで断りなく使ってきましたが、uv 0.4.24以降は`--extra-index-url`に代わって`--index`を利用することが推奨されています。[^uv_7481]
+[^uv_7481]: <https://github.com/astral-sh/uv/pull/7481>
+
+したがって`--index`オプションでPyPI以外のインデックスサーバーを指定すればよいわけです。ただし1点だけ注意事項があり、uvはインデックスサーバーのURLが不正な場合でも警告を出してくれません。
 
 ```shell
-uv add torch==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118 --verbose
-
-DEBUG No cache entry for: https://download.pytorch.org/whl/cu118/torch/
-DEBUG Searching for a compatible version of torch (==2.1.2+cu118)
-DEBUG Selecting: torch==2.1.2+cu118 [compatible] (torch-2.1.2+cu118-cp310-cp310-linux_x86_64.whl)
-DEBUG Found stale response for: https://download.pytorch.org/whl/cu118/torch-2.1.2%2Bcu118-cp310-cp310-linux_x86_64.whl#sha256=60396358193f238888540f4a38d78485f161e28ec17fa445f0373b5350ef21f0
-DEBUG Sending revalidation request for: https://download.pytorch.org/whl/cu118/torch-2.1.2%2Bcu118-cp310-cp310-linux_x86_64.whl#sha256=60396358193f238888540f4a38d78485f161e28ec17fa445f0373b5350ef21f0
-DEBUG Found not-modified response for: https://download.pytorch.org/whl/cu118/torch-2.1.2%2Bcu118-cp310-cp310-linux_x86_64.whl#sha256=60396358193f238888540f4a38d78485f161e28ec17fa445f0373b5350ef21f0
+uv add tqdm --index https://download.pytorch.org/whl/cu999 # 明らかに存在しないインデックスサーバー
+Resolved 3 packages in 1.07s
+Installed 1 package in 2ms
+ + tqdm==4.66.5
 ```
 
-```
-> uv add "torch==2.1.2+cu118" "torchvision==0.16.2+cu118" --index-strategy unsafe-best-match
-Resolved 19 packages in 1ms
-error: distribution torch==2.1.2+cu118 @ registry+https://download.pytorch.org/whl/cu118 can't be installed because it doesn't have a source distribution or wheel for the current platform
-```
-これは様子が異なる。
+おかしいな？と思ったら`--verbose`オプションで確認しましょう。
 
-なんでさっきできていまダメなんだ？
+## it doesn't have a source distribution or wheel for the current platform
+
+指定されたバージョンのパッケージは存在するものの、PythonのバージョンやCPUのアーキテクチャが異なるなどで利用できないケースです。
+
+### すること
+
+1. Pythonバージョンやプラットフォームが意図通りであるかを確認する
+
+### Pythonバージョンの確認
+
+実は、`uv init`は元々バージョンを固定する仕様ではありませんでした。uv 0.4.4以降、`uv init`と同時に`.python-version`が作成されるようになったんですね。[^uv_6869]
+[^uv_6869]: https://github.com/astral-sh/uv/pull/6869
+
+なので、もしuvを使っていて、かつインデックスサーバーに存在するバージョンがaddできない場合、ランタイムのバージョンが誤っている可能性があります。次の通り確認できます。
+
 ```shell
-uv add "torch==2.1.2+cu118" "torchvision==0.16.2+cu118" --index-url https://download.pytorch.org/whl/cu118 --verbose
-DEBUG Searching for a compatible version of urllib3 (>=1.21.1, <1.27)
-DEBUG Selecting: urllib3==1.26.13 [compatible] (urllib3-1.26.13-py2.py3-none-any.whl)
-DEBUG Tried 19 versions: certifi 1, charset-normalizer 1, filelock 1, fsspec 1, idna 1, jinja2 1, markupsafe 1, mpmath 1, networkx 1, numpy 1, pillow 1, requests 1, sympy 1, torch 1, torchvision 1, train 1, triton 1, typing-extensions 1, urllib3 1
-DEBUG Split universal resolution took 3.455s
-Resolved 19 packages in 3.45s
-error: distribution torch==2.1.2+cu118 @ registry+https://download.pytorch.org/whl/cu118 can't be installed because it doesn't have a source distribution or wheel for the current platform
+uv run python --version
 ```
 
-```
-> uv run python --version
-   Built train @ file:///.../train
-Uninstalled 1 package in 1ms
-Installed 1 package in 7ms
-Python 3.12.0
-```
+## まとめ
 
-解答: uv initは元々バージョンを固定する仕様ではなかった。結果としてcpythonのバージョンが異なり、厳密にマッチするwheelがないのでエラーになっていた。
-https://github.com/astral-sh/uv/pull/6869
+uvでPyTorchをインストールする際に遭遇した問題と、その対処法をまとめました。
 
-uvのバージョンが壊れないようにするための挙動
-
-バージョン解決の経過を見ることは出来ないのか？
---verboseでできる
-
-https://github.com/astral-sh/uv/issues/6821
-
-uv add と uv pip install
-https://docs.astral.sh/uv/pip/compatibility/
-
-関連Issue
-https://github.com/astral-sh/uv/issues/1497
-https://github.com/astral-sh/uv/issues/2037
-
-## 参考
-
-https://qiita.com/fujine/items/11acac9aaa56791378b4
-
-https://www.pythonic-exam.com/archives/8336
-
-https://claude.ai/chat/3c53137a-6db0-4df8-88e4-cf1a0ec86df7
+uvの仕様は頻繁に更新されるため、まずはuvを最新化するのも有効だと思います。効率的で堅牢なパッケージ管理の役に立てば幸いです。
