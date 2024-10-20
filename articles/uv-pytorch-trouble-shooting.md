@@ -2,8 +2,8 @@
 title: "uv add torchで2度とNo solution foundと言わせない"
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["python", "uv", "rye", "pytorch"]
-published: false
+topics: ["python", "pip", "uv", "rye", "pytorch"]
+published: true
 ---
 
 ## TL;DR
