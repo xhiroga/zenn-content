@@ -1,5 +1,5 @@
 ---
-title: "brew caskで欲しいバージョンのfomulaがないのでtap自作する"
+title: "brew caskで欲しいバージョンのformulaがないのでtap自作する"
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["homebrew"]
