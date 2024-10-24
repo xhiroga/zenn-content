@@ -2,8 +2,8 @@
 title: "pip index versionsコマンドを知っているか？"
 emoji: "📦"
 type: "tech"
-topics: ["python", "pip", "パッケージ管理"]
-published: false
+topics: ["python", "pip", "uv"]
+published: true
 ---
 
 ## TL;DR
