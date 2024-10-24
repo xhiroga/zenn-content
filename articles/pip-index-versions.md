@@ -18,15 +18,17 @@ published: false
 しかし、既存の方法にはいくつかの問題がありました：
 
 - `pip search`: 用途が違います（キーワードを含むパッケージ名を探す）[^pip_reference_search]
-- `pip install torch==`: バージョン名を指定しないことで利用可能なバージョンを示すテクニックですが、エラーになります。
-- `pip install torch --dry-run`: 最新バージョンしかわかりません（ただし、関連する依存関係を教えてくれるので、これはこれで便利です）。
+- `pip install torch==`: バージョン名を指定しないことで利用可能なバージョンを示すテクニックですが、エラー扱いになります。[^windows_pip_install]
+- `pip install torch --dry-run`: 2022年に追加されたオプションです。最新バージョンしかわかりません（ただし、関連する依存関係を教えてくれるので、これはこれで便利です）。
 - `pip-search`や`yolk3k`を使う: 追加のパッケージインストールが必要です。
 
 [^pip_reference_search]: <https://kurozumi.github.io/pip/reference/pip_search.html>
 
+[^windows_pip_install]: さらに、私の環境のせいかもしれませんが、PowerShellだと失敗するんですよね...
+
 :::details なぜpip searchが使えなくなったのか？
-PyPIがXML-RPCのAPIサポートを終了したことにより、従来の `pip search` コマンドが使用できなくなりました。そのため、パッケージの情報を取得する新しい方法が必要となりました。
-<!-- TODO: 資料が必要 -->
+PyPIがXML-RPCのAPIサポートを終了したことにより、従来の `pip search` コマンドが使用できなくなりました。そのため、パッケージの情報を取得する新しい方法が必要となりました。[^pip_issue_5216]
+[^pip_issue_5216]: <https://github.com/pypa/pip/issues/5216>
 :::
 
 ## pip index versionsとは？
