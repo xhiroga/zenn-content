@@ -139,6 +139,10 @@ pip index versions torch
 
 ## Zenn Markdown Syntax
 
+### Frontmatter / Header 1
+
+FrontmatterがあるのでHeader 1は不要です。
+
 ### 太字
 
 Zenn.devでは、太字の**に続けて空白が必要です（ただし引用は続けて良い）

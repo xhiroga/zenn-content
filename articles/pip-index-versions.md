@@ -1,121 +1,83 @@
+---
+title: "pip index versionsコマンドを知っているか？"
+emoji: "📦"
+type: "tech"
+topics: ["python", "pip", "パッケージ管理"]
+published: false
+---
 
-- pip indexとは？
-  - pipのドキュメントには存在しない
-    - https://pip.pypa.io/en/stable/cli/
+## TL;DR
 
-もともとあったsearchコマンドは？
-PyPIが対応しなくなった。なぜ？
-PyPIがXML-RPCのAPIに対応しなくなったらしい。
-https://warehouse.pypa.io/api-reference/xml-rpc.html#deprecated-methods
-このWarehouseというのは？PyPIで使われているWebアプリケーションフレームワーク
+- `pip index versions <package_name>` コマンドで、パッケージの利用可能なバージョンを確認できます。
+- このコマンドは実験的な機能で、将来変更される可能性があります。
 
-PyPI以外ではsearchはサポートされているらしい。ほんとに？
-いずれにせよあまりサポートはされてなさそうだ。
-（ほかのインデックスサーバーのURLください）
+## 動機
+
+機械学習プロジェクトなどでパッケージをインストールする際、再現性を確保するために依存関係を厳密に指定したいことがあります。そのためには、パッケージの利用可能なバージョンを調べる必要があります。
+
+しかし、既存の方法にはいくつかの問題がありました：
+
+- `pip search`: 用途が違います（キーワードを含むパッケージ名を探す）[^pip_reference_search]
+- `pip install torch==`: バージョン名を指定しないことで利用可能なバージョンを示すテクニックですが、エラーになります。
+- `pip install torch --dry-run`: 最新バージョンしかわかりません（ただし、関連する依存関係を教えてくれるので、これはこれで便利です）。
+- `pip-search`や`yolk3k`を使う: 追加のパッケージインストールが必要です。
+
+[^pip_reference_search]: <https://kurozumi.github.io/pip/reference/pip_search.html>
+
+:::details なぜpip searchが使えなくなったのか？
+PyPIがXML-RPCのAPIサポートを終了したことにより、従来の `pip search` コマンドが使用できなくなりました。そのため、パッケージの情報を取得する新しい方法が必要となりました。
+<!-- TODO: 資料が必要 -->
+:::
+
+## pip index versionsとは？
+
+`pip index versions` は、パッケージの利用可能なバージョンを表示するコマンドです。このコマンドは、2021年に実装された比較的新しい機能です。[^pip_changelog_v21_2]
+
+[^pip_changelog_v21_2]: <https://pip.pypa.io/en/stable/news/#v21-2>
+
+このコマンドの背景には、次のような問題意識がありました（翻訳はClaudeによる）[^pip_issue_7975]：
+
+> 現在、pipにはPackageFinderを呼び出して"best match"を選択せずに利用する方法がありません。しかし、ユーザーにとっては、バージョン範囲をどのように指定するかを決めるために、利用可能なバージョンのリストを見ることがよくある操作です。
+
+[^pip_issue_7975]: <https://github.com/pypa/pip/issues/7975>
+
+`pip index versions` は、この問題を解決するために導入されました。
+
+## 使い方
+
+`pip index versions` の基本的な使い方は次の通りです：
 
 ```shell
-pip search torch
-ERROR: XMLRPC request failed [code: -32500]
-RuntimeError: PyPI no longer supports 'pip search' (or XML-RPC search). Please use https://pypi.org/search (via a browser) instead. See https://warehouse.pypa.io/api-reference/xml-rpc.html#deprecated-methods for more information.
+$ pip index versions torch
+WARNING: pip index is currently an experimental command. It may be removed/changed in a future release without prior warning.
+torch (2.5.0)
+Available versions: 2.5.0, 2.4.1, 2.4.0, 2.3.1, 2.3.0, 2.2.2, 2.2.1, 2.2.0, 2.1.2, 2.1.1, 2.1.0, 2.0.1, 2.0.0
+  INSTALLED: 2.2.0
+  LATEST:    2.5.0
 
-pip search torch --index "https://download.pytorch.org/whl/cu124"
-ERROR: Exception:
-Traceback (most recent call last):
-  File "C:\Users\hiroga\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pip\_internal\network\xmlrpc.py", line 52, in request
-    raise_for_status(response)
-  File "C:\Users\hiroga\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pip\_internal\network\utils.py", line 56, in raise_for_status
-    raise NetworkConnectionError(http_error_msg, response=resp)
-pip._internal.exceptions.NetworkConnectionError: 403 Client Error: Forbidden for url: https://download.pytorch.org/whl/cu124
-
+# PyPI以外のインデックスサーバーを利用する場合
+$ pip index versions torch --index "https://download.pytorch.org/whl/cu124"
+WARNING: pip index is currently an experimental command. It may be removed/changed in a future release without prior warning.
+torch (2.5.0+cu124)
+Available versions: 2.5.0+cu124, 2.4.1+cu124, 2.4.0+cu124
+  INSTALLED: 2.2.0
+  LATEST:    2.5.0+cu124
 ```
 
-ドキュメントにないのでソースを探す
-https://github.com/pypa/pip
+このコマンドは、指定したパッケージの利用可能なバージョンとインストール済みのバージョン、最新バージョンを表示します。
 
+:::message alert
+`pip index versions` は現在実験的な機能です。将来のリリースで予告なく削除または変更される可能性があります。
+:::
 
-2021年に実装されている。割と新しい？
-https://github.com/pypa/pip/commit/3751878b42c9914e1c71aeec62b97ec47fb9accf
+## uvでの対応
 
-Release noteより抜粋
-https://pip.pypa.io/en/stable/news/#id419
+（あまりいないと思いますが）2024年10月現在、`uv pip`は`index versions`に対応していません。しかし、`pip index versions` に相当する機能の実装を期待するIssueがあります。[^uv_issue_2111]。
 
-> Add new subcommand pip index used to interact with indexes, and implement pip index version to list available versions of a package. (#7975)
+[^uv_issue_2111]: <https://github.com/astral-sh/uv/issues/2111>
 
-そのモチベーションのIssue
-https://github.com/pypa/pip/issues/7975
+## まとめ
 
+`pip index versions` は、パッケージの利用可能なバージョンを簡単に確認できる便利なコマンドです。特に、再現性が重要な機械学習プロジェクトなどで役立ちます。
 
-pip install には dry runがある。
->   --dry-run                   Don't actually install anything, just print what would be. Can be used in combination with --ignore-installed to 'resolve' the
-                              requirements.
-
-uv pip installにもdry runがある
-https://docs.astral.sh/uv/reference/cli/#uv-pip-install
-> --dry-run
-Perform a dry run, i.e., don’t actually install anything but resolve the dependencies and print the resulting plan
-
-おそらく--dry-runだとBest Matchを探してしまうのでは？
-
-Searchとは異なる方法なんだろうか？
-PackageFinder は（index version 内部で使われているコマンド）
-
-名前はそこそこ議論があった
-https://github.com/pypa/pip/issues/8516
-
-pip searchだと面倒そう
-I feel we are free to do anything with pip search now. I feel we can just accept this to replace pip search <term> and slap on a big red banner whenever it’s called telling the user this is experimental and will change at any time without notice whatsoever, so users should use it at their own risk.
-
-最終的には名前は実装のPRで議論されている
-https://github.com/pypa/pip/pull/8978
-
-
-また立ち位置は？
-
-uvでの対応予定は？
-Feature request: show available package versions (equivalent of pip index versions) #2111
-https://github.com/astral-sh/uv/issues/2111
-
-わかる。ほしい。
-
-> # or, the old hack:
-pip install <some-package>==
-こんなテクが...
-
-ここでも紹介されてる。
-https://stackoverflow.com/questions/4888027/how-to-list-all-available-package-versions-with-pip
-
-> For pip >= 21.2 use:
-
-pip index versions pylibmc
-Note that this command is experimental, and might change in the future!
-
-Below approach breaks with pip 24.1 released on 2024-06-21.
-
-For pip >= 21.1 use:
-
-pip install pylibmc==
-For pip >= 20.3 use:
-
-pip install --use-deprecated=legacy-resolver pylibmc==
-For pip >= 9.0 use:
-
-$ pip install pylibmc==
-Collecting pylibmc==
-  Could not find a version that satisfies the requirement pylibmc== (from 
-  versions: 0.2, 0.3, 0.4, 0.5.1, 0.5.2, 0.5.3, 0.5.4, 0.5.5, 0.5, 0.6.1, 0.6, 
-  0.7.1, 0.7.2, 0.7.3, 0.7.4, 0.7, 0.8.1, 0.8.2, 0.8, 0.9.1, 0.9.2, 0.9, 
-  1.0-alpha, 1.0-beta, 1.0, 1.1.1, 1.1, 1.2.0, 1.2.1, 1.2.2, 1.2.3, 1.3.0)
-No matching distribution found for pylibmc==
-The available versions will be printed without actually downloading or installing any packages.
-
-For pip < 9.0 use:
-
-pip install pylibmc==blork
-
-<<<
-
-pip search と pip index versionsの違い
-
-> First find the latest version available with pip search <package name>. 
-latestしかないっぽい。検証する...と思ったがsearchが対応しているインデックスサーバーを見つけられなかった
-
+ただし、実験的な機能であることに注意が必要です。今後の変更に備えて、最新の情報をチェックすることをおすすめします。
