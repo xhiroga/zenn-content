@@ -6,7 +6,7 @@
 
 - 記事内で指定がない限り、一般的なソフトウェアエンジニアが対象となる読者です。
 
-## ページの構成
+## Page Structure
 
 すでに下書きで定義されている場合を除いて、次のいずれかのページ構成を用いることを検討してください。必要に応じて章や節を足して良いです。
 
@@ -43,7 +43,7 @@
 ## 参考URL
 ```
 
-## 文の構成
+## Sentence Structure
 
 ### ハルシネーションの予防
 
@@ -69,7 +69,44 @@ Pythonのパッケージのフォーマットであるwheelは、モンティパ
 [^python_2021]: <https://discuss.python.org/t/where-the-name-wheel-comes-from/6708>
 ```
 
-### 具体例の提示
+### 曖昧より狭くても具体的に
+
+#### Bad
+
+```md
+pip indexコマンドは比較的新しい機能で、2021年に実装されました。そのため、一部の環境では利用できない可能性があります。
+```
+
+#### Good
+
+```md
+pip indexコマンドは比較的新しい機能で、2021年に実装されました。x.y.z未満のバージョンでは利用できません。
+<!-- TODO: 調査が必要 -->
+```
+
+#### Very Good
+
+```md
+pip indexコマンドは比較的新しい機能で、2021年に実装されました。21.2未満のバージョンでは利用できません。[^pip_changelog_v21_2]
+[^pip_changelog_v21_2]: <https://pip.pypa.io/en/stable/news/#v21-2>
+```
+
+### 百聞は一見にしかず
+
+#### Bad
+
+```md
+pip index versionsは、インデックスサーバー上のパッケージ情報を表示するコマンド・サブコマンドです。
+```
+
+#### Good
+
+```md
+pip index versionsは、インデックスサーバー上のパッケージ情報を表示するコマンド・サブコマンドです。
+例えば、次のコマンドを実行してみてください。
+
+pip index versions torch
+```
 
 ### 文体
 
@@ -100,7 +137,7 @@ Pythonのパッケージのフォーマットであるwheelは、モンティパ
 
 書籍・単行本・雑誌・新聞・Webサイト・映画・CDアルバム等の名前・タイトルの固有名詞には、「」ではなく『』を用いてください。
 
-## Zennのマークダウン記法
+## Zenn Markdown Syntax
 
 ### 太字
 
@@ -157,6 +194,48 @@ $ pwd
 /Users/hiroga/Documents/GitHub/zenn-content
 ```
 
+### Log
+
+ターミナルの出力などのログは、アコーディオンで残してください。
+
+#### Good
+
+:::details pip index versions torchの出力
+
+```shell
+pip index versions torch
+WARNING: pip index is currently an experimental command. It may be removed/changed in a future release without prior warning.
+torch (2.5.0)
+Available versions: 2.5.0, 2.4.1, 2.4.0, 2.3.1, 2.3.0, 2.2.2, 2.2.1, 2.2.0, 2.1.2, 2.1.1, 2.1.0, 2.0.1, 2.0.0
+  INSTALLED: 2.2.0
+  LATEST:    2.5.0
+```
+
+:::
+
+## Self Review
+
+Self reviewのコメントをFrontmatterに書いてください。また、解消されたコメントは削除してください。
+
+```md
+---
+title: "..."
+emoji: "🔖"
+type: "tech" # or "idea"
+topics: [...]
+published: false
+self_review: # HERE
+  - ...
+  - ...
+---
+```
+
+### 因果関係
+
+#### Example
+
+- "PyPIがXML-RPCのAPIサポートを終了したことにより、従来の `pip search` コマンドが使用できなくなりました。そのため、パッケージの情報を取得する新しい方法が必要となりました。" とあるが、直接的に言及しているIssueやPRの議論が引用されていない。
+
 ## 参考URL
 
 この指示にあたり、以下のURLを参考にした。
@@ -164,3 +243,4 @@ $ pwd
 - [X | コミュニティノートガイド](https://communitynotes.x.com/guide/ja/contributing/examples)
 - <https://ja.wikipedia.org/wiki/Wikipedia:秀逸な記事>
 - [日本語の文章等で使われる約物の使い分けルール](https://jp-college.com/cat_japanese05/20220224/)
+- [詭弁のカタログ](https://togetter.com/li/1355346)
