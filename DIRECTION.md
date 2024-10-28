@@ -8,9 +8,9 @@
 
 ## Page Structure
 
-すでに下書きで定義されている場合を除いて、次のいずれかのページ構成を用いることを検討してください。必要に応じて章や節を足して良いです。
+ページ構成の一例を次の通り示します。
 
-### テクニック・トラブルシュート・ドキュメント
+### トラブルシュート
 
 ```md
 
@@ -23,8 +23,6 @@
 ## やり方
 
 ## まとめ
-
-## 参考URL
 ```
 
 ### 失敗談
@@ -39,8 +37,6 @@
 ## 再発防止
 
 ## まとめ
-
-## 参考URL
 ```
 
 ## Sentence Structure
@@ -217,13 +213,31 @@ Available versions: 2.5.0, 2.4.1, 2.4.0, 2.3.1, 2.3.0, 2.2.2, 2.2.1, 2.2.0, 2.1.
 
 :::
 
-## Self Review
+## Meta notes
 
-Self reviewのコメントをFrontmatterに書いてください。また、解消されたコメントは削除してください。
+Reviewer向けのnotesをFrontmatterに書いてください。
+
+### Self Review
+
+書いていて不足を感じる点はself reviewとして残して下さい。
+
+### Slug
+
+slugの候補を提案してください。slugとは、URLの次の部分です。
+
+`https://zenn.dev/ユーザー名/articles/{slug}`
+
+条件は次の通り。
+
+- 半角英小文字（a-z）、半角数字（0-9）、ハイフン（-）、アンダースコア（_）
+- 12〜50字
+- ただし、他の記事はkebab-caseで統一
+
+### Good
 
 ```md
 ---
-title: "..."
+title: "Pythonのパッケージ管理ツールuvの便利な使い方999選"
 emoji: "🔖"
 type: "tech" # or "idea"
 topics: [...]
@@ -231,6 +245,12 @@ published: false
 self_review: # HERE
   - ...
   - ...
+slug_idea: # HERE
+  - python-uv-package-manager-999-tips
+  - useful-python-uv-tips-999
+  - 999-ways-to-use-python-uv
+  - python-uv-package-management-guide
+  - mastering-python-uv-tips
 ---
 ```
 
