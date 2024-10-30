@@ -4,26 +4,34 @@ emoji: "📎"
 type: "tech"
 topics: ["CLIP", "StableDiffusion"]
 published: false
+chats:
+- https://claude.ai/chat/19b185aa-b5be-49f1-a73b-9a88a38fab48
+- https://claude.ai/chat/8134061b-e048-424f-96f1-a224ce43e764
 ---
 
-## 
+## TL;DR
 
+- Stable DiffusionのモデルからCLIP Textモデルを取り出そうとしました
+- Stable DiffusionはCLIP Textモデルのすべてを使っているわけではないです
+- ViT/L-14の重みの一部をStable Diffusion由来の重みに差し替えても動くことが確認できました
 
 ## 動機
 
 Stable Diffusionモデルの特性を調べるうえで、CLIPScoreという指標があることを知りました。
 
-特に継続学習したモデルを調べようと思ったのですが、訓練に使用された・埋め込まれているCLIPモデルを特定する必要があると思いました。また、LoRAなどの学習ではText Encoderも学習させることができます。
+そこで任意のモデルのCLIPScoreを調べるシステムを組もうと思ったのですが、モデルによってCLIPが異なる可能性に思い当たりました。そのため、正しい計測にはモデルごとのCLIPを特定する必要がありそうです。
 
-そこで、Stable DiffusionモデルからCLIPを取り出して使うことができるのかを検証しました。
+その代わり、Stable DiffusionモデルからCLIPを取り出して使うことができるのかを検証しました。
 
-## モデルの構造
+## CLIPとは（おさらい）
 
 CLIPは、画像のキャプションのペアを用いて、TextのEncoderと画像のEncoderが近い埋め込みを返すように訓練したモデルです。
 
 ![CLIP](https://github.com/openai/CLIP/blob/main/CLIP.png?raw=true)
 
-CLIPのうち、Stable Diffusionに埋め込まれているのはフローチャート中にピンクで示した部分です。勉強中なので、作図は誤っている可能性があります。
+CLIPのうち、Stable Diffusionに埋め込まれているのはフローチャート中にピンクで示した部分です。
+
+（ViT/L-14をもとに作図。勉強中のため誤っている可能性があります）
 
 ```mermaid
 flowchart TB
@@ -36,7 +44,7 @@ direction LR
 token_embedding[Token Embedding<br/>49408 x 768]:::sd
 positional_embedding[Positional Embedding<br/>77 x 768]:::sd
 resblocks_text[Transformer Blocks<br/>12層]:::sd
-eos_token(["Extract [CLS] Token<br/>1 x 768"]):::simple
+eos_token(["[CLS] Tokenの抽出<br/>1 x 768"]):::simple
 text_projection[Text Projection<br/>768 x 768]:::simple
 text_input --> token_embedding
 token_embedding --> positional_embedding
@@ -45,13 +53,13 @@ end
 
 subgraph vision_encoder["Vision Encoder"]
 direction LR
-patch_embedding[Patch Embedding<br/>49 x 768]:::simple
-positional_embedding_vision[Positional Embedding<br/>50 x 768]:::simple
-resblocks_vision[Transformer Blocks<br/>12層]:::simple
-cls_token(["Extract [CLS] Token<br/>1 x 768"]):::simple
+class_embedding[Class Embedding<br/>1024]:::simple
+positional_embedding_vision[Positional Embedding<br/>257 x 1024]:::simple
+resblocks_vision[Transformer Blocks<br/>23層]:::simple
+cls_token(["[CLS] Tokenの抽出<br/>1 x 768"]):::simple
 visual_projection[Visual Projection<br/>1024 x 768]:::simple
-image_input --> patch_embedding
-patch_embedding --> positional_embedding_vision
+image_input --> class_embedding
+class_embedding --> positional_embedding_vision
 positional_embedding_vision --> resblocks_vision --> cls_token --> visual_projection
 end
 
@@ -74,36 +82,33 @@ classDef sd fill:#f9f
 
 ## 実装方針
 
-はじめにCLIPの実装ですが、OpenAI CLIPを用いました。今から考えると、Huggingface TransformersのCLIPのCLIPTextModelなどを使ったほうが楽だったかもしれませんが...
+はじめにCLIPの実装ですが、OpenAI CLIPを用いました。今から考えると、[Huggingface TransformersのCLIPのCLIPTextModel](https://huggingface.co/docs/transformers/en/model_doc/clip#transformers.CLIPTextModel)を使ったほうが楽だったかもしれません...
 
-リサーチ
+OpenAI CLIPを使ってテキストの重みのみをロードする[Issue](https://github.com/openai/CLIP/issues/113)があり、これを参考にしました。ただし、Issueとは異なりライブラリ側のコードを修正しなくても動くようにしました。
 
-OpenAI CLIPを使った方法はあった。しかしライブラリのコードをいじる。これは再現性が低くなる。
-別の方法を検討したい（でもよく考えたらコードをフォークしたらそれで済んだのでは）
-https://github.com/openai/CLIP/issues/113
+また、前述のとおりStable DiffusionモデルはCLIPのText Projectionにかかる重みをもっていません。ここは仕方なく、訓練済みCLIPから取ってくることにしました。
 
-CLIPTextModel使ったほうが絶対楽だったぞ...
-https://huggingface.co/docs/transformers/en/model_doc/clip#transformers.CLIPTextModel
+## 実装
 
-実装の大まかな方針
-
-無いレイヤーはCLIPから取ってくる
-CLIPのstate_dictからのロード機能を使う
-
-TODO
-
-- [ ] state_dictとは？（なんか共通規格っぽいけど誰が定義したの？Torch？）
-- [ ] 実際のレイヤーは階層構造になっているけど、state_dictでは開いている
-
-ソース
+ソースコードをGitHubに公開しました。
 
 https://github.com/xhiroga/til/tree/main/software-engineering/openai/clip/_src/text-encoder-only
 
+## 評価
 
-評価
+（比較的構造がシンプルな）Stable Diffusionモデルから取り出したCLIPとViT/L-14で、同じテキストを埋め込み表現にしてそのコサイン類似度を測りました。結果、非常に近い値になりました。
 
-ViT/L-14と、同じテキストを埋め込みにしてコサイン類似度を測る
+```shell
+$ uv run python cos_sim.py
+texts=['a diagram', 'a dog', 'a cat']
+text_features_vitl14.shape=torch.Size([3, 768])
+text_features.shape=torch.Size([3, 768])
+text_features_sd_clip.shape=torch.Size([3, 768])
+similarity=0.9999422497250121, distance=5.775027498788887e-05
+```
 
-結果
+なぜ完全一致ではないんだろう？と謎は残るものの、Stable Diffusion1.5でViT/L-14を使っていることが体感でき、良かったです。
 
-<!-- https://claude.ai/chat/19b185aa-b5be-49f1-a73b-9a88a38fab48, https://claude.ai/chat/8134061b-e048-424f-96f1-a224ce43e764 -->
+## まとめ
+
+CLIPモデルの重みをStable DiffusionモデルのCLIPの重みで差し替えても動作することが確認できました。
