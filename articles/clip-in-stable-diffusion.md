@@ -11,9 +11,9 @@ chats:
 
 ## TL;DR
 
-- Stable DiffusionのモデルからCLIP Textモデルを取り出そうとしました
-- Stable DiffusionはCLIP Textモデルのすべてを使っているわけではないです
-- ViT/L-14の重みの一部をStable Diffusion由来の重みに差し替えても動くことが確認できました
+- Stable DiffusionのモデルからCLIP Textモデルを取り出そうとしました。
+- Stable DiffusionはCLIP Textモデルのすべてを使っているわけではありません。
+- Stable Diffusion由来の重みでViT/L-14の重みを差し替えても動くことを確認できました。
 
 ## 動機
 
@@ -76,7 +76,12 @@ classDef sd fill:#f9f
 ```
 
 図の通り、Stable DiffusionはCLIPのText Encoderをすべて使っているわけではありません。CLIPはテキストの情報を分類のための[CLS]トークンに集約させて使っています。一方で、Stable Diffusionでは精度の高い推論のためにすべてのトークンに対する埋め込み表現を用いています。
-<!-- https://huggingface.co/blog/stable_diffusion -->
+
+> The stable diffusion model takes both a latent seed and a text prompt as an input. The latent seed is then used to generate random latent image representations of size 64×64 where as the text prompt is transformed to text embeddings of size 77×768 via CLIP's text encoder.[^huggingface_stable_diffusion]
+
+[^huggingface_stable_diffusion]: <https://huggingface.co/blog/stable_diffusion>
+
+引用にある**text embeddings of size 77×768**とは、Transformer Blockを経由した状態（[CLS]トークンの抽出直前）です。なので、CLIPとしての動作に必要なText Projection層は同梱されていないんですね。
 
 したがって、実はStable Diffusionから純粋なCLIPのText Encoderを取り出して使うことができませんでした。
 
@@ -92,7 +97,7 @@ OpenAI CLIPを使ってテキストの重みのみをロードする[Issue](http
 
 ソースコードをGitHubに公開しました。
 
-https://github.com/xhiroga/til/tree/main/software-engineering/openai/clip/_src/text-encoder-only
+<https://github.com/xhiroga/til/tree/main/software-engineering/openai/clip/_src/text-encoder-only>
 
 ## 評価
 
