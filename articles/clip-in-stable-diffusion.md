@@ -3,7 +3,7 @@ title: "SDモデルからCLIPを取り出して使う"
 emoji: "📎"
 type: "tech"
 topics: ["CLIP", "StableDiffusion"]
-published: false
+published: true
 chats:
 - https://claude.ai/chat/19b185aa-b5be-49f1-a73b-9a88a38fab48
 - https://claude.ai/chat/8134061b-e048-424f-96f1-a224ce43e764
@@ -97,7 +97,8 @@ OpenAI CLIPを使ってテキストの重みのみをロードする[Issue](http
 
 ソースコードをGitHubに公開しました。
 
-<https://github.com/xhiroga/til/tree/main/software-engineering/openai/clip/_src/text-encoder-only>
+<!-- markdownlint-disable -->
+https://github.com/xhiroga/til/blob/86afdf3aa5fffec038ecd40923775ee5a4138d58/software-engineering/openai/clip/_src/text-encoder-only/sd.py
 
 ## 評価
 
