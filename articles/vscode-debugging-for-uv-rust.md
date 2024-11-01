@@ -3,12 +3,12 @@ title: "uvのデバッグ環境をVS Codeで構築する"
 emoji: "🔍"
 type: "tech"
 topics: ["rust", "uv", "vscode", "debug"]
-published: false
+published: true
 ---
 
 ## TL;DR
 
-Rustで書かれたPythonパッケージマネージャーuvのデバッグ環境をVisual Studio Codeで構築する方法を紹介します。
+Rustで書かれたPythonパッケージマネージャー[uv](https://github.com/astral-sh/uv)のデバッグ環境をVisual Studio Codeで構築する方法を紹介します。
 
 ## 動機
 
