@@ -2,7 +2,7 @@
 title: "uvのデバッグ環境をVS Codeで構築する"
 emoji: "🔍"
 type: "tech"
-topics: ["rust", "uv", "vscode", "debug"]
+topics: ["rust", "uv", "vscode"]
 published: true
 ---
 
@@ -89,3 +89,7 @@ $ code --install-extension vadimcn.vscode-lldb
 VS Codeを使ってuvのデバッグ環境を構築する方法を紹介しました。この環境を使うことで、uvの内部動作を詳細に調査できます。
 
 この方法を使えば、uvの動作をステップ実行したり、変数の値を確認したりすることができます。Rustプロジェクトのデバッグに慣れていない方でも、視覚的に分かりやすく追跡できるでしょう。
+
+## 参考
+
+- [Rustで書いたプログラムをデバッグする方法色々](https://qiita.com/lechatthecat/items/c5444fdf0656cab6c0e4)
