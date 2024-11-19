@@ -4,9 +4,8 @@ emoji: "🐘"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["AI", "機械学習", "ディープラーニング"]
 published: false
-<!-- https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108 -->
----
 
+---
 <!-- 方針: LLMコミュニティでの発表であり、自分の学習であることも踏まえ、わからない概念を細かくケアする -->
 
 ## Note
@@ -243,6 +242,8 @@ https://zenn.dev/sunwood_ai_labs/articles/vllm-pagedattention-llm-inference
 [^Salimans_et_al_2016]: T. Salimans, I. Goodfellow, W. Zaremba, V. Cheung, A. Radford, and X. Chen, “Improved Techniques for Training GANs,” Jun. 10, 2016, arXiv: arXiv:1606.03498. doi: 10.48550/arXiv.1606.03498.
 [^Heusel_et_al_2017]: M. Heusel, H. Ramsauer, T. Unterthiner, B. Nessler, and S. Hochreiter, “GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium,” Jan. 12, 2018, arXiv: arXiv:1706.08500. doi: 10.48550/arXiv.1706.08500.
 [^fmuuly] “Llamaで画像生成：LlamaGen【論文】,” Zenn. Accessed: Nov. 05, 2024. [Online]. Available: <https://zenn.dev/fmuuly/articles/40f4863385b7d8>
+
+<!-- https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108 -->
 
 ## TODO
 
