@@ -90,39 +90,38 @@ https://note.com/yutohub/n/n5fd752f212d6
 
 ## Next-Token Predictionによる画像生成
 
-![Image generation by next-image-token prediction | VAR](https://github.com/FoundationVision/VAR/assets/39692511/3e12655c-37dc-4528-b923-ec6c4cfef178)
-
-### 自己回帰モデルとは？
-
-出力が入力に入るモデル。Llamaとか...
-
-←→ 一度にすべての出力を出すタイプ
+**TODO: 説明のブラッシュアップ**
 
 - Llamaをそのまま使っている
 - クラス分類をするために、クラストークンを用いている。ViTに出てくるやつ
 - Transformerで画像トークンというのはDiTなどに倣っている
+- **TODO: 画像生成のアプローチとしては拡散モデルよりも古そうな気がするので、それにも触れる**
+
+![Image generation by next-image-token prediction | VAR](https://github.com/FoundationVision/VAR/assets/39692511/3e12655c-37dc-4528-b923-ec6c4cfef178)
+
+### 自己回帰モデルのおさらい
+
+**TODO: 説明**
 
 ### 先行研究
+
+**TODO: 全体的な裏取り**
 
 - DiT: 拡散モデル、ただしノイズの除去にCNNの代わりにTransformerを用いる
 - PixArt-α: SD1.5の1割の学習時間で住むやつ
 - VQGAN: 画像トークナイザーで紹介した
 - 更に遡ればImageGPTがある？
 
-### クラスからの画像生成・テキスト条件付き画像生成
+### 条件付きの画像生成
 
-クラストークンを入力に用いるらしい
+クラストークンを入力に用いる
+
+**TODO: CLIPなど、同様の手法を用いたモデルを絡めた説明**
 
 ### Scale Up
 
-DDPって？FSDPって？
-https://zenn.dev/syoyo/scraps/5fc9c6edb48511
-
-### CFGって？
-
-https://ai-illust.art/term/272
-
-画像を2枚生成するらしいが...あんまりSD使ってて意識しないな？
+**TODO: DDP, FSDP, CFGの説明**
+<!-- https://zenn.dev/syoyo/scraps/5fc9c6edb48511 -->
 
 ## 評価
 
