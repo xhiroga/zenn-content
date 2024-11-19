@@ -153,21 +153,14 @@ https://data-analytics.fun/2021/12/31/understanding-fid/
 - フレシェインセプション距離[^Heusel_et_al_2017]
 - Frechet、フレシェは、おそらくフレシェ空間から？
 - いかに多様な画像を生成できるか？
+  - 本物の画像と、埋め込み表現を計算してその距離を測る
+  - 具体的にはImageNetやCOCOを用いることが多い。今回はImageNet256x256らしい、それって何枚？
 - Inception-V3で埋め込みを計算する（あれ、Inception-V3ってクラス分類のモデルでは？）
+- 小さいほど良い。BigGANで約7, 最新の評価にはDiffusionで2くらい **TODO: 単位は?**
 
 > 評価指標。主な指標としてFréchet inception distance (FID) [Heusel et al. 2017]を用いる。また、二次指標とし て、Inception Score (IS) [Salimans et al. 2016]、sFID [Nash et al. 2021]、Precision/Recall [Kynkänniemi et al. 2019]を報告する。すべての評価は、公正な比較のためにADMのTensorFlowスクリプト[Dhariwal & Nichol 2021]を 使用して実装されている。
 
 <!-- https://claude.ai/chat/fd1ccb06-f197-469b-a2af-36ace1d784b9 -->
-
-本物の画像と、埋め込み表現を計算してその距離を測る
-具体的にはImageNetやCOCOを用いることが多い
-今回はImageNet256x256らしい、それって何枚？
-
-小さいほど良い。BigGANで約7, 最新の評価にはDiffusionで2くらい。
-
-[1] M. Heusel, H. Ramsauer, T. Unterthiner, B. Nessler, and S. Hochreiter, “GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium,” in Advances in Neural Information Processing Systems, Curran Associates, Inc., 2017. Accessed: Nov. 14, 2024. [Online]. Available: https://papers.nips.cc/paper/2017/hash/8a1d694707eb0fefe65871369074926d-Abstract.html
-
-単位は？例えば1ならなんなのか。
 
 ### rFID
 
