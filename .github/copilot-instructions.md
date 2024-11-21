@@ -217,6 +217,27 @@ Available versions: 2.5.0, 2.4.1, 2.4.0, 2.3.1, 2.3.0, 2.2.2, 2.2.1, 2.2.0, 2.1.
 
 Reviewer向けのnotesをFrontmatterに書いてください。
 
+### Topics
+
+Zenn.dev において、特に機械学習の分野では次のようなタグが使われています。表記揺れ防止のため、予め次の通り示しておきます。
+
+#### Good
+
+- machinelearning
+- deeplearning
+- computervision
+- cg
+- AI
+- LLM
+- 論文
+
+#### Bad
+
+- 機械学習: machinelearning に統一
+- 深層学習: deeplearning に統一
+- ディープラーニング: deeplearning に統一
+- CV: computervision とは別Topicとして扱われてしまう
+
 ### Self Review
 
 書いていて不足を感じる点はself reviewとして残して下さい。
