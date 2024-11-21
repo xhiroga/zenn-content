@@ -1,9 +1,9 @@
 ---
-title: "【論文】StrokeNUWA: ストロークトークンを導入したSVG生成"
+title: "StrokeNUWA: SVG生成のためのストロークトークン【論文】"
 emoji: "🎨"
 type: "tech"
 topics: ["論文", "machinelearning", "svg", "pytorch", "computervision", "deeplearning"]
-published: false
+published: true
 self_review:
   - LLMとの互換性についての説明をもう少し詳しく
   - アーキテクチャの図があると良い
@@ -58,7 +58,8 @@ StrokeNUWAは、これらの課題を解決するために「ストロークト�
 
 ### ストロークトークンとは
 
-もともとIconShopでは、SVGの線や丸・長方形などのパスをそのままトークンとして扱うのではなく、ペンの移動（コマンド）に分解した上でトークンとして扱っていました。（この方式に名前はありませんが、敢えて言えば「コマンドトークン」でしょうか？）
+もともとIconShopでは、SVGの線や丸・長方形などのパスをそのままトークンとして扱うのではなく、ペンの移動（コマンド）に分解した上でトークンとして扱っていました。
+（この方式に名前はありませんが、敢えて言えば「コマンドトークン」でしょうか？）
 
 SVGは実はできることが非常に多くて、グラデーション、ぼかし、ドロップシャドウ、アニメーションなどの機能があります。研究にあたってはそれらを除外したほうが良さそうですね。それに加えて、長方形を長方形として学ぶのではなく、4つの辺として学んだほうが、汎化能力が高そうというのは直感的に納得できます。
 
@@ -119,7 +120,7 @@ SVGコードをストロークトークンに変換するVQ-Stroke, テキスト
 
 SVGパスをストロークトークンに還元するコンポーネントです。SVGパスをコマンドの羅列に分解し、パスを行、コマンドを列とした行列に変換する工程と、行列をCNNでストロークトークンに変換する工程に分かれます。
 
-パスごとに畳み込みをすると思われ、そのため入力は行列ですが1次元畳み込みを適用しています。
+パスごとに畳み込みをすると思われ、そのため入力は行列ですが1次元畳み込みを適用しています。また、再構成品質と圧縮率を評価しています。
 
 ## 実験
 
@@ -142,7 +143,7 @@ FIGR-8-SVGには150万近いSVGアイコンがあると思われ（なおFIGR-8�
 [^Heusel_et_al_2017]: M. Heusel, H. Ramsauer, T. Unterthiner, B. Nessler, and S. Hochreiter, “GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium,” Jan. 12, 2018, arXiv: arXiv:1706.08500. doi: 10.48550/arXiv.1706.08500.
 [^mm_0824_2021]: https://data-analytics.fun/2021/12/31/understanding-fid/
 
-CLIPScoreは27程度のようです。実はCLIPScoreに馴染みがなかったので[HuggingFace上のデモ](https://huggingface.co/spaces/taesiri/CLIPScore)で試してみましたが、だいたい20~30に収まっていれば正常なようですね。
+CLIPScoreは27程度のようです。実はCLIPScoreに馴染みがなかったので[HuggingFace上のデモ](https://huggingface.co/spaces/taesiri/CLIPScore)で試してみましたが、人間から見て自然なキャプションでも20~30の範囲に収まるようですね。
 
 ## 読んで思ったこと
 
