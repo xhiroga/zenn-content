@@ -4,10 +4,6 @@ emoji: "🎨"
 type: "tech"
 topics: ["論文", "machinelearning", "svg", "pytorch", "computervision", "deeplearning"]
 published: true
-self_review:
-  - LLMとの互換性についての説明をもう少し詳しく
-  - アーキテクチャの図があると良い
-  - 実装面での課題についてより具体的な説明が必要
 notebook_urls:
    - https://claude.ai/chat/caa52279-d9ed-4da0-9309-dd687c4d7a5f
    - https://notebooklm.google.com/notebook/493f0c50-6b99-4034-a77c-c8cc350ee157
@@ -139,7 +135,7 @@ FIGR-8-SVGには150万近いSVGアイコンがあると思われ（なおFIGR-8�
 また品質については、CLIPScoreとFIDを用いて評価しています。CLIPScore[^Hassel_2022]とは、画像のキャプションの品質を測るための指標で、テキストと画像の埋め込みのコサイン類似度を用いた評価を行います。
 [^Hassel_2022]: J. Hessel, A. Holtzman, M. Forbes, R. L. Bras, and Y. Choi, “CLIPScore: A Reference-free Evaluation Metric for Image Captioning,” Mar. 23, 2022, arXiv: arXiv:2104.08718. doi: 10.48550/arXiv.2104.08718.
 
-また、FID（フレチェ開始距離）[^Heusel_et_al_2017]についてはmm_0824さんの記事[^mm_0824_2021]が詳しいです。
+また、FID（フレチェインセプション距離）[^Heusel_et_al_2017]についてはmm_0824さんの記事[^mm_0824_2021]が詳しいです。
 [^Heusel_et_al_2017]: M. Heusel, H. Ramsauer, T. Unterthiner, B. Nessler, and S. Hochreiter, “GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium,” Jan. 12, 2018, arXiv: arXiv:1706.08500. doi: 10.48550/arXiv.1706.08500.
 [^mm_0824_2021]: https://data-analytics.fun/2021/12/31/understanding-fid/
 
