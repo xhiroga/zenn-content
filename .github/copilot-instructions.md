@@ -112,8 +112,17 @@ pip index versions torch
 
 文が短くなるよう、分けられる文は分けます。
 
-- Bad: 私はProxmoxを運用していますが、容量が気になるので、バックアップをDiskstationに保存しています。
-- Good: 私はProxmoxを運用しています。容量が気になるので、バックアップをDiskstationに保存しています。
+#### Bad
+
+```md
+私はProxmoxを運用していますが、容量が気になるので、バックアップをDiskstationに保存しています。
+```
+
+#### Good
+
+```md
+私はProxmoxを運用しています。容量が気になるので、バックアップをDiskstationに保存しています。
+```
 
 ### 漢語と和語
 

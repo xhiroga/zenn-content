@@ -4,6 +4,8 @@ emoji: "🐘"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["AI", "機械学習", "ディープラーニング"]
 published: false
+notebook_urls:
+  - https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108
 ---
 
 ## Autoregressive Model Beats Diffusion: Llama for Scalable Image Generation[^Sun_et_al_2024]
@@ -113,10 +115,29 @@ https://note.com/yutohub/n/n5fd752f212d6
 
 **TODO: CLIPなど、同様の手法を用いたモデルを絡めた説明**
 
+条件付き画像生成については、CFGなど同様の性質を示す。
+
+#### CFG
+
+拡散モデルで条件付き画像生成を学習するために、生成された画像とキャプションの適合度を計算してフィードバックする手法があった。なお、この適合度を計算する部品を分類器 (classifier)という。
+
+数式で言えば、キャプションを前提として画像が生成される条件付き確率$p(x|y)$を最大化するには、$p(y|x)p(x)$を最大化する必要がある、ということになる。
+
+ところが、拡散モデルではノイズを徐々に取り除く形で画像を生成する。だから、ノイズが含まれる各段階ごとにキャプションとの適合度を計算する必要があり、手間が大きかった。
+
+また、生成された画像を評価する際の指標であるFIDなどが分類を内部で使っているので、学習時に分類器からフィードバックを受けると数値指標をハックする形になることも懸念でした。
+
+**TODO: CFG**
+
+なお、CFGを理解するにあたって次のブログが大変分かりやすかったです。
+
+https://cake-by-the-river.hatenablog.jp/entry/stable_diffusion_8
+
 ### Scale Up
 
-**TODO: DDP, FSDP, CFGの説明**
-<!-- https://zenn.dev/syoyo/scraps/5fc9c6edb48511 -->
+LlamaGenのアーキテクチャはLlamaとほぼ同じであるため、LLMコミュニティの最適化技術がそのまま利用できる。
+
+LlamaGenではDDPとFSDPを採用している。どちらも共にGPUメモリ最適化の手法である。LlamaGenでは、パラメータ数1.4B以下のモデルではDDPを利用している。
 
 ## 評価
 
@@ -150,7 +171,7 @@ ISの評価式は、生成した画像のXXの平均になっています。
 
 https://data-analytics.fun/2021/12/31/understanding-fid/
 
-- フレシェインセプション距離[^Heusel_et_al_2017]
+- フレチェインセプション距離[^Heusel_et_al_2017]
 - Frechet、フレシェは、おそらくフレシェ空間から？
 - いかに多様な画像を生成できるか？
   - 本物の画像と、埋め込み表現を計算してその距離を測る
