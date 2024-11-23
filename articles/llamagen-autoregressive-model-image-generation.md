@@ -14,6 +14,10 @@ notebook_urls:
 
 https://arxiv.org/abs/2406.06525
 
+[^Sun_et_al_2024]: P. Sun et al., “Autoregressive Model Beats Diffusion: Llama for Scalable Image Generation,” Jun. 10, 2024, arXiv: arXiv:2406.06525. doi: 10.48550/arXiv.2406.06525.
+
+なお、fmuuly氏による「[Llamaで画像生成：LlamaGen【論文】](https://zenn.dev/fmuuly/articles/40f4863385b7d8)」も分かりやすくてオススメです。
+
 ## Note
 
 この記事の内容を、2024-12-03に行われる [松尾研LLMコミュニティ【Paper & Hacks】](https://matsuolab-community.connpass.com/) にて発表します。
@@ -113,15 +117,34 @@ https://note.com/yutohub/n/n5fd752f212d6
 - VQGAN: 画像トークナイザーで紹介した
 - 更に遡ればImageGPTがある？
 
-### 条件付き画像生成
+### 画像生成の損失関数
+
+画像生成の学習では、いかに入力に近い画像を再構成できたかによって損失を測ります。式は次の通り。
+
+$$
+\begin{align}
+L_{AE} = I_2 (x, \widehat{x}) + L_P (x, \widehat{x}) + \lambda_G L_G (\widehat{x})
+\end{align}
+$$
+
+各項の意味は次のとおりです。
+
+- $L_P$: LPIPS[^Zhang_et_al_2018]からの知的損失
+  - LPIPSとは、AlexNetやVGGなどの特徴量を元に、画像が人間の類似性判断と一致するように学習した評価モデル
+- $L_G$: PatchGAN識別器識別器からの敵対的損失
+  - **TODO: 同時にGANなんか学習してたっけ？**
+
+[^Zhang_et_al_2018]: R. Zhang, P. Isola, A. A. Efros, E. Shechtman, and O. Wang, “The Unreasonable Effectiveness of Deep Features as a Perceptual Metric,” Apr. 10, 2018, arXiv: arXiv:1801.03924. doi: 10.48550/arXiv.1801.03924.
+
+**TODO: なお、参考までにStable Diffusion論文では次のように...**
+
+### CFG
 
 LlamaGenは条件付きの画像生成に対応しています。それを行う場合、クラス条件付けやテキスト条件付けを画像トークンをコンテキストとして用います。
 
 具体的には、テキスト条件付けの場合、T5によってテキストを埋め込みに変換した後、画像のグリッドトークンを変換した埋め込みと連結して入力に用いています。
 
-また条件付き画像生成では、Stable Diffusionと同様にCFG (分類機なしガイダンス)を用いています。
-
-#### CFG
+条件付き画像生成では、Stable Diffusionと同様にCFG (分類機なしガイダンス)を用いています。
 
 拡散モデルで条件付きでノイズを除去した画像を推論するために、生成された画像とキャプションの適合度からノイズ除去の方向性として用いる手法があります。なお、この適合度を計算する部品を分類器 (classifier)といいます。
 
@@ -228,15 +251,7 @@ https://zenn.dev/sunwood_ai_labs/articles/vllm-pagedattention-llm-inference
 - LlamaGenの出力は、あくまで画像のグリッドトークンのみ。テキストと画像を自由に使い分けるモデルに進化させる場合、モデル自身が画像のトークン数を定める必要がある点に苦労しそうだと思った
   - 16x16 = 256枚のグリッドトークンを出力すべきところ、250枚で画像の出力を止めてしまい、右下が欠けた画像になるとか
 
-## References
-
-[^Sun_et_al_2024]: P. Sun et al., “Autoregressive Model Beats Diffusion: Llama for Scalable Image Generation,” Jun. 10, 2024, arXiv: arXiv:2406.06525. doi: 10.48550/arXiv.2406.06525.
 [^Esser_et_al_2021]: P. Esser, R. Rombach, and B. Ommer, “Taming Transformers for High-Resolution Image Synthesis,” Jun. 23, 2021, arXiv: arXiv:2012.09841. doi: 10.48550/arXiv.2012.09841.
-[^Salimans_et_al_2016]: T. Salimans, I. Goodfellow, W. Zaremba, V. Cheung, A. Radford, and X. Chen, “Improved Techniques for Training GANs,” Jun. 10, 2016, arXiv: arXiv:1606.03498. doi: 10.48550/arXiv.1606.03498.
 [^Heusel_et_al_2017]: M. Heusel, H. Ramsauer, T. Unterthiner, B. Nessler, and S. Hochreiter, “GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium,” Jan. 12, 2018, arXiv: arXiv:1706.08500. doi: 10.48550/arXiv.1706.08500.
-[^fmuuly]: “Llamaで画像生成：LlamaGen【論文】,” Zenn. Accessed: Nov. 05, 2024. [Online]. Available: <https://zenn.dev/fmuuly/articles/40f4863385b7d8>
-
+[^Salimans_et_al_2016]: T. Salimans, I. Goodfellow, W. Zaremba, V. Cheung, A. Radford, and X. Chen, “Improved Techniques for Training GANs,” Jun. 10, 2016, arXiv: arXiv:1606.03498. doi: 10.48550/arXiv.1606.03498.
 [^Tang_et_al_2024]: Z. Tang et al., “StrokeNUWA: Tokenizing Strokes for Vector Graphic Synthesis,” Jan. 30, 2024, arXiv: arXiv:2401.17093. Accessed: Nov. 13, 2024. [Online]. Available: http://arxiv.org/abs/2401.17093
-
-
-<!-- https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108 -->
