@@ -6,7 +6,8 @@ topics: ["AI", "機械学習", "ディープラーニング"]
 published: false
 notebook_urls:
   - https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108
-  - https://aistudio.google.com/prompts/1o53DQY58Yjsr4suqx63vbJnhMXxOhz4o?pli=1
+  - LlamaGen: https://aistudio.google.com/prompts/1hRYVjlnhrsyim6hOgD8F23-l-O4Oe8Hj
+  - CFG: https://aistudio.google.com/prompts/1o53DQY58Yjsr4suqx63vbJnhMXxOhz4o?pli=1
 ---
 
 ## Autoregressive Model Beats Diffusion: Llama for Scalable Image Generation[^Sun_et_al_2024]
@@ -43,6 +44,8 @@ https://arxiv.org/abs/2406.06525
 **TODO: 適当に作図する**
 <!-- - 訓練: 画像 -> 畳み込み -> ベクトル量子化 -> Transformerで自己教師あり学習（のはず） -->
 <!-- - 推論: 初期条件 -> Transformer -> トークン列 -> ベクトル量子化の逆 -> 畳み込みの逆 -> 画像 -->
+
+なお、LlamaGen論文中での呼び方ではありませんが、画像をパッチワークのように分割してトークン化するアプローチはStrokeNUWA[^Tang_et_al_2024]にて「グリッドトークン」と呼ばれています。
 
 ## Image Tokenizer
 
@@ -110,13 +113,13 @@ https://note.com/yutohub/n/n5fd752f212d6
 - VQGAN: 画像トークナイザーで紹介した
 - 更に遡ればImageGPTがある？
 
-### 条件付きの画像生成
+### 条件付き画像生成
 
-クラストークンを入力に用いる
+LlamaGenは条件付きの画像生成に対応しています。それを行う場合、クラス条件付けやテキスト条件付けを画像トークンをコンテキストとして用います。
 
-**TODO: CLIPなど、同様の手法を用いたモデルを絡めた説明**
+具体的には、テキスト条件付けの場合、T5によってテキストを埋め込みに変換した後、画像のグリッドトークンを変換した埋め込みと連結して入力に用いています。
 
-条件付き画像生成については、CFGなど同様の性質を示す。
+また条件付き画像生成では、Stable Diffusionと同様にCFG (分類機なしガイダンス)を用いています。
 
 #### CFG
 
@@ -220,6 +223,11 @@ https://zenn.dev/sunwood_ai_labs/articles/vllm-pagedattention-llm-inference
 - 自己回帰モデルのほうが〇〇の面で優れている
 - 拡散モデルは逆に〇〇で優れている
 
+## 感想
+
+- LlamaGenの出力は、あくまで画像のグリッドトークンのみ。テキストと画像を自由に使い分けるモデルに進化させる場合、モデル自身が画像のトークン数を定める必要がある点に苦労しそうだと思った
+  - 16x16 = 256枚のグリッドトークンを出力すべきところ、250枚で画像の出力を止めてしまい、右下が欠けた画像になるとか
+
 ## References
 
 [^Sun_et_al_2024]: P. Sun et al., “Autoregressive Model Beats Diffusion: Llama for Scalable Image Generation,” Jun. 10, 2024, arXiv: arXiv:2406.06525. doi: 10.48550/arXiv.2406.06525.
@@ -227,5 +235,8 @@ https://zenn.dev/sunwood_ai_labs/articles/vllm-pagedattention-llm-inference
 [^Salimans_et_al_2016]: T. Salimans, I. Goodfellow, W. Zaremba, V. Cheung, A. Radford, and X. Chen, “Improved Techniques for Training GANs,” Jun. 10, 2016, arXiv: arXiv:1606.03498. doi: 10.48550/arXiv.1606.03498.
 [^Heusel_et_al_2017]: M. Heusel, H. Ramsauer, T. Unterthiner, B. Nessler, and S. Hochreiter, “GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium,” Jan. 12, 2018, arXiv: arXiv:1706.08500. doi: 10.48550/arXiv.1706.08500.
 [^fmuuly]: “Llamaで画像生成：LlamaGen【論文】,” Zenn. Accessed: Nov. 05, 2024. [Online]. Available: <https://zenn.dev/fmuuly/articles/40f4863385b7d8>
+
+[^Tang_et_al_2024]: Z. Tang et al., “StrokeNUWA: Tokenizing Strokes for Vector Graphic Synthesis,” Jan. 30, 2024, arXiv: arXiv:2401.17093. Accessed: Nov. 13, 2024. [Online]. Available: http://arxiv.org/abs/2401.17093
+
 
 <!-- https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108 -->
