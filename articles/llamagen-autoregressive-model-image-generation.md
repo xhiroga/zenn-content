@@ -5,7 +5,7 @@ type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["AI", "機械学習", "ディープラーニング"]
 published: false
 notebook_urls:
-  - https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108
+  - LlamaGen: https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108
   - LlamaGen: https://aistudio.google.com/prompts/1hRYVjlnhrsyim6hOgD8F23-l-O4Oe8Hj
   - CFG: https://aistudio.google.com/prompts/1o53DQY58Yjsr4suqx63vbJnhMXxOhz4o?pli=1
 ---
@@ -45,11 +45,27 @@ https://arxiv.org/abs/2406.06525
 
 ## アーキテクチャ
 
-**TODO: 適当に作図する**
-<!-- - 訓練: 画像 -> 畳み込み -> ベクトル量子化 -> Transformerで自己教師あり学習（のはず） -->
-<!-- - 推論: 初期条件 -> Transformer -> トークン列 -> ベクトル量子化の逆 -> 畳み込みの逆 -> 画像 -->
+主に、画像を離散的な特徴に変換・逆変換するオートエンコーダーと、離散的な特徴 = グリッドトークンの次トークン予測を行うLlamaから成ります。
 
-なお、LlamaGen論文中での呼び方ではありませんが、画像をパッチワークのように分割してトークン化するアプローチはStrokeNUWA[^Tang_et_al_2024]にて「グリッドトークン」と呼ばれています。
+```mermaid
+graph LR
+    i[画像 🏞️]
+    t[テキスト・クラス 💬]
+    
+    i --> enc[エンコーダー<br/>量子化器]
+    subgraph Image Tokenizer
+    enc --コードブックを参照--> token([グリッドトークン<br/>🟦 🟩 ⬜️ 🟩 ...])
+    token --> dec[デコーダー]
+    end
+
+    t --> llm[Llama 🦙]
+    token --> llm
+    llm --> token
+
+    dec --> o[出力画像 🏞️]
+```
+
+なお、グリッドトークンという呼び方はLlamaGen論文中には登場していません。画像をストロークに分割する手法に対して、StrokeNUWA[^Tang_et_al_2024]にてこのように呼ばれています。
 
 ## Image Tokenizer
 
@@ -58,7 +74,7 @@ https://arxiv.org/abs/2406.06525
 **TODO: HuggingFaceにPlayGroundをデプロイする**
 
 - Transformerで画像を予測するには、極端な話1ピクセルごとにトークンとして扱えば良い
-- それだと効率が悪いので、「複数ピクセルをまとめる（畳み込み）」「にたピクセルを1括りにする（ベクトル量子化）」を行う
+- それだと効率が悪いので、「複数ピクセルをまとめる（畳み込み）」「似たピクセルを1括りにする（ベクトル量子化）」を行う
 - 本論文ではVQGANで提案された手法を用いた
 
 ### Image Tokenizerの概要
