@@ -69,19 +69,19 @@ graph LR
 
 ## Image Tokenizer
 
-<!-- ImageGPTの画像 -->
+Image Tokenizerとは、自己回帰モデルなどで扱うために画像をトークン化するモデルです。
+
+特にTransformerでは、長い系列を扱おうとすると急激に処理が重くなります。そのため、画像を1ピクセルごとの系列データと見なすと、解像度の高い画像はとても扱えません。
+
+そこで、類似するピクセルの集合を1括りにする（ベクトル量子化など）ことで、画像をトークンの集合として扱えるようになります。
 
 **TODO: HuggingFaceにPlayGroundをデプロイする**
 
-- Transformerで画像を予測するには、極端な話1ピクセルごとにトークンとして扱えば良い
-- それだと効率が悪いので、「複数ピクセルをまとめる（畳み込み）」「似たピクセルを1括りにする（ベクトル量子化）」を行う
-- 本論文ではVQGANで提案された手法を用いた
+### Image Tokenizerの関連研究
 
-### Image Tokenizerの概要
+LlamaGenで用いられたImage Tokenizerは、同じく自己回帰モデルによる画像生成を扱ったVQGAN[^Esser_et_al_2021]の論文とほぼ同じです。
 
-**TODO: 先行研究としてVQGANの紹介**[^Esser_et_al_2021]
-
-<!-- - 実はTransformer部分がLlamaに代わった以外はVQGAN（要確認） -->
+VQGANのアーキテクチャを次の通り示します。LlamaGenのアーキテクチャと比較すると、自己回帰モデルが異なる（Transformer or Llama）ことが分かります。
 
 ![Taming Transformers for High-Resolution Image Synthesis](https://github.com/CompVis/taming-transformers/blob/master/assets/teaser.png?raw=true)
 
@@ -130,8 +130,8 @@ https://note.com/yutohub/n/n5fd752f212d6
 
 - DiT: 拡散モデル、ただしノイズの除去にCNNの代わりにTransformerを用いる
 - PixArt-α: SD1.5の1割の学習時間で住むやつ
+- ImageGPT
 - VQGAN: 画像トークナイザーで紹介した
-- 更に遡ればImageGPTがある？
 
 ### 画像生成の損失関数
 
