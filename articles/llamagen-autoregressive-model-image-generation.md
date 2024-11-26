@@ -1,13 +1,14 @@
 ---
-title: "LlamaGen: LlamaのNext-Token Predictionを使った画像生成"
-emoji: "🐘"
+title: "LlamaGen: LlamaのNext-Token予測を使った画像生成【論文】"
+emoji: "🦙"
 type: "idea" # tech: 技術記事 / idea: アイデア
-topics: ["AI", "機械学習", "ディープラーニング"]
+topics: ["論文", "machinelearning", "computervision", "deeplearning", "llm", "llama"]
 published: false
 notebook_urls:
   - LlamaGen: https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108
   - LlamaGen: https://aistudio.google.com/prompts/1hRYVjlnhrsyim6hOgD8F23-l-O4Oe8Hj
   - VQGAN: https://aistudio.google.com/prompts/1Re2PEOv2zcIzic2fOejI0R5AqoH6HRk0
+  - ベクトル量子化: https://chatgpt.com/c/67457c7f-84cc-8010-b422-d0a0068dd127
   - CFG: https://aistudio.google.com/prompts/1o53DQY58Yjsr4suqx63vbJnhMXxOhz4o?pli=1
 ---
 
@@ -94,31 +95,21 @@ VQGANの（＝LlamaGenの）Image Tokenizerは、画像ピクセルの集合を�
 
 したがって、例えば256x256の画像をダウンサンプル比8のImage Tokenizerでトークン化すると、必要なトークン数は1024となります（256/8 * 256/8 = 1024）。
 
-LlamaGenのImage Tokenizerは、ダウンサンプル比が8と16の場合で、コードブックのサイズが4096から32768の場合でそれぞれ学習されています。
+LlamaGenのImage Tokenizerは、ダウンサンプル比が8と16の場合で、コードブックの語彙数が4096から32768の場合でそれぞれ学習されています。ちなみに、Llama3のボキャブラリーの数は128Kトークン[^Llama3]です。
+[^Llama3]: https://ai.meta.com/blog/meta-llama-3/
 
-**TODO: L2正規化**
+#### ベクトル量子化
 
-- コードブック
-  - **TODO: コードブックの説明**
-  - **TODO: 97%のコードブック使用率 → これどうやって測ったの？**
-  - **TODO: VAEにはコードブック使用率の概念はないと思うが、（下流タスク以外に）どうやって比較するの？**
-  - **TODO: コードブックはどれだけある？単純に考えれば256^3 = 1cfhg6,777,216**
-- ダウンサンプル比
-  - 圧縮方法としてベクトル量子化を採用した
-  - **TODO: ベクトル量子化についての解説**
-  - **TODO: ダウンサンプル比8と16らしいが...それって単純に考えれば2Mってこと（多いがLLMと比較して大外れではない）**
-  - **TODO: これってピクセルで計算するんだっけ？**
-  - 他の圧縮方法ではなくベクトル量子化である理由（できたら）
-  - （予想）ベクトル量子化の方が、JPEGのような圧縮方式よりも、形状を保つことができて有利...？
-  - VQVAEの論文に書いてあるらしい
+私にとっては初めての概念だったので、ベクトル量子化についても軽く触れておきます。
 
-<!-- > ベクトル量子化とは -->
-<!-- > ベクトル量子化は、データを圧縮する際に、連続的な値を一定の数の離散的な値に変換するプロセスです。これにより、データはより効率的に圧縮され、特に画像のような複雑なデータを扱う際に有効です。 -->
-<!-- https://www.softech.co.jp/mm_120704_pc.htm -->
+そもそも量子化とは、連続的な値を離散的な値に変換することです。例えば、WAVファイルは音声を量子化したファイルですね。
 
-Llamaで使われているトークナイザの場合はどう？
-> Llama 3では128Kトークンの語彙を持つトークナイザーを使用
-https://note.com/yutohub/n/n5fd752f212d6
+ベクトル量子化の基本は、k平均法（k-means clustering）の考え方と似ています。k平均法では、データをk個のクラスターに分け、各クラスターの中心（重心）を計算して代表点とします。この中心点をコードベックとして使い、データを近似するのがベクトル量子化です。ただし、k平均法は主にデータの分類や解析を目的としているのに対し、ベクトル量子化はデータ圧縮や符号化のために設計されている点が異なります。
+
+近年では、ベクトル量子化の手法が深層学習の分野でも注目されています。その一例が**VQ-VAE（Vector Quantized Variational Autoencoder）**です。VQ-VAEはオートエンコーダーの一種で、入力データを潜在空間でベクトル量子化することで、連続的な潜在表現を離散化します。この離散表現が得られることで、データ圧縮が可能になるだけでなく、生成モデルとして高品質なデータ生成を実現します。例えば、画像生成や音声合成の分野で高い成果を上げています。
+
+なお、ベクトル量子化については「ソフテックだより」の記事[^Softech_2012]が分かりやすかったです。
+[^Softech_2012]: https://www.softech.co.jp/mm_120704_pc.htm
 
 <!-- 気になる: 離散表現ではなく連続表現を自己回帰モデルで扱える？ -->
 
