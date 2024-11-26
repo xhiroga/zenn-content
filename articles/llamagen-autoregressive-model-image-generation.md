@@ -7,6 +7,7 @@ published: false
 notebook_urls:
   - LlamaGen: https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108
   - LlamaGen: https://aistudio.google.com/prompts/1hRYVjlnhrsyim6hOgD8F23-l-O4Oe8Hj
+  - VQGAN: https://aistudio.google.com/prompts/1Re2PEOv2zcIzic2fOejI0R5AqoH6HRk0
   - CFG: https://aistudio.google.com/prompts/1o53DQY58Yjsr4suqx63vbJnhMXxOhz4o?pli=1
 ---
 
@@ -87,7 +88,16 @@ VQGANのアーキテクチャを次の通り示します。LlamaGenのアーキ�
 
 ### Image Tokenizerの仕組み
 
-- 画像トランスフォーマーのパラメータは「ダウンサンプル比」と「コードブックの語彙数」
+VQGANの（＝LlamaGenの）Image Tokenizerは、画像ピクセルの集合を特徴マップに投影するエンコーダーと、特徴マップの各ベクトルを、学習可能なコードインデックスの最も近い値にマッピングする量子化器からなります。
+
+画像の情報の圧縮率を測るための値として、「ダウンサンプル比」と「コードブックの語彙数」があります。カメラで例えれば、「解像度」と「色の階調」ということになるでしょうか。エンコーダーが画像を畳み込む前後の比率がダウンサンプル比であり、量子化器がマッピングする先のベクトルの種類がコードブックの語彙数です。
+
+したがって、例えば256x256の画像をダウンサンプル比8のImage Tokenizerでトークン化すると、必要なトークン数は1024となります（256/8 * 256/8 = 1024）。
+
+LlamaGenのImage Tokenizerは、ダウンサンプル比が8と16の場合で、コードブックのサイズが4096から32768の場合でそれぞれ学習されています。
+
+**TODO: L2正規化**
+
 - コードブック
   - **TODO: コードブックの説明**
   - **TODO: 97%のコードブック使用率 → これどうやって測ったの？**
