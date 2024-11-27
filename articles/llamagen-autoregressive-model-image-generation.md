@@ -14,40 +14,38 @@ notebook_urls:
 
 ## Autoregressive Model Beats Diffusion: Llama for Scalable Image Generation[^Sun_et_al_2024]
 
-https://arxiv.org/abs/2406.06525
-
 [^Sun_et_al_2024]: P. Sun et al., “Autoregressive Model Beats Diffusion: Llama for Scalable Image Generation,” Jun. 10, 2024, arXiv: arXiv:2406.06525. doi: 10.48550/arXiv.2406.06525.
+
+https://arxiv.org/abs/2406.06525
 
 なお、fmuuly氏による「[Llamaで画像生成：LlamaGen【論文】](https://zenn.dev/fmuuly/articles/40f4863385b7d8)」も分かりやすくてオススメです。
 
 ## Note
 
-この記事の内容を、2024-12-03に行われる [松尾研LLMコミュニティ【Paper & Hacks】](https://matsuolab-community.connpass.com/) にて発表します。
+この記事の内容を、2024-12-03に行われる [松尾研LLMコミュニティ【Paper & Hacks】#28](https://matsuolab-community.connpass.com/event/338122/) にて発表します。
 
-## TL;DR
+## はじめに
 
-拡散モデルによる画像生成の発展とは異なるパラダイムとして、LLMなどで用いられている自己回帰モデルによる画像生成があります。本記事で紹介するLlamaGenは、テキストではなく画像のパッチをトークンとして訓練したLlamaです。論文では、LlamaGenが拡散モデルに並ぶ性能での画像生成を可能にしたと主張しています。
+近年の画像生成AIの発展は目覚ましく、その中でも**拡散モデル**は高品質な画像生成を可能にする手法として注目を集めています。拡散モデルは、画像にノイズを徐々に加えていき、最終的に完全なノイズになった状態から、逆向きにノイズを除去していくことで画像を生成します。この手法は、複雑な画像分布を学習するのに優れていますが、生成過程が逐次的であるため、計算コストが高いという課題があります。
 
-論文の貢献は次のとおりです。
+一方、自然言語処理で成功を収めている**自己回帰モデル**は、系列データを前の時刻のデータから予測するモデルです。文章生成で言えば、前の単語から次の単語を予測していくことで文章を生成します。この考え方を画像生成にも適用したのが、**自己回帰型画像生成モデル**です。自己回帰モデルは並列処理が可能であるため、拡散モデルに比べて高速な画像生成が期待できます。しかし、高解像度の画像をそのままピクセル単位で自己回帰モデルに適用すると、計算量が爆発的に増加してしまうという問題がありました。
 
-**TODO: 研究者に伝わる固有名詞を入れて分かりやすく**
+本稿で紹介する **LlamaGen** は、LLMであるLlamaを自己回帰型画像生成モデルに応用した研究です。LlamaGenは、画像をトークン化し、そのトークン列をLlamaを用いて自己回帰的に生成することで、高品質な画像生成を実現します。
 
-1. 性能の良いImage Tokenizerの利用
-2. Next-Token Predictionによる画像生成
-3. text-to-imageのような下流タスクでの性能
-4. LLMコミュニティの資産の流用  
+## 関連研究
 
-## この論文を取り上げた動機
+* **PixelCNN:** 自己回帰モデルによる画像生成の先駆け的な研究。
+* **ImageGPT:** Transformerを用いた自己回帰型画像生成モデル。
+* **VQGAN:** ベクトル量子化を用いたImage TokenizerとCNNを用いた自己回帰型画像生成モデル。
+* **DiT:**  ノイズの除去にTransformerを用いた拡散モデル。
+* **PixArt-α:** Stable Diffusionよりも少ない計算量で高品質な画像を生成する拡散モデル。
 
-私は人間と同じように絵を描くモデルに興味があります。その方法として、自己回帰モデルによる画像生成に注目しています。
+## LlamaGenのアーキテクチャ
 
-松尾研LLMコミュニティで発表の機会をいただいたため、自己回帰モデルの中でも特にLLMによって画像生成を行う本論文を取り上げることにしました。
+LlamaGenは、主に2つのモジュールから構成されています。
 
-自分自身の勉強のためと、LLMコミュニティでの発表であることを踏まえて、画像生成や評価の基礎的な部分を分かりやすく解説することに注力します。
-
-## アーキテクチャ
-
-主に、画像を離散的な特徴に変換・逆変換するオートエンコーダーと、離散的な特徴 = グリッドトークンの次トークン予測を行うLlamaから成ります。
+1. **Image Tokenizer:** 画像を離散的なトークン列に変換するモジュール。VQGAN で提案されたアーキテクチャをベースにしています。
+2. **Autoregressive Transformer (Llama):** トークン列を入力として受け取り、自己回帰的に次のトークンを予測することで画像を生成するモジュール。LLMであるLlamaをベースにしています。
 
 ```mermaid
 graph LR
@@ -67,29 +65,57 @@ graph LR
     dec --> o[出力画像 🏞️]
 ```
 
-なお、グリッドトークンという呼び方はLlamaGen論文中には登場していません。画像をストロークに分割する手法に対して、StrokeNUWA[^Tang_et_al_2024]にてこのように呼ばれています。
+## 自己回帰モデルと拡散モデルの比較
+
+## LlamaGenとViTの比較
+
+| 特徴 | LlamaGen | ViT |
+|---|---|---|
+| アーキテクチャ | 自己回帰型 | Transformer Encoder |
+| 局所性バイアス | 無し | 無し |
+| 計算コスト | 訓練時は拡散モデルより低い、推論時は高い | 訓練時、推論時ともに低い |
+| スケーラビリティ | LLMのスケール則に従う | Transformerのスケール則に従う |
+| 長距離の依存関係 | 注意機構により学習 | 注意機構により学習 |
+| 生成画像の多様性 | 高い | 高い |
+
+TODO: 表の内容を追記・修正
 
 ## Image Tokenizer
 
-Image Tokenizerとは、自己回帰モデルなどで扱うために画像をトークン化するモデルです。
-
-特にTransformerでは、長い系列を扱おうとすると急激に処理が重くなります。そのため、画像を1ピクセルごとの系列データと見なすと、解像度の高い画像はとても扱えません。
-
-そこで、類似するピクセルの集合を1括りにする（ベクトル量子化など）ことで、画像をトークンの集合として扱えるようになります。
-
-**TODO: HuggingFaceにPlayGroundをデプロイする**
+Image Tokenizerは、高解像度画像を効率的に処理するために、画像をトークンの系列に変換する重要なモジュールです。Transformer ベースのモデルは系列長に対して計算コストが二次関数的に増加するため、高解像度画像をピクセルごとにトークン化すると、計算量が爆発的に増加してしまいます。Image Tokenizer は、画像をより短いトークン列に変換することで、この問題を解決します。
 
 ### Image Tokenizerの関連研究
 
-LlamaGenで用いられたImage Tokenizerは、同じく自己回帰モデルによる画像生成を扱ったVQGAN[^Esser_et_al_2021]の論文とほぼ同じです。
+LlamaGen で用いられた Image Tokenizer は、VQGAN[^Esser_et_al_2021] で提案されたものとほぼ同じアーキテクチャです。VQGAN は、Image Tokenizer と自己回帰モデルを組み合わせることで、高解像度画像の生成を可能にしました。
 
+[^Esser_et_al_2021]: P. Esser, R. Rombach, and B. Ommer, “Taming Transformers for High-Resolution Image Synthesis,” Jun. 23, 2021, arXiv: arXiv:2012.09841. doi: 10.48550/arXiv.2012.09841.
+
+:::details VQGANとLlamaGenの違い
 VQGANのアーキテクチャを次の通り示します。LlamaGenのアーキテクチャと比較すると、自己回帰モデルが異なる（Transformer or Llama）ことが分かります。
 
 ![Taming Transformers for High-Resolution Image Synthesis](https://github.com/CompVis/taming-transformers/blob/master/assets/teaser.png?raw=true)
+:::
 
 ### Image Tokenizerの仕組み
 
-VQGANの（＝LlamaGenの）Image Tokenizerは、画像ピクセルの集合を特徴マップに投影するエンコーダーと、特徴マップの各ベクトルを、学習可能なコードインデックスの最も近い値にマッピングする量子化器からなります。
+VQGAN（および LlamaGen）の Image Tokenizer は、エンコーダー、量子化器、デコーダーの3つの部分から構成されています。
+
+1. **エンコーダー:** 入力画像を低次元の特徴マップに変換します。
+2. **量子化器:** 特徴マップの各ベクトルを、学習済みコードブック中の最も近いコードベクトルに置き換えます。このコードベクトルがトークンとなります。
+3. **デコーダー:** トークン列から画像を再構成します。
+
+このプロセスにより、画像は少数のトークンで表現され、Transformer で効率的に処理できるようになります。
+
+### ベクトル量子化
+
+ベクトル量子化は、連続的なベクトル空間を離散的なコードブックで表現する手法です。VQ-VAE (Vector Quantized Variational AutoEncoder) などで利用されており、画像や音声などの高次元データを効率的に圧縮・表現することができます。
+
+TODO: ベクトル量子化についてもう少し詳しく説明
+
+なお、ベクトル量子化については「ソフテックだより」の記事[^Softech_2012]が分かりやすかったです。
+[^Softech_2012]: https://www.softech.co.jp/mm_120704_pc.htm
+
+### Image Tokenizerの評価
 
 画像の情報の圧縮率を測るための値として、「ダウンサンプル比」と「コードブックの語彙数」があります。カメラで例えれば、「解像度」と「色の階調」ということになるでしょうか。エンコーダーが画像を畳み込む前後の比率がダウンサンプル比であり、量子化器がマッピングする先のベクトルの種類がコードブックの語彙数です。
 
@@ -98,45 +124,17 @@ VQGANの（＝LlamaGenの）Image Tokenizerは、画像ピクセルの集合を�
 LlamaGenのImage Tokenizerは、ダウンサンプル比が8と16の場合で、コードブックの語彙数が4096から32768の場合でそれぞれ学習されています。ちなみに、Llama3のボキャブラリーの数は128Kトークン[^Llama3]です。
 [^Llama3]: https://ai.meta.com/blog/meta-llama-3/
 
-#### ベクトル量子化
+## Next-Token予測による画像生成
 
-私にとっては初めての概念だったので、ベクトル量子化についても軽く触れておきます。
+LlamaGen は、Image Tokenizer によって生成されたトークン列を LLM (Llama) に入力し、自己回帰的に次のトークンを予測することで画像を生成します。これは、自然言語処理における文章生成と同様のアプローチです。
 
-そもそも量子化とは、連続的な値を離散的な値に変換することです。例えば、WAVファイルは音声を量子化したファイルですね。
+### Next-Token予測による画像生成の関連研究
 
-ベクトル量子化の基本は、k平均法（k-means clustering）の考え方と似ています。k平均法では、データをk個のクラスターに分け、各クラスターの中心（重心）を計算して代表点とします。この中心点をコードベックとして使い、データを近似するのがベクトル量子化です。ただし、k平均法は主にデータの分類や解析を目的としているのに対し、ベクトル量子化はデータ圧縮や符号化のために設計されている点が異なります。
-
-近年では、ベクトル量子化の手法が深層学習の分野でも注目されています。その一例が**VQ-VAE（Vector Quantized Variational Autoencoder）**です。VQ-VAEはオートエンコーダーの一種で、入力データを潜在空間でベクトル量子化することで、連続的な潜在表現を離散化します。この離散表現が得られることで、データ圧縮が可能になるだけでなく、生成モデルとして高品質なデータ生成を実現します。例えば、画像生成や音声合成の分野で高い成果を上げています。
-
-なお、ベクトル量子化については「ソフテックだより」の記事[^Softech_2012]が分かりやすかったです。
-[^Softech_2012]: https://www.softech.co.jp/mm_120704_pc.htm
-
-<!-- 気になる: 離散表現ではなく連続表現を自己回帰モデルで扱える？ -->
-
-## Next-Token Predictionによる画像生成
-
-**TODO: 説明のブラッシュアップ**
-
-- Llamaをそのまま使っている
-- クラス分類をするために、クラストークンを用いている。ViTに出てくるやつ
-- Transformerで画像トークンというのはDiTなどに倣っている
-- **TODO: 画像生成のアプローチとしては拡散モデルよりも古そうな気がするので、それにも触れる**
-- **TODO: 自己回帰モデルについてのおさらいをいれる**
-
-![Image generation by next-image-token prediction | VAR](https://github.com/FoundationVision/VAR/assets/39692511/3e12655c-37dc-4528-b923-ec6c4cfef178)
-
-### 先行研究
-
-**TODO: 全体的な裏取り**
-
-- DiT: 拡散モデル、ただしノイズの除去にCNNの代わりにTransformerを用いる
-- PixArt-α: SD1.5の1割の学習時間で住むやつ
-- ImageGPT
-- VQGAN: 画像トークナイザーで紹介した
+自己回帰モデルによる画像生成は、PixelCNN や ImageGPT など、以前から研究されてきました.  LlamaGen は、これらの先行研究と同様に、自己回帰モデルを利用していますが、LLM である Llama を採用することで、スケーラビリティと生成品質の向上を実現しています。
 
 ### 画像生成の損失関数
 
-画像生成の学習では、いかに入力に近い画像を再構成できたかによって損失を測ります。式は次の通り。
+LlamaGen の訓練では、生成された画像が入力画像に近づくように、以下の損失関数を最小化します。
 
 $$
 \begin{align}
@@ -144,131 +142,84 @@ L_{AE} = I_2 (x, \widehat{x}) + L_P (x, \widehat{x}) + \lambda_G L_G (\widehat{x
 \end{align}
 $$
 
-各項の意味は次のとおりです。
+ここで、
 
-- $L_P$: LPIPS[^Zhang_et_al_2018]からの知的損失
-  - LPIPSとは、AlexNetやVGGなどの特徴量を元に、画像が人間の類似性判断と一致するように学習した評価モデル
-- $L_G$: PatchGAN識別器識別器からの敵対的損失
-  - **TODO: 同時にGANなんか学習してたっけ？**
+* $L_2(x, \hat{x})$ は、入力画像 $x$ と生成画像 $\hat{x}$ の間のピクセル単位の平均二乗誤差です。
+* $L_P(x, \hat{x})$ は、入力画像 $x$ と生成画像 $\hat{x}$ の間の知覚的損失です。LPIPS[^Zhang_et_al_2018] を使用します。
+* $L_G(\hat{x})$ は、生成画像 $\hat{x}$ に対する敵対的損失です。PatchGAN 識別器を用います。
 
 [^Zhang_et_al_2018]: R. Zhang, P. Isola, A. A. Efros, E. Shechtman, and O. Wang, “The Unreasonable Effectiveness of Deep Features as a Perceptual Metric,” Apr. 10, 2018, arXiv: arXiv:1801.03924. doi: 10.48550/arXiv.1801.03924.
 
-**TODO: なお、参考までにStable Diffusion論文では次のように...**
+### CFG (Classifier-Free Guidance)
 
-### CFG
+LlamaGen は、Stable Diffusion と同様に、Classifier-Free Guidance (CFG) を用いて条件付き画像生成を行います。CFG は、分類器を用いることなく、テキストなどの条件情報を画像生成プロセスに組み込むことができる手法です。
 
-LlamaGenは条件付きの画像生成に対応しています。それを行う場合、クラス条件付けやテキスト条件付けを画像トークンをコンテキストとして用います。
+TODO: CFG について詳しく説明。条件付きと条件なしのモデルの学習、推論時の動作など。
 
-具体的には、テキスト条件付けの場合、T5によってテキストを埋め込みに変換した後、画像のグリッドトークンを変換した埋め込みと連結して入力に用いています。
-
-条件付き画像生成では、Stable Diffusionと同様にCFG (分類機なしガイダンス)を用いています。
-
-拡散モデルで条件付きでノイズを除去した画像を推論するために、生成された画像とキャプションの適合度からノイズ除去の方向性として用いる手法があります。なお、この適合度を計算する部品を分類器 (classifier)といいます。
-
-数式で言えば、キャプションを前提として画像が生成される条件付き確率$p(x|y)$を最大化するには、$p(y|x)p(x)$を最大化する必要がある、ということになります。
-
-ところが、拡散モデルではノイズを徐々に取り除く形で画像を生成します。だから、ノイズが含まれる各段階ごとにキャプションとの適合度を計算する必要があり、手間が大きかったのでした。
-
-また、生成された画像を評価する際の指標であるFIDなどが分類を内部で使っているので、学習時に分類器からフィードバックを受けると数値指標をハックする形になることも懸念でした。
-
-そこで、分類器を用いることなく$p(y|x)$を推定するClassifier-Free Guidance (CFG)が提案されました。 CFGでは、条件付きの拡散モデル$p(x|y)$と条件なしの拡散モデル$p(x)$を同時に学習します。推論時には、両方のモデルを用いてノイズ除去の方向を計算し、その差分を利用することで、あたかも分類器を用いたかのようなガイダンスを実現します。具体的には、条件付きのノイズ除去方向と条件なしのノイズ除去方向を計算し、その差分に重みをかけて条件なしのノイズ除去方向に加算することで、条件の影響の強さを調整します。これにより、分類器を用いることなく、効率的に条件付き画像生成を行うことができます。
-
-なお、CFGを理解するにあたって次のブログが大変分かりやすかったです。
-
-https://cake-by-the-river.hatenablog.jp/entry/stable_diffusion_8
-
-### Scale Up
-
-LlamaGenのアーキテクチャはLlamaとほぼ同じであるため、LLMコミュニティの最適化技術がそのまま利用できる。
-
-LlamaGenではDDPとFSDPを採用している。どちらも共にGPUメモリ最適化の手法である。LlamaGenでは、パラメータ数1.4B以下のモデルではDDPを利用している。
+なお、CFGを理解するにあたってかくびー氏のブログ[^cakkby6_2023]が分かりやすかったです。
+[^cakkby6_2023]: <https://cake-by-the-river.hatenablog.jp/entry/stable_diffusion_8>
 
 ## 評価
 
-- Image Tokenizerの評価にはrFIDを用いる **TODO: Reconstruct FIDの説明...ただし全然見つからない...**
-- 画像生成の評価にはFIDなどを使っている
+LlamaGen の性能は、FID (Fréchet Inception Distance)、IS (Inception Score)、rFID (Reconstruction FID)、sFID (sliced FID)、Precision/Recall、PSNR、SSIM などの指標を用いて評価されます。
 
-### IS (Inception Score)
+### 評価指標の説明
 
-- 確信度合いと多様性によって判断する
-- Inception-V3という画像の1000クラス分類モデルを用いた評価
-- 生成画像の分類結果のエントロピーが高ければ高いほど良い
-- 1000枚生成する
+* **IS (Inception Score):** 生成画像の品質と多様性を測定する指標。高いほど良い。
+* **FID (Fréchet Inception Distance):** 生成画像と実画像の分布間の距離を測定する指標。小さいほど良い。
+* **rFID (Reconstruction FID):** 入力画像と再構成画像の FID。小さいほど良い。
+* **sFID:** FID の改良版。
+* **Precision/Recall:** 生成画像の精度と再現率。
+* **PSNR (Peak Signal-to-Noise Ratio):**  画質の客観的評価指標。高いほど良い。
+* **SSIM (Structural Similarity Index):** 画質の客観的評価指標。1に近いほど良い。
 
-[^Salimans_et_al_2016]
+### IS (Inception Score)[^Salimans_et_al_2016]
 
-**TODO: GANからSDまでを比較してグラフにできるとよい**
+[^Salimans_et_al_2016]: T. Salimans, I. Goodfellow, W. Zaremba, V. Cheung, A. Radford, and X. Chen, “Improved Techniques for Training GANs,” Jun. 10, 2016, arXiv: arXiv:1606.03498. doi: 10.48550/arXiv.1606.03498.
 
-#### 評価式
+**TODO**
 
-https://data-analytics.fun/2021/12/12/understanding-inception-score/
+なお、mm_0824氏のブログ[^mm_0824_2021]が分かりやすかったです。
+[^mm_0824_2021]: <https://data-analytics.fun/2021/12/12/understanding-inception-score/>
 
-ISの評価式は、生成した画像のXXの平均になっています。
+### FID (Fréchet inception distance)[^Heusel_et_al_2017]
 
-#### InceptionNet
+[^Heusel_et_al_2017]: M. Heusel, H. Ramsauer, T. Unterthiner, B. Nessler, and S. Hochreiter, “GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium,” Jan. 12, 2018, arXiv: arXiv:1706.08500. doi: 10.48550/arXiv.1706.08500.
 
-- GoogleNetとも呼ばれる...**TODO: Inceptionに付いて解説**
+フレチェインセプション距離
 
-<!-- ![](https://eiga.k-img.com/images/movie/54466/photo/40c4d73c5c33ebfb.jpg) -->
+**TODO**
 
-### FID (Fréchet inception distance)
-
-https://data-analytics.fun/2021/12/31/understanding-fid/
-
-- フレチェインセプション距離[^Heusel_et_al_2017]
-- Frechet、フレシェは、おそらくフレシェ空間から？
 - いかに多様な画像を生成できるか？
   - 本物の画像と、埋め込み表現を計算してその距離を測る
   - 具体的にはImageNetやCOCOを用いることが多い。今回はImageNet256x256らしい、それって何枚？
 - Inception-V3で埋め込みを計算する（あれ、Inception-V3ってクラス分類のモデルでは？）
 - 小さいほど良い。BigGANで約7, 最新の評価にはDiffusionで2くらい **TODO: 単位は?**
 
-> 評価指標。主な指標としてFréchet inception distance (FID) [Heusel et al. 2017]を用いる。また、二次指標とし て、Inception Score (IS) [Salimans et al. 2016]、sFID [Nash et al. 2021]、Precision/Recall [Kynkänniemi et al. 2019]を報告する。すべての評価は、公正な比較のためにADMのTensorFlowスクリプト[Dhariwal & Nichol 2021]を 使用して実装されている。
+### Precision/Recall
 
-<!-- https://claude.ai/chat/fd1ccb06-f197-469b-a2af-36ace1d784b9 -->
+## LLMエコシステム
 
-### rFID
+### スケールアップ
 
-再構成-FID
+LlamaGenのアーキテクチャはLlamaとほぼ同じであるため、LLMコミュニティの最適化技術がそのまま利用できる。
 
-> Computes rFID, i.e., FID between val images and reconstructed images. Log is saved to `rfid.log` in the same directory as the given vqvae model. 
-https://github.com/kakaobrain/rq-vae-transformer/blob/main/compute_rfid.py
+LlamaGenではDDPとFSDPを採用している。どちらも共にGPUメモリ最適化の手法である。LlamaGenでは、パラメータ数1.4B以下のモデルではDDPを利用している。
 
-どのくらいだと高いの？低いの？これもGANの時代は9近かったのが、SDXLで0.8くらいになっている
-そもそもFID自体が元データセットにどれだけ近いかを表すので、rFIDって何？定義がどこにもない...実装を見る？Connected Papersを見る？
+### vLLM
 
-### sFID
+LlamaGen は、vLLM を用いることで推論を高速化しています。vLLM は、大規模言語モデルの推論に特化したライブラリで、効率的なメモリ管理や並列処理など、様々な最適化技術を提供しています。
 
-sFID [Nash et al. 2021]
-
-### Precetion/Recall
-
-### PSNR
-
-### SSIM
-
-## vLLMの活用
-
-**TODO: 説明**
-
-### vLLMとは？
-
-https://zenn.dev/sunwood_ai_labs/articles/vllm-pagedattention-llm-inference
-
-**TODO: それで、1枚何秒になるの？**
+TODO: vLLM による高速化のメカニズムと効果
 
 ## まとめ
 
-- 総合的に〇〇でも拡散モデル並みのパフォーマンスを出せる → この〇〇
-- 自己回帰モデルのほうが〇〇の面で優れている
-- 拡散モデルは逆に〇〇で優れている
+LlamaGen は、LLM である Llama を自己回帰型画像生成に応用した、新しい画像生成モデルです。高品質な Image Tokenizer と効率的な訓練手法により、拡散モデルに匹敵する生成品質を達成しながら、高速な画像生成を可能にしています。
 
-## 感想
+TODO: LlamaGen の主要な貢献をまとめる。
 
-- LlamaGenの出力は、あくまで画像のグリッドトークンのみ。テキストと画像を自由に使い分けるモデルに進化させる場合、モデル自身が画像のトークン数を定める必要がある点に苦労しそうだと思った
-  - 16x16 = 256枚のグリッドトークンを出力すべきところ、250枚で画像の出力を止めてしまい、右下が欠けた画像になるとか
+## 感想と将来展望
 
-[^Esser_et_al_2021]: P. Esser, R. Rombach, and B. Ommer, “Taming Transformers for High-Resolution Image Synthesis,” Jun. 23, 2021, arXiv: arXiv:2012.09841. doi: 10.48550/arXiv.2012.09841.
-[^Heusel_et_al_2017]: M. Heusel, H. Ramsauer, T. Unterthiner, B. Nessler, and S. Hochreiter, “GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium,” Jan. 12, 2018, arXiv: arXiv:1706.08500. doi: 10.48550/arXiv.1706.08500.
-[^Salimans_et_al_2016]: T. Salimans, I. Goodfellow, W. Zaremba, V. Cheung, A. Radford, and X. Chen, “Improved Techniques for Training GANs,” Jun. 10, 2016, arXiv: arXiv:1606.03498. doi: 10.48550/arXiv.1606.03498.
-[^Tang_et_al_2024]: Z. Tang et al., “StrokeNUWA: Tokenizing Strokes for Vector Graphic Synthesis,” Jan. 30, 2024, arXiv: arXiv:2401.17093. Accessed: Nov. 13, 2024. [Online]. Available: http://arxiv.org/abs/2401.17093
+LlamaGen は、LLM を画像生成に応用するという点で非常に興味深い研究です。しかし、まだ発展途上の技術であり、いくつかの課題も残されています。例えば、トークン数の制御やマルチモーダルへの拡張などが挙げられます.
+
+TODO: LlamaGen の改善点、発展方向性、他のモダリティへの応用可能性、将来展望について記述。
