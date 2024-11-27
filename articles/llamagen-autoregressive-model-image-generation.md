@@ -19,7 +19,7 @@ notebook_urls:
 
 https://arxiv.org/abs/2406.06525
 
-なお、fmuuly氏による「[Llamaで画像生成：LlamaGen【論文】](https://zenn.dev/fmuuly/articles/40f4863385b7d8)」も分かりやすくてオススメです。
+なお、[fmuuly氏による](https://zenn.dev/fmuuly)「[Llamaで画像生成：LlamaGen【論文】](https://zenn.dev/fmuuly/articles/40f4863385b7d8)」も分かりやすくてオススメです。
 
 ## Note
 
@@ -38,15 +38,15 @@ https://arxiv.org/abs/2406.06525
 * **PixelCNN:** 自己回帰モデルによる画像生成の先駆け的な研究。
 * **ImageGPT:** Transformerを用いた自己回帰型画像生成モデル。
 * **VQGAN:** ベクトル量子化を用いたImage TokenizerとCNNを用いた自己回帰型画像生成モデル。
+* **LDM**
 * **DiT:**  ノイズの除去にTransformerを用いた拡散モデル。
-* **PixArt-α:** Stable Diffusionよりも少ない計算量で高品質な画像を生成する拡散モデル。
 
 ## LlamaGenのアーキテクチャ
 
 LlamaGenは、主に2つのモジュールから構成されています。
 
 1. **Image Tokenizer:** 画像を離散的なトークン列に変換するモジュール。VQGAN で提案されたアーキテクチャをベースにしています。
-2. **Autoregressive Transformer (Llama):** トークン列を入力として受け取り、自己回帰的に次のトークンを予測することで画像を生成するモジュール。LLMであるLlamaをベースにしています。
+2. **Llama** トークン列を入力として受け取り、自己回帰的に次のトークンを予測することで画像を生成するモジュール。LLMであるLlamaをベースにしています。
 
 ```mermaid
 graph LR
@@ -70,8 +70,8 @@ graph LR
 
 ## LlamaGenとViTの比較
 
-Transformerを画像言語モデルで用いた例としては、ViT[^Dosovitskiy_et_al]が有名です。
-[^Dosovitskiy_et_al]: A. Dosovitskiy et al., “An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale,” Oct. 22, 2020, arXiv: arXiv:2010.11929. doi: 10.48550/arXiv.2010.11929.
+Transformerを画像言語モデルで用いた例としては、ViT[^Dosovitskiy_et_al_2020]が有名です。
+[^Dosovitskiy_et_al_2020]: A. Dosovitskiy et al., “An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale,” Oct. 22, 2020, arXiv: arXiv:2010.11929. doi: 10.48550/arXiv.2010.11929.
 
 LlamaGenとViTの違いをまとめました。
 
@@ -91,7 +91,6 @@ Image Tokenizerは、高解像度画像を効率的に処理するために、�
 ### Image Tokenizerの関連研究
 
 LlamaGen で用いられた Image Tokenizer は、VQGAN[^Esser_et_al_2021] で提案されたものとほぼ同じアーキテクチャです。VQGAN は、Image Tokenizer と自己回帰モデルを組み合わせることで、高解像度画像の生成を可能にしました。
-
 [^Esser_et_al_2021]: P. Esser, R. Rombach, and B. Ommer, “Taming Transformers for High-Resolution Image Synthesis,” Jun. 23, 2021, arXiv: arXiv:2012.09841. doi: 10.48550/arXiv.2012.09841.
 
 :::details VQGANとLlamaGenの違い
@@ -113,8 +112,6 @@ VQGAN（および LlamaGen）の Image Tokenizer は、エンコーダー、量�
 ### ベクトル量子化
 
 ベクトル量子化は、連続的なベクトル空間を離散的なコードブックで表現する手法です。VQ-VAE (Vector Quantized Variational AutoEncoder) などで利用されており、画像や音声などの高次元データを効率的に圧縮・表現することができます。
-
-TODO: ベクトル量子化についてもう少し詳しく説明
 
 なお、ベクトル量子化については「ソフテックだより」の記事[^Softech_2012]が分かりやすかったです。
 [^Softech_2012]: https://www.softech.co.jp/mm_120704_pc.htm
@@ -161,7 +158,7 @@ LlamaGen は、Stable Diffusion と同様に、Classifier-Free Guidance (CFG) �
 TODO: CFG について詳しく説明。条件付きと条件なしのモデルの学習、推論時の動作など。
 
 なお、CFGを理解するにあたってかくびー氏のブログ[^cakkby6_2023]が分かりやすかったです。
-[^cakkby6_2023]: <https://cake-by-the-river.hatenablog.jp/entry/stable_diffusion_8>
+[^cakkby6_2023]: https://cake-by-the-river.hatenablog.jp/entry/stable_diffusion_8
 
 ## 評価
 
@@ -181,7 +178,16 @@ LlamaGen の性能は、FID (Fréchet Inception Distance)、IS (Inception Score)
 
 [^Salimans_et_al_2016]: T. Salimans, I. Goodfellow, W. Zaremba, V. Cheung, A. Radford, and X. Chen, “Improved Techniques for Training GANs,” Jun. 10, 2016, arXiv: arXiv:1606.03498. doi: 10.48550/arXiv.1606.03498.
 
-**TODO**
+画像のクラス分類モデルであるInceptionNetを用いて、画像生成モデルの品質を測る手法です。
+
+評価対象の画像生成モデルでまとまった量の画像を生成し、それらの画像について次の確率分布を測ります。
+
+1. ある画像の分類結果の分布。特定のラベルに集中しているほど良い
+2. 画像全体の分類結果の分布。全てのラベルに広がっているほど良い
+
+2つの確率分布を算出したら、それらの分布の違いを測ります。具体的には、KDL（カルバック・ライブラー・ダイバージェンス）を計算します。そして、すべての画像におけるKLDの平均を取り、そのexpを取った値がインセプションスコアとなります。
+
+値は高いほど良く、GANで約220、潜在拡散モデルで約250、LlamaGenでは約310となっています。
 
 なお、mm_0824氏のブログ[^mm_0824_2021]が分かりやすかったです。
 [^mm_0824_2021]: <https://data-analytics.fun/2021/12/12/understanding-inception-score/>
@@ -190,15 +196,16 @@ LlamaGen の性能は、FID (Fréchet Inception Distance)、IS (Inception Score)
 
 [^Heusel_et_al_2017]: M. Heusel, H. Ramsauer, T. Unterthiner, B. Nessler, and S. Hochreiter, “GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium,” Jan. 12, 2018, arXiv: arXiv:1706.08500. doi: 10.48550/arXiv.1706.08500.
 
-フレチェインセプション距離
+日本語にするとフレチェインセプション距離でしょうか。2つの分布の違いを、中心の違いと散らばり方の違いの2つの観点から測り、足し合わせた値です。
 
-**TODO**
+具体的には、次の2つの項を計算します。
 
-- いかに多様な画像を生成できるか？
-  - 本物の画像と、埋め込み表現を計算してその距離を測る
-  - 具体的にはImageNetやCOCOを用いることが多い。今回はImageNet256x256らしい、それって何枚？
-- Inception-V3で埋め込みを計算する（あれ、Inception-V3ってクラス分類のモデルでは？）
-- 小さいほど良い。BigGANで約7, 最新の評価にはDiffusionで2くらい **TODO: 単位は?**
+1. 2つの分布の平均べクトルの間の距離
+2. 2つの分布の分散共分散行列の差異のトレース（詳細は計算式を参照してください）
+
+値は小さいほど良く、BigGANで約7, 最新の評価にはDiffusionで約2となっています。
+
+計算にあたってはベンチマーク対象が必要で、LlamaGenではImageNetでベンチマークを行っています。
 
 ### Precision/Recall
 

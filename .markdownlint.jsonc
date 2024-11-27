@@ -2,5 +2,5 @@
   "default": true,
   "MD013": false,
   "MD024": false,
-  "MD034": false  // リンクの埋め込みのため
+  "MD034": false  // リンクの埋め込み等のため
 }
