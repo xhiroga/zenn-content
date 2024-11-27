@@ -25,7 +25,11 @@ https://arxiv.org/abs/2406.06525
 
 この記事の内容を、2024-12-03に行われる [松尾研LLMコミュニティ【Paper & Hacks】#28](https://matsuolab-community.connpass.com/event/338122/) にて発表します。
 
+https://matsuolab-community.connpass.com/event/338122/
+
 ## はじめに
+
+TODO: ストーリーを書き直す
 
 近年の画像生成AIの発展は目覚ましく、その中でも**拡散モデル**は高品質な画像生成を可能にする手法として注目を集めています。拡散モデルは、画像にノイズを徐々に加えていき、最終的に完全なノイズになった状態から、逆向きにノイズを除去していくことで画像を生成します。この手法は、複雑な画像分布を学習するのに優れていますが、生成過程が逐次的であるため、計算コストが高いという課題があります。
 
@@ -35,11 +39,14 @@ https://arxiv.org/abs/2406.06525
 
 ## 関連研究
 
+TODO: 論文の関連研究を見て並び替え
+
 * **PixelCNN:** 自己回帰モデルによる画像生成の先駆け的な研究。
 * **ImageGPT:** Transformerを用いた自己回帰型画像生成モデル。
 * **VQGAN:** ベクトル量子化を用いたImage TokenizerとCNNを用いた自己回帰型画像生成モデル。
+* DALL-E
 * **LDM**
-* **DiT:**  ノイズの除去にTransformerを用いた拡散モデル。
+* **DiT:**  （おまけ）ノイズの除去にTransformerを用いた拡散モデル。
 
 ## LlamaGenのアーキテクチャ
 
@@ -77,8 +84,8 @@ LlamaGenとViTの違いをまとめました。
 
 | 特徴             | LlamaGen                             | ViT                                          |
 | ---------------- | ------------------------------------ | -------------------------------------------- |
-| アーキテクチャ   | GPT (=Transformer Decoder)           | Transformer Encoder                          |
 | 主なタスク       | 画像生成                             | 画像のクラス分類                             |
+| アーキテクチャ   | GPT (=Transformer Decoder)           | Transformer Encoder                          |
 | トークン化の対象 | 画像のパッチ                         | 画像のパッチ                                 |
 | トークン化の方法 | ベクトルを量子化しコードブックに対応 | ベクトルを全結合層で変換しパッチ埋込みを得る |
 
@@ -116,7 +123,7 @@ VQGAN（および LlamaGen）の Image Tokenizer は、エンコーダー、量�
 なお、ベクトル量子化については「ソフテックだより」の記事[^Softech_2012]が分かりやすかったです。
 [^Softech_2012]: https://www.softech.co.jp/mm_120704_pc.htm
 
-### Image Tokenizerの評価
+### Image Tokenizerのパラメータ
 
 画像の情報の圧縮率を測るための値として、「ダウンサンプル比」と「コードブックの語彙数」があります。カメラで例えれば、「解像度」と「色の階調」ということになるでしょうか。エンコーダーが画像を畳み込む前後の比率がダウンサンプル比であり、量子化器がマッピングする先のベクトルの種類がコードブックの語彙数です。
 
@@ -125,17 +132,9 @@ VQGAN（および LlamaGen）の Image Tokenizer は、エンコーダー、量�
 LlamaGenのImage Tokenizerは、ダウンサンプル比が8と16の場合で、コードブックの語彙数が4096から32768の場合でそれぞれ学習されています。ちなみに、Llama3のボキャブラリーの数は128Kトークン[^Llama3]です。
 [^Llama3]: https://ai.meta.com/blog/meta-llama-3/
 
-## Next-Token予測による画像生成
+### Image Tokenizerの訓練
 
-LlamaGen は、Image Tokenizer によって生成されたトークン列を LLM (Llama) に入力し、自己回帰的に次のトークンを予測することで画像を生成します。これは、自然言語処理における文章生成と同様のアプローチです。
-
-### Next-Token予測による画像生成の関連研究
-
-自己回帰モデルによる画像生成は、PixelCNN や ImageGPT など、以前から研究されてきました.  LlamaGen は、これらの先行研究と同様に、自己回帰モデルを利用していますが、LLM である Llama を採用することで、スケーラビリティと生成品質の向上を実現しています。
-
-### 画像生成の損失関数
-
-LlamaGen の訓練では、生成された画像が入力画像に近づくように、以下の損失関数を最小化します。
+Image Tokenizer の訓練では、生成された画像が入力画像に近づくように、以下の損失関数を最小化します。
 
 $$
 \begin{align}
@@ -151,6 +150,14 @@ $$
 
 [^Zhang_et_al_2018]: R. Zhang, P. Isola, A. A. Efros, E. Shechtman, and O. Wang, “The Unreasonable Effectiveness of Deep Features as a Perceptual Metric,” Apr. 10, 2018, arXiv: arXiv:1801.03924. doi: 10.48550/arXiv.1801.03924.
 
+## Next-Token予測による画像生成
+
+LlamaGen は、Image Tokenizer によって生成されたトークン列を LLM (Llama) に入力し、自己回帰的に次のトークンを予測することで画像を生成します。これは、自然言語処理における文章生成と同様のアプローチです。
+
+### Next-Token予測による画像生成の関連研究
+
+自己回帰モデルによる画像生成は、PixelCNN や ImageGPT など、以前から研究されてきました.  LlamaGen は、これらの先行研究と同様に、自己回帰モデルを利用していますが、LLM である Llama を採用することで、スケーラビリティと生成品質の向上を実現しています。
+
 ### CFG (Classifier-Free Guidance)
 
 LlamaGen は、Stable Diffusion と同様に、Classifier-Free Guidance (CFG) を用いて条件付き画像生成を行います。CFG は、分類器を用いることなく、テキストなどの条件情報を画像生成プロセスに組み込むことができる手法です。
@@ -159,6 +166,10 @@ TODO: CFG について詳しく説明。条件付きと条件なしのモデル�
 
 なお、CFGを理解するにあたってかくびー氏のブログ[^cakkby6_2023]が分かりやすかったです。
 [^cakkby6_2023]: https://cake-by-the-river.hatenablog.jp/entry/stable_diffusion_8
+
+### Next-Token予測による画像生成の訓練
+
+TODO: コード紹介？簡単な説明？
 
 ## 評価
 
@@ -208,6 +219,8 @@ LlamaGen の性能は、FID (Fréchet Inception Distance)、IS (Inception Score)
 計算にあたってはベンチマーク対象が必要で、LlamaGenではImageNetでベンチマークを行っています。
 
 ### Precision/Recall
+
+TODO
 
 ## LLMエコシステム
 
