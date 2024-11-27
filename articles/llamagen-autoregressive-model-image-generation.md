@@ -7,6 +7,7 @@ published: false
 notebook_urls:
   - LlamaGen: https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108
   - LlamaGen: https://aistudio.google.com/prompts/1hRYVjlnhrsyim6hOgD8F23-l-O4Oe8Hj
+  - ViT: https://aistudio.google.com/prompts/1Z0JvJe5WNEhPa2rKy8YcV69jVADoDt4G
   - VQGAN: https://aistudio.google.com/prompts/1Re2PEOv2zcIzic2fOejI0R5AqoH6HRk0
   - ベクトル量子化: https://chatgpt.com/c/67457c7f-84cc-8010-b422-d0a0068dd127
   - CFG: https://aistudio.google.com/prompts/1o53DQY58Yjsr4suqx63vbJnhMXxOhz4o?pli=1
@@ -69,16 +70,19 @@ graph LR
 
 ## LlamaGenとViTの比較
 
-| 特徴 | LlamaGen | ViT |
-|---|---|---|
-| アーキテクチャ | 自己回帰型 | Transformer Encoder |
-| 局所性バイアス | 無し | 無し |
-| 計算コスト | 訓練時は拡散モデルより低い、推論時は高い | 訓練時、推論時ともに低い |
-| スケーラビリティ | LLMのスケール則に従う | Transformerのスケール則に従う |
-| 長距離の依存関係 | 注意機構により学習 | 注意機構により学習 |
-| 生成画像の多様性 | 高い | 高い |
+Transformerを画像言語モデルで用いた例としては、ViT[^Dosovitskiy_et_al]が有名です。
+[^Dosovitskiy_et_al]: A. Dosovitskiy et al., “An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale,” Oct. 22, 2020, arXiv: arXiv:2010.11929. doi: 10.48550/arXiv.2010.11929.
 
-TODO: 表の内容を追記・修正
+LlamaGenとViTの違いをまとめました。
+
+| 特徴             | LlamaGen                             | ViT                                          |
+| ---------------- | ------------------------------------ | -------------------------------------------- |
+| アーキテクチャ   | GPT (=Transformer Decoder)           | Transformer Encoder                          |
+| 主なタスク       | 画像生成                             | 画像のクラス分類                             |
+| トークン化の対象 | 画像のパッチ                         | 画像のパッチ                                 |
+| トークン化の方法 | ベクトルを量子化しコードブックに対応 | ベクトルを全結合層で変換しパッチ埋込みを得る |
+
+Transformerを用いる点とトークン化の対象は同じですが、利用する型（エンコーダ・デコーダ）やタスク、トークン化の方法が異なります。
 
 ## Image Tokenizer
 
