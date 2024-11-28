@@ -3,7 +3,7 @@ title: "LlamaGen: LlamaのNext-Token予測を使った画像生成【論文】"
 emoji: "🦙"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["論文", "machinelearning", "computervision", "deeplearning", "llm", "llama"]
-published: false
+published: true
 notebook_urls:
   - LlamaGen: https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108
   - LlamaGen: https://aistudio.google.com/prompts/1hRYVjlnhrsyim6hOgD8F23-l-O4Oe8Hj
@@ -49,12 +49,20 @@ https://github.com/xhiroga/LlamaGen/tree/chore/uv
 
 自己回帰モデルで画像を扱おうという研究は、実はこの研究が初めてではありません。むしろ、拡散モデルよりも長い歴史があります。
 
-* **PixelCNN (2016):** 自己回帰モデルによる画像生成の先駆け的な研究。ピクセルを直接予測するモデルで、マスク畳み込みを用いて計算量を抑えながら自己回帰を実現しました。
-* **ImageGPT (2020):** Transformer を用いた自己回帰型画像生成モデル。画像を低解像度化し、ピクセルをトークンとして扱います。大規模言語モデルの事前学習と同様に、大量の画像データで事前学習を行うことで、様々な画像生成タスクに適用できる汎用的な表現を獲得することを目指しました。
-* **ViT (2020):** 画像認識のための Transformer ベースのモデル。画像をパッチに分割し、各パッチをトークンとして Transformer エンコーダーに入力します。画像分類タスクで高い性能を達成し、Transformer が画像認識にも有効であることを示しました。
-* **DALL-E (2021):** Transformer を用いた画像生成モデル。画像を VAE で離散トークン化し、テキストと画像のペアデータで学習します。テキストから高品質な画像を生成できることを示しました。
-* **VQGAN (2021):** ベクトル量子化を用いた Image Tokenizer と Transformer を用いた自己回帰型画像生成モデル。高解像度画像生成において、Transformer が CNN よりも優れた性能を持つことを示しました。
-* **DiT (2023):** 拡散モデルの一種で、ノイズ除去に Transformer を用います。拡散モデルと Transformer の利点を組み合わせることで、高品質な画像生成を実現しました。
+* **PixelCNN (2016)**[^Oord_et_al_2016a][^Oord_et_al_2016b]: 自己回帰モデルによる画像生成の先駆け的な研究。ピクセルを直接予測するモデルで、マスク畳み込みを用いて計算量を抑えながら自己回帰を実現しました。
+* **ImageGPT (2020)**[^Chen_et_al_2020]: Transformer を用いた自己回帰型画像生成モデル。画像を低解像度化し、ピクセルをトークンとして扱います。大規模言語モデルの事前学習と同様に、大量の画像データで事前学習を行うことで、様々な画像生成タスクに適用できる汎用的な表現を獲得することを目指しました。
+* **ViT (2020)**[^Dosovitskiy_et_al_2020]: 画像認識のための Transformer ベースのモデル。画像をパッチに分割し、各パッチをトークンとして Transformer エンコーダーに入力します。画像分類タスクで高い性能を達成し、Transformer が画像認識にも有効であることを示しました。
+* **DALL-E (2021)**[^Ramesh_et_al_2021]: Transformer を用いた画像生成モデル。画像を VAE で離散トークン化し、テキストと画像のペアデータで学習します。テキストから高品質な画像を生成できることを示しました。
+* **VQGAN (2021)**[^Esser_et_al_2021]: ベクトル量子化を用いた Image Tokenizer と Transformer を用いた自己回帰型画像生成モデル。高解像度画像生成において、Transformer が CNN よりも優れた性能を持つことを示しました。
+* **DiT (2023)**[^Peebles_and_Xie_2023]: 拡散モデルの一種で、ノイズ除去に Transformer を用います。拡散モデルと Transformer の利点を組み合わせることで、高品質な画像生成を実現しました。
+
+[^Oord_et_al_2016a]: A. van den Oord, N. Kalchbrenner, and K. Kavukcuoglu, “Pixel Recurrent Neural Networks,” Aug. 19, 2016, arXiv: arXiv:1601.06759. Accessed: Nov. 28, 2024. [Online]. Available: http://arxiv.org/abs/1601.06759
+[^Oord_et_al_2016b]: A. van den Oord, N. Kalchbrenner, O. Vinyals, L. Espeholt, A. Graves, and K. Kavukcuoglu, “Conditional Image Generation with PixelCNN Decoders,” Jun. 18, 2016, arXiv: arXiv:1606.05328. doi: 10.48550/arXiv.1606.05328.
+[^Chen_et_al_2020]: M. Chen et al., “Generative Pretraining from Pixels,” 2020.
+[^Dosovitskiy_et_al_2020]: A. Dosovitskiy et al., “An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale,” Oct. 22, 2020, arXiv: arXiv:2010.11929. doi: 10.48550/arXiv.2010.11929.
+[^Ramesh_et_al_2021]: A. Ramesh et al., “Zero-Shot Text-to-Image Generation,” Feb. 26, 2021, arXiv: arXiv:2102.12092. doi: 10.48550/arXiv.2102.12092.
+[^Esser_et_al_2021]: P. Esser, R. Rombach, and B. Ommer, “Taming Transformers for High-Resolution Image Synthesis,” Jun. 23, 2021, arXiv: arXiv:2012.09841. doi: 10.48550/arXiv.2012.09841.
+[^Peebles_and_Xie_2023]: W. Peebles and S. Xie, “Scalable Diffusion Models with Transformers,” Mar. 02, 2023, arXiv: arXiv:2212.09748. Accessed: Nov. 07, 2024. [Online]. Available: http://arxiv.org/abs/2212.09748
 
 LlamaGen の貢献は、大規模言語モデルのノウハウ（アーキテクチャや訓練手法など）を画像生成に適用することで、高品質な画像生成が可能になることを示した点にあります。
 
@@ -135,7 +143,7 @@ VQGAN（および LlamaGen）の Image Tokenizer は、エンコーダー、量�
 
 したがって、例えば256x256の画像をダウンサンプル比8のImage Tokenizerでトークン化すると、必要なトークン数は1024となります（256/8 * 256/8 = 1024）。
 
-LlamaGenのImage Tokenizerは、ダウンサンプル比が8と16の場合で、コードブックの語彙数が4096から32768の場合でそれぞれ学習されています。ちなみに、Llama3のボキャブラリーの数は128Kトークン[^Llama3]です。
+LlamaGenのImage Tokenizerは、ダウンサンプル比が8と16の場合で、コードブックの語彙数が4096から32768の場合でそれぞれ学習されています。ちなみにLlama3のボキャブラリーの数は128Kトークン[^Llama3]なので、桁が違いますね。
 [^Llama3]: https://ai.meta.com/blog/meta-llama-3/
 
 ### Image Tokenizerの訓練
@@ -144,7 +152,7 @@ Image Tokenizer の訓練では、生成された画像が入力画像に近づ�
 
 $$
 \begin{align}
-L_{AE} = I_2 (x, \widehat{x}) + L_P (x, \widehat{x}) + \lambda_G L_G (\widehat{x})
+L_{AE} = L_2 (x, \widehat{x}) + L_P (x, \widehat{x}) + \lambda_G L_G (\widehat{x})
 \end{align}
 $$
 
@@ -248,7 +256,7 @@ LlamaGen の性能は、FID (Fréchet Inception Distance)、IS (Inception Score)
 
 値は高いほどよく、LlamaGenのPrecisionは約0.8、Recallは約0.5となっています。
 
-### LlamaGenのスケール則
+## LlamaGenのスケール則
 
 LlamaGen は、モデルのパラメータ数を増やすことで、より高品質な画像を生成できることが示されています。これは、大規模言語モデルで観測されるスケール則と同様の傾向です。具体的には、パラメータ数を増やすことで、FID などの評価指標が改善されることが確認されています。
 
@@ -266,7 +274,7 @@ LlamaGen は、vLLM を用いることで推論を高速化しています。vLL
 
 LlamaGen は、LLM である Llama を自己回帰型画像生成に応用した、新しい画像生成モデルです。高品質な Image Tokenizer と効率的な訓練手法により、拡散モデルに匹敵する生成品質を達成しながら、LLM のスケール則に従って性能向上していくことが期待されます。また、vLLMなどのLLMエコシステムを活用することで高速な推論も可能になっています。
 
-## 感想と将来展望
+## 感想
 
 LlamaGen は、LLM を画像生成に応用するという点で非常に興味深い研究です。大規模言語モデルのスケール則と同様の傾向が確認されているため、今後更にモデルサイズを大きくすることで、更なる高品質な画像生成が期待されます。
 
