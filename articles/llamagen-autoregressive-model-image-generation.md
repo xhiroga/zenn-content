@@ -7,10 +7,12 @@ published: false
 notebook_urls:
   - LlamaGen: https://notebooklm.google.com/notebook/3b48c448-56cd-44d4-a259-7246d00f5108
   - LlamaGen: https://aistudio.google.com/prompts/1hRYVjlnhrsyim6hOgD8F23-l-O4Oe8Hj
+  - 関連研究: https://aistudio.google.com/prompts/1bmhZcwjdpElxJcKqyehL7WoZEP3Uf8I9
   - ViT: https://aistudio.google.com/prompts/1Z0JvJe5WNEhPa2rKy8YcV69jVADoDt4G
   - VQGAN: https://aistudio.google.com/prompts/1Re2PEOv2zcIzic2fOejI0R5AqoH6HRk0
   - ベクトル量子化: https://chatgpt.com/c/67457c7f-84cc-8010-b422-d0a0068dd127
   - CFG: https://aistudio.google.com/prompts/1o53DQY58Yjsr4suqx63vbJnhMXxOhz4o?pli=1
+  - Precision/Recall: https://aistudio.google.com/prompts/1JhKUhFlhdecNVxaz33-m31pNyjmCTd5p
 ---
 
 ## Autoregressive Model Beats Diffusion: Llama for Scalable Image Generation[^Sun_et_al_2024]
@@ -36,9 +38,16 @@ https://matsuolab-community.connpass.com/event/338122/
 
 本稿で紹介する **LlamaGen** は、LLMであるLlamaを自己回帰型画像生成モデルに応用した研究です。LlamaGenは、画像をトークン化し、そのトークン列をLlamaを用いて自己回帰的に生成することで、高品質な画像生成を実現します。将来的には、例えば図の入った画像を前処理なしで訓練に用いるようなことができるかもしれませんね。
 
+### ソースコード
+
+LlamaGenはソースコードと重みが公開されています。[^GitHub_LlamaGen]動かすのに非常に苦労したので、フォークして`uv`で動くように整えたリポジトリを公開します。
+[^GitHub_LlamaGen]: https://github.com/FoundationVision/LlamaGen
+
+https://github.com/xhiroga/LlamaGen/tree/chore/uv
+
 ## 関連研究
 
-自己回帰モデルで画像を扱おうという研究は、この研究が初めてではありません。むしろ、拡散モデルよりも長い歴史があります。次の通りまとめました。
+自己回帰モデルで画像を扱おうという研究は、実はこの研究が初めてではありません。むしろ、拡散モデルよりも長い歴史があります。次の通りまとめました。
 
 * **PixelCNN (2016)**[^Oord_et_al_2016a][^Oord_et_al_2016b]: 自己回帰モデルによる画像生成の先駆け的な研究。
 * **ImageGPT (2020)**[^Chen_et_al_2020]: Transformerを用いた画像生成モデル。画像を低解像度化してピクセルをトークンとして扱う。
@@ -81,8 +90,6 @@ graph LR
 
     dec --> o[出力画像 🏞️]
 ```
-
-## 自己回帰モデルと拡散モデルの比較
 
 ## LlamaGenとViTの比較
 
@@ -169,14 +176,28 @@ LlamaGen は、Image Tokenizer によって生成されたトークン列を LLM
 
 LlamaGen は、Stable Diffusion と同様に、Classifier-Free Guidance (CFG) を用いて条件付き画像生成を行います。CFG は、分類器を用いることなく、テキストなどの条件情報を画像生成プロセスに組み込むことができる手法です。
 
-TODO: CFG について詳しく説明。条件付きと条件なしのモデルの学習、推論時の動作など。
+LlamaGenは条件付きの画像生成に対応しています。それを行う場合、クラス条件付けやテキスト条件付けを画像トークンをコンテキストとして用います。
+
+具体的には、テキスト条件付けの場合、T5によってテキストを埋め込みに変換した後、画像のグリッドトークンを変換した埋め込みと連結して入力に用いています。
+
+条件付き画像生成では、Stable Diffusionと同様にCFG (分類機なしガイダンス)を用いています。
+
+拡散モデルで条件付きでノイズを除去した画像を推論するために、生成された画像とキャプションの適合度からノイズ除去の方向性として用いる手法があります。なお、この適合度を計算する部品を分類器 (classifier)といいます。
+
+数式で言えば、キャプションを前提として画像が生成される条件付き確率$p(x|y)$を最大化するには、$p(y|x)p(x)$を最大化する必要がある、ということになります。
+
+ところが、拡散モデルではノイズを徐々に取り除く形で画像を生成します。だから、ノイズが含まれる各段階ごとにキャプションとの適合度を計算する必要があり、手間が大きかったのでした。
+
+また、生成された画像を評価する際の指標であるFIDなどが分類を内部で使っているので、学習時に分類器からフィードバックを受けると数値指標をハックする形になることも懸念でした。
+
+そこで、分類器を用いることなく$p(y|x)$を推定するClassifier-Free Guidance (CFG)が提案されました。 CFGでは、条件付きの拡散モデル$p(x|y)$と条件なしの拡散モデル$p(x)$を同時に学習します。推論時には、両方のモデルを用いてノイズ除去の方向を計算し、その差分を利用することで、あたかも分類器を用いたかのようなガイダンスを実現します。具体的には、条件付きのノイズ除去方向と条件なしのノイズ除去方向を計算し、その差分に重みをかけて条件なしのノイズ除去方向に加算することで、条件の影響の強さを調整します。これにより、分類器を用いることなく、効率的に条件付き画像生成を行うことができます。
 
 なお、CFGを理解するにあたってかくびー氏のブログ[^cakkby6_2023]が分かりやすかったです。
 [^cakkby6_2023]: https://cake-by-the-river.hatenablog.jp/entry/stable_diffusion_8
 
 ### Next-Token予測による画像生成の訓練
 
-TODO: コード紹介？簡単な説明？
+画像生成の訓練は、大規模言語モデルの事前学習と変わりません。予測したトークンに対する交差エントロピー誤差を計算し、誤差逆伝播を行います。
 
 ## 評価
 
@@ -225,9 +246,15 @@ LlamaGen の性能は、FID (Fréchet Inception Distance)、IS (Inception Score)
 
 計算にあたってはベンチマーク対象が必要で、LlamaGenではImageNetでベンチマークを行っています。
 
-### Precision/Recall
+### Precision/Recall[^Kynkaanniemi_et_al_2019]
 
-TODO
+[^Kynkaanniemi_et_al_2019]: T. Kynkäänniemi, T. Karras, S. Laine, J. Lehtinen, and T. Aila, “Improved Precision and Recall Metric for Assessing Generative Models,” Oct. 30, 2019, arXiv: arXiv:1904.06991. doi: 10.48550/arXiv.1904.06991.
+
+適合度と再現率です。実際の画像の分布と生成した画像の分布の重なり合う範囲を比較します。
+
+といっても、画像生成モデルに、学習データと全く同じ画像を再現させることは望めませんし、求められていません。そこで、実際の画像と生成した画像のそれぞれに似た画像がお互いに含まれているかを判断します。具体的には、画像をVGGなどでベクトル化し、特徴空間においてn番目に近い画像までの距離を半径とした超球を作り、比較対象の画像がその超球に含まれるかによって判断します。
+
+値は高いほどよく、LlamaGenのPrecisionは約0.8、Recallは約0.5となっています。
 
 ## LLMエコシステム
 
