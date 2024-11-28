@@ -29,24 +29,33 @@ https://matsuolab-community.connpass.com/event/338122/
 
 ## はじめに
 
-TODO: ストーリーを書き直す
+近年の画像生成AIは、高品質な画像を生成できる一方で、大規模言語モデルと統合されているとは言えません。例えばChatGPTには画像生成機能がありますが、内部ではDALL-Eという別のモデルを呼び出しています。[^DALL-E3]
+[^DALL-E3]: https://openai.com/index/dall-e-3/
 
-近年の画像生成AIの発展は目覚ましく、その中でも**拡散モデル**は高品質な画像生成を可能にする手法として注目を集めています。拡散モデルは、画像にノイズを徐々に加えていき、最終的に完全なノイズになった状態から、逆向きにノイズを除去していくことで画像を生成します。この手法は、複雑な画像分布を学習するのに優れていますが、生成過程が逐次的であるため、計算コストが高いという課題があります。
+これは、画像生成AIと大規模言語モデルのアーキテクチャが根本的に異なるためです。Stable DiffusionやDALL-E2以降で用いられる拡散モデルは、画像にノイズを徐々に加えていき、最終的に完全なノイズになった状態から、逆向きにノイズを除去していくことで画像を生成します。一方で、GPTに代表される大規模言語モデルは、前のトークンから次のトークンを予測することで文章を生成します。これらを統合することはできないのでしょうか？
 
-一方、自然言語処理で成功を収めている**自己回帰モデル**は、系列データを前の時刻のデータから予測するモデルです。文章生成で言えば、前の単語から次の単語を予測していくことで文章を生成します。この考え方を画像生成にも適用したのが、**自己回帰型画像生成モデル**です。自己回帰モデルは並列処理が可能であるため、拡散モデルに比べて高速な画像生成が期待できます。しかし、高解像度の画像をそのままピクセル単位で自己回帰モデルに適用すると、計算量が爆発的に増加してしまうという問題がありました。
-
-本稿で紹介する **LlamaGen** は、LLMであるLlamaを自己回帰型画像生成モデルに応用した研究です。LlamaGenは、画像をトークン化し、そのトークン列をLlamaを用いて自己回帰的に生成することで、高品質な画像生成を実現します。
+本稿で紹介する **LlamaGen** は、LLMであるLlamaを自己回帰型画像生成モデルに応用した研究です。LlamaGenは、画像をトークン化し、そのトークン列をLlamaを用いて自己回帰的に生成することで、高品質な画像生成を実現します。将来的には、例えば図の入った画像を前処理なしで訓練に用いるようなことができるかもしれませんね。
 
 ## 関連研究
 
-TODO: 論文の関連研究を見て並び替え
+自己回帰モデルで画像を扱おうという研究は、この研究が初めてではありません。むしろ、拡散モデルよりも長い歴史があります。次の通りまとめました。
 
-* **PixelCNN:** 自己回帰モデルによる画像生成の先駆け的な研究。
-* **ImageGPT:** Transformerを用いた自己回帰型画像生成モデル。
-* **VQGAN:** ベクトル量子化を用いたImage TokenizerとCNNを用いた自己回帰型画像生成モデル。
-* DALL-E
-* **LDM**
-* **DiT:**  （おまけ）ノイズの除去にTransformerを用いた拡散モデル。
+* **PixelCNN (2016)**[^Oord_et_al_2016a][^Oord_et_al_2016b]: 自己回帰モデルによる画像生成の先駆け的な研究。
+* **ImageGPT (2020)**[^Chen_et_al_2020]: Transformerを用いた画像生成モデル。画像を低解像度化してピクセルをトークンとして扱う。
+* **ViT (2020)**[^Dosovitskiy_et_al_2020]: 画像のクラス分類モデル。画像をグリッドで分割し、そのパッチを埋め込みベクトル化して扱う。
+* **DALL-E (2021)**[^Ramesh_et_al_2021]: Transformerを用いた画像生成モデル。画像をVAEで離散トークン化。
+* **VQGAN (2021)**[^Esser_et_al_2021]: ベクトル量子化を用いたImage TokenizerとTransformerを用いた自己回帰型画像生成モデル。
+* **DiT (2023)**[^Peebles_and_Xie_2023]: （参考）ノイズの除去にTransformerを用いた拡散モデル。
+
+[^Oord_et_al_2016a]: A. van den Oord, N. Kalchbrenner, and K. Kavukcuoglu, “Pixel Recurrent Neural Networks,” Aug. 19, 2016, arXiv: arXiv:1601.06759. Accessed: Nov. 28, 2024. [Online]. Available: http://arxiv.org/abs/1601.06759
+[^Oord_et_al_2016b]: A. van den Oord, N. Kalchbrenner, O. Vinyals, L. Espeholt, A. Graves, and K. Kavukcuoglu, “Conditional Image Generation with PixelCNN Decoders,” Jun. 18, 2016, arXiv: arXiv:1606.05328. doi: 10.48550/arXiv.1606.05328.
+[^Chen_et_al_2020]: M. Chen et al., “Generative Pretraining from Pixels,” 2020.
+[^Dosovitskiy_et_al_2020]: A. Dosovitskiy et al., “An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale,” Oct. 22, 2020, arXiv: arXiv:2010.11929. doi: 10.48550/arXiv.2010.11929.
+[^Ramesh_et_al_2021]: A. Ramesh et al., “Zero-Shot Text-to-Image Generation,” Feb. 26, 2021, arXiv: arXiv:2102.12092. doi: 10.48550/arXiv.2102.12092.
+[^Esser_et_al_2021]: P. Esser, R. Rombach, and B. Ommer, “Taming Transformers for High-Resolution Image Synthesis,” Jun. 23, 2021, arXiv: arXiv:2012.09841. doi: 10.48550/arXiv.2012.09841.
+[^Peebles_and_Xie_2023]: W. Peebles and S. Xie, “Scalable Diffusion Models with Transformers,” Mar. 02, 2023, arXiv: arXiv:2212.09748. Accessed: Nov. 07, 2024. [Online]. Available: http://arxiv.org/abs/2212.09748
+
+LlamaGenの貢献は、大規模言語モデルのノウハウが画像生成でも通じることを示したところにあると言えそうです。
 
 ## LlamaGenのアーキテクチャ
 
@@ -78,7 +87,6 @@ graph LR
 ## LlamaGenとViTの比較
 
 Transformerを画像言語モデルで用いた例としては、ViT[^Dosovitskiy_et_al_2020]が有名です。
-[^Dosovitskiy_et_al_2020]: A. Dosovitskiy et al., “An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale,” Oct. 22, 2020, arXiv: arXiv:2010.11929. doi: 10.48550/arXiv.2010.11929.
 
 LlamaGenとViTの違いをまとめました。
 
@@ -98,7 +106,6 @@ Image Tokenizerは、高解像度画像を効率的に処理するために、�
 ### Image Tokenizerの関連研究
 
 LlamaGen で用いられた Image Tokenizer は、VQGAN[^Esser_et_al_2021] で提案されたものとほぼ同じアーキテクチャです。VQGAN は、Image Tokenizer と自己回帰モデルを組み合わせることで、高解像度画像の生成を可能にしました。
-[^Esser_et_al_2021]: P. Esser, R. Rombach, and B. Ommer, “Taming Transformers for High-Resolution Image Synthesis,” Jun. 23, 2021, arXiv: arXiv:2012.09841. doi: 10.48550/arXiv.2012.09841.
 
 :::details VQGANとLlamaGenの違い
 VQGANのアーキテクチャを次の通り示します。LlamaGenのアーキテクチャと比較すると、自己回帰モデルが異なる（Transformer or Llama）ことが分かります。
