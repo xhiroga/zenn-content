@@ -1,7 +1,7 @@
 ---
 title: "LlamaGen: LlamaのNext-Token予測を使った画像生成【論文】"
 emoji: "🦙"
-type: "idea" # tech: 技術記事 / idea: アイデア
+type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["論文", "machinelearning", "computervision", "deeplearning", "llm", "llama"]
 published: true
 notebook_urls:
