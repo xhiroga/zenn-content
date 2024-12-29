@@ -14,15 +14,9 @@ SSHクライアントでは、OpenSSH 7.3 (2016年8月リリース)[^openssh_7.3
 [^openssh_7.3]: <https://www.openssh.com/txt/release-7.3>
 
 このIncludeは便利な半面、ちょっとした落とし穴もあります。  
-筆者は今回、[SSHクライアントのターミナル『Tabby』](https://github.com/Eugeny/tabby)に[このInclude機能を対応させる](https://github.com/Eugeny/tabby/pull/10105/files)過程で、内部ロジックを調べて痛感しました。
+筆者は今回、[SSHクライアントのターミナル『Tabby』](https://github.com/Eugeny/tabby)を[Include機能に対応させる](https://github.com/Eugeny/tabby/pull/10105/files)過程で、内部ロジックを調べて痛感しました。
 
-そこで、**「SSHのIncludeディレクティブにはどんなメリットがあるか」**、そして**「どこに注意すると良いか」**をまとめます。
-
-## TL;DR
-
-- **Include** を使うと、SSHクライアント設定を複数ファイルに分割できます。  
-- たとえば `~/.ssh/config.d/` のようなフォルダを丸ごと読み込むので、サーバ追加・削除のたびにメインの `config` を修正しなくても済みます。  
-- ただし、**Host/Matchブロック内でもIncludeが書ける**、**相対パスの扱い**、**同じキーの再定義時の上書き順** など、仕様がややこしい面があります。
+そこで、ハマらないために予め知っておきたい落とし穴をまとめました。
 
 ## そもそもIncludeディレクティブとは？
 
@@ -61,57 +55,75 @@ Include ~/.ssh/config.d/*.conf
 
 ### (1) パスの扱い
 
-原則、**絶対パス** で書くと素直に解決されます。  
-相対パスの場合、`~/.ssh/` を基準にして展開されると考えてください。  
-ただし、OS や一部のOpenSSH実装では細かい差異があるため、トラブルを避けるなら絶対パスが無難です。
+Includeディレクティブは相対パスで書くことができます。では、二重にIncludeする場合の基準はどこになるでしょうか？
+
+```conf
+# ~/.ssh/config.d/dev.conf
+Include temp.conf
+```
+
+正解は、「`~/.ssh`または`/etc/ssh`が基準になる」です。Includeを宣言したファイルからの相対パスではないんですね。
+
+`man ssh_config`にも次のように記載してあります。
+
+> Files without absolute paths are assumed to be in ~/.ssh if included in a user configuration file or /etc/ssh if included from the system configuration file.
+
+IncludeをJavaScriptのImportのように考えているとハマりそうです。  
+Includeは、あくまで巨大なssh_configファイルを作るための機能ということを意識しておくと良いかもしれません。
 
 ### (2) Host や Match ブロック内でもIncludeが書けてしまう
 
 ```conf
 # ~/.ssh/config
-Match User boss
-  Include ~/.ssh/config.d/boss.conf
+Host example.com
+  User user
+
+Include ~/.ssh/config.d/stg.conf
+
+# ~/.ssh/config.d/stg.conf
+HostName 1.2.3.4
+
+Host test.com
+  User user
+  ...
 ```
 
-このようにブロック内に書くと、「合致した場合にさらに別ファイルを読み込む」などの複雑な挙動が可能になります。  
-しかし可読性を損なうため、あまり推奨されていません。
+`~/.ssh/config.d/stg.conf`が`HostName`から始まっていますね。なんとこれは有効なssh_configです。  
+実行すると次のようになります。
+
+```conf
+% ssh -G example.com | grep hostname
+hostName 1.2.3.4
+```
+
+ハマらないためには、Includeはファイルの先頭に書き、文中のIncludeや二重のIncludeを避けるのが良さそうです。
 
 ### (3) いきなりHost設定を継ぎ足せる
 
-ssh_configでは、分割ファイルの読み込み順も含めて最終的に1つの設定に統合されるのがポイントです。
-
-下記の例では、**誤って** `HostName` を別ファイルにだけ書いてしまっても、最後に見つかった `HostName` が適用されます。
+(2) と似ていますが、実は呼び出す順番さえ連続していればHost設定を途中から書くことができます。
 
 ```conf
+# ~/.ssh/config
+Include config.d/config1
+Include config.d/config2
+
 # ~/.ssh/config.d/config1
 Host example.com
   User user
-```
 
-```conf
 # ~/.ssh/config.d/config2
 HostName 5.6.7.8
 ```
-
-:::details 実行結果
 
 ```shell
 $ ssh -G example.com | grep hostname
 hostname 5.6.7.8
 ```
 
-:::
-
 結果として `example.com` が `5.6.7.8` に向かうため、意図しない接続先になってしまうことも。  
-複数ファイルに分割するときは、重複定義に注意しましょう。
+トラブルを避けるため、被Include対象の`ssh_config`はHostブロックから書き始めることを意識したいですね。
 
 ## まとめ
 
 SSHのIncludeディレクティブは、設定を分割して管理するうえで非常に便利です。  
-しかし、**相対パスの解釈** や **Hostブロック内におけるInclude**、**キー上書きの優先順位** といった点で混乱しやすいです。
-
-- **大規模な環境** では、分割で管理しやすくなる反面、意図しない上書きが起きないように設計しましょう。
-- **自宅や個人の環境** でも、サーバが増えてきたらIncludeを活用すると快適になります。
-
-筆者はTabby（Electronベースのターミナル）に対してInclude機能を実装する過程で、こうした挙動を把握し、苦労しました。  
-みなさんのSSH運用でも、一度Includeを試してみてください。
+しかし、あくまで巨大なファイルを分割するだけの機能ということを忘れると、ハマる原因になります。本記事が皆さんをトラブルから遠ざけてくれますように。
