@@ -14,7 +14,7 @@ SSHクライアントでは、OpenSSH 7.3 (2016年8月リリース)[^openssh_7.3
 [^openssh_7.3]: <https://www.openssh.com/txt/release-7.3>
 
 このIncludeは便利な半面、ちょっとした落とし穴もあります。  
-筆者は今回、[SSHクライアントのターミナル『Tabby』](https://github.com/Eugeny/tabby)を[Include機能に対応させる](https://github.com/Eugeny/tabby/pull/10105/files)過程で、内部ロジックを調べて痛感しました。
+筆者は今回、[SSHクライアントのターミナル『Tabby』](https://github.com/Eugeny/tabby)を[Include機能に対応させる](https://github.com/Eugeny/tabby/pull/10105)過程で、内部ロジックを調べて痛感しました。
 
 そこで、ハマらないために予め知っておきたい落とし穴をまとめました。
 
