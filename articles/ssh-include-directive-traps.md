@@ -1,9 +1,9 @@
 ---
-title: "あなたの知らないSSH Client Includeディレクティブの落とし穴"
+title: "あなたの知らないSSHのIncludeディレクティブの落とし穴"
 emoji: "🐘"
 type: "tech"
 topics: ["ssh", "linux"]
-published: false
+published: true
 ---
 
 ## はじめに
@@ -51,7 +51,7 @@ Include ~/.ssh/config.d/*.conf
 2. **glob が使える**  
    新しいサーバ用の設定ファイルを `~/.ssh/config.d/` にポンと置くだけで完了します。
 
-## 意外と多い罠
+## 落とし穴
 
 ### (1) パスの扱い
 
@@ -112,15 +112,15 @@ Host example.com
   User user
 
 # ~/.ssh/config.d/config2
-HostName 5.6.7.8
+HostName 1.2.3.4
 ```
 
 ```shell
 $ ssh -G example.com | grep hostname
-hostname 5.6.7.8
+hostname 1.2.3.4
 ```
 
-結果として `example.com` が `5.6.7.8` に向かうため、意図しない接続先になってしまうことも。  
+結果として `example.com` が `1.2.3.4` に向かうため、意図しない接続先になってしまうことも。  
 トラブルを避けるため、被Include対象の`ssh_config`はHostブロックから書き始めることを意識したいですね。
 
 ## まとめ
