@@ -17,14 +17,6 @@ https://docs.aws.amazon.com/awsconsolehelpdocs/latest/gsg/multisession.html
 
 ## 仕様深堀り
 
-### AWS SSOとの併用
-
-アカウントメニューコンテンツ（アカウントメニューボタンをクリックすると表示されるメニュー）では表示されないものの、AWS SSOとも普通に併用できます。さらに、Organizationを跨いだ同時ログインも可能です。
-
-![AWS Multi Session Buttons](/images/aws-multi-session-fig1.png)
-
-SSOとの併用方法は[Serverworksさんのブログ](https://blog.serverworks.co.jp/sign-in-for-multiple-AWS-accounts)にスクショがあって分かりやすいです。
-
 ### サブドメインの仕様
 
 マネジメントコンソールのサブドメインのURLは次の形式になっているようです。
@@ -58,6 +50,20 @@ SSOとの併用方法は[Serverworksさんのブログ](https://blog.serverworks
 ![Session limit (not) reached](/images/aws-multi-session-fig3.png)
 
 何分前にログインしたセッションか？はここでしか見られない情報なので、URLを記録しておくと便利な場合が稀にあるかもしれないですね。
+
+### Switch role履歴
+
+Add session ボタン横の ▼ からSwitch Roleの履歴を見ることができますが、スイッチ元のアカウントが異なる場合はクリックしても何も起きません。
+
+![Switch role history](/images/aws-multi-session-fig4.gif)
+
+### AWS SSOとの併用
+
+アカウントメニューコンテンツ（アカウントメニューボタンをクリックすると表示されるメニュー）では表示されないものの、AWS SSOとも普通に併用できます。さらに、Organizationを跨いだ同時ログインも可能です。
+
+![AWS Multi Session Buttons](/images/aws-multi-session-fig1.png)
+
+SSOとの併用方法は[Serverworksさんのブログ](https://blog.serverworks.co.jp/sign-in-for-multiple-AWS-accounts)にスクショがあって分かりやすいです。
 
 ### その他
 
