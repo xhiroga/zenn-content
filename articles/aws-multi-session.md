@@ -25,7 +25,7 @@ https://docs.aws.amazon.com/awsconsolehelpdocs/latest/gsg/multisession.html
 
 SSOとの併用方法は[Serverworksさんのブログ](https://blog.serverworks.co.jp/sign-in-for-multiple-AWS-accounts)にスクショがあって分かりやすいです。
 
-### サブドメイン
+### サブドメインの仕様
 
 マネジメントコンソールのサブドメインのURLは次の形式になっているようです。
 
@@ -51,7 +51,7 @@ SSOとの併用方法は[Serverworksさんのブログ](https://blog.serverworks
 
 アカウント名や任意の文字列を表示したいという要望は根強いと思うので、今後のアップデートに期待したいですね。
 
-### セッション数制限の確認画面はいつでも見れる
+### セッション数制限の画面をいつでも開く
 
 同時ログインしているセッション数が5つを超えそうな場合は[Session limit reached](https://signin.aws.amazon.com/sessions/limit)にリダイレクトされます。実はこのページは、セッション数が5つ以内の場合も普通に開くことができます。
 
