@@ -33,7 +33,7 @@ SSOとの併用方法は[Serverworksさんのブログ](https://blog.serverworks
 
 なお、クロスアカウントでスイッチロールした場合、アカウントIDはスイッチ先のアカウントIDでした。
 
-また、`英数8文字`はセッションを出入りした場合でも、Roleが同一ならユニークでした。おそらく何らかの関数で、`Federated user名` → `英数8文字`に変換しているものと思われます。
+また、同じロールでセッションを出入りしても、`英数8文字`は不変でした。`Federated user名`→`英数8文字`に変換する何らかの関数があると思われます。
 
 ### アカウントエイリアスの表示
 
@@ -69,7 +69,9 @@ SSOとの併用方法は[Serverworksさんのブログ](https://blog.serverworks
 
 複数のAWSのセッションを使い分ける上で、アカウントやロールを間違えないためのChrome拡張を開発しています。ヘッダーの色を変えられる他、アカウント名を表示することが可能です（マルチセッションサポートを現在対応中です）
 
-[Chrome Web Store](https://chromewebstore.google.com/detail/aws-peacock-management-co/bknjjajglapfhbdcfgmhgkgfomkkaidj?utm_source=zenn-dev_aws-multi-session)から[Firefox ADD-ONS](https://addons.mozilla.org/ja/firefox/addon/aws-peacock-management-console/)ご利用いただけます。
+![AWS Peacock Management Console](https://github.com/xhiroga/aws-peacock-management-console/blob/43709a5b0f1acb8354721a8acb9d3e224387dd8e/images/aws-peacock-mc.png?raw=true)
+
+[Chrome Web Store](https://chromewebstore.google.com/detail/aws-peacock-management-co/bknjjajglapfhbdcfgmhgkgfomkkaidj?utm_source=zenn-dev_aws-multi-session)と[Firefox ADD-ONS](https://addons.mozilla.org/ja/firefox/addon/aws-peacock-management-console/)からご利用いただけます。
 
 ソースコードもGitHubで公開しています。スターをいただけると励みになります！
 
