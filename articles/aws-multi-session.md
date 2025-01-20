@@ -6,24 +6,24 @@ topics: ["AWS"]
 published: true
 ---
 
-2025-01-16[^release-day]に、AWSマネジメントコンソールで複数アカウントによる同時サインインが可能になりました。
+2025-01-16[^release-day]に、AWSマネジメントコンソールで複数アカウントによる同時サインインが可能になりました！
 [^release-day]: 2025-01-10から段階的にリリースされていたようです。
 
-従来はブラウザのプロファイルを使い分けるなどの工夫が必要だったところ、非常にありがたい機能です。
+従来はブラウザのプロファイルを使い分けるなどの工夫が必要だったので、とてもありがたいです。
 
-## 公式ドキュメント（Signing in to multiple accounts）
+## 公式ドキュメント
 
 https://docs.aws.amazon.com/awsconsolehelpdocs/latest/gsg/multisession.html
 
 ## 仕様深堀り
 
-### AWS SSOとの関係
+### AWS SSOとの併用
 
 アカウントメニューコンテンツ（アカウントメニューボタンをクリックすると表示されるメニュー）では表示されないものの、AWS SSOとも普通に併用できます。さらに、Organizationを跨いだ同時ログインも可能です。
 
 ![AWS Multi Session Buttons](/images/aws-multi-session-fig1.png)
 
-SSOとの併用方法は[Serverworksさんのブログ](https://blog.serverworks.co.jp/sign-in-for-multiple-AWS-accounts)にスクショがあって分かりやすかったです。
+SSOとの併用方法は[Serverworksさんのブログ](https://blog.serverworks.co.jp/sign-in-for-multiple-AWS-accounts)にスクショがあって分かりやすいです。
 
 ### サブドメイン
 
@@ -31,7 +31,7 @@ SSOとの併用方法は[Serverworksさんのブログ](https://blog.serverworks
 
 `https://{アカウントID}-英数8文字.us-east-1.console.aws.amazon.com/...`
 
-なお、クロスアカウントでスイッチロールした場合、アカウントIDはスイッチ先のアカウントIDでした。
+なお、クロスアカウントでスイッチロールした場合、`アカウントID`はスイッチ先のアカウントIDでした。
 
 また、同じロールでセッションを出入りしても、`英数8文字`は不変でした。`Federated user名`→`英数8文字`に変換する何らかの関数があると思われます。
 
