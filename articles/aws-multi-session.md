@@ -1,5 +1,5 @@
 ---
-title: "AWSマネジメントコンソールのマルチセッションの仕様深堀り"
+title: "AWSマネジメントコンソールのマルチセッションの小ネタ集"
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["AWS"]
@@ -15,7 +15,7 @@ published: true
 
 https://docs.aws.amazon.com/awsconsolehelpdocs/latest/gsg/multisession.html
 
-## 仕様深堀り
+## 小ネタ集
 
 ### サブドメインの仕様
 
