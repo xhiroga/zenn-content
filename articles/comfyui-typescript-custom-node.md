@@ -1,5 +1,5 @@
 ---
-title: "ComfyUI Custom Nodes用のTypeScriptテンプレートを公開しました。"
+title: "ComfyUI Custom Nodes用のTypeScriptテンプレートを公開しました"
 emoji: "🛠️"
 type: "tech"
 topics: ["ComfyUI", "TypeScript", "JavaScript"]
