@@ -8,7 +8,7 @@ published: true
 
 ## TLDR
 
-- Roo Code上でDeep Researchのような検索・レポート作成ができる
+- Roo Code上でDeep Researchのような検索ができて非常に便利
 - MCPサーバーで検索(Brave Search)・Web閲覧(Fetch)を行う
 
 ## デモ
@@ -24,7 +24,7 @@ MCP（Model Context Protocol）は、AIアシスタントとデータソース�
 MCPの公式サイトから、公開されているMCPサーバーを参照できます。
 https://mcp.so/
 
-## Brave Search & Fetch
+## Brave Search & Fetch とは？
 
 ### Brave Search
 
@@ -101,4 +101,5 @@ Use "brave-search" MCP as default search. Use "fetch" MCP as default web viewer
 
 ## まとめ
 
-Roo CodeにMCPサーバーを追加することで、検索やWeb閲覧機能を簡単に利用できるようになります。Brave SearchとFetchを組み合わせることで、効率的な情報収集が可能になり、コーディング作業の生産性が大幅に向上します。
+これまではコーディング中のトラブルシュートのためにソースコードをo1 Proに貼り付けていましたが、その手間がなくせる可能性を感じており、非常に興奮しています！  
+プロンプトの工夫次第では実際にDeep Research並の性能も狙えると思うので、ぜひ皆さんも使ってみて感想を教えてください！
