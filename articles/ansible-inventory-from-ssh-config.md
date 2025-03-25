@@ -1,22 +1,22 @@
 ---
-title: "SSH設定ファイルからAnsibleインベントリを動的に生成する"
+title: "Ansibleのインベントリを~/.ssh/configから動的に生成"
 emoji: "🔧"
 type: "tech"
 topics: ["ansible", "python", "ssh", "sshconf"]
-published: false
+published: true
 ---
 
 ## TL;DR
 
 - SSH設定ファイル（~/.ssh/config）からAnsibleインベントリを動的に生成するPythonスクリプトを書きました
-- SSH Configの読み取りには `sshconf` を使った
-- AnsibleのランタイムをPythonの仮想環境にすると、動的インベントリも同じ環境で実行させられる
+- SSH Configの読み取りには `sshconf` を用いました
+- AnsibleのランタイムをPythonの仮想環境にすると、動的インベントリも同じ環境で実行できます
 
 ## 動機
 
-機械学習の実験をしていると、GPUクラウドを頻繁に立てたり落としたりします。その度に接続先情報を複数の場所に書き換えるのは大きなストレスでした。
+機械学習の実験をしていると、GPUクラウドを頻繁に立てたり落としたりします。その度に接続先情報を複数の場所に書き換えるのがストレスでした。
 
-SSH設定は `~/.ssh/config` に書いていますが、Ansibleのインベントリファイルにも同じホスト情報を記述する必要があります。この二重管理をなくし、DRY（Don't Repeat Yourself）の原則に従いたいと考えました。
+SSH設定は `~/.ssh/config` に書いていますが、Ansibleのインベントリファイルにもホスト名を記述する必要があります。この二重管理をなくし、DRY（Don't Repeat Yourself）の原則に従いたいと考えました。
 
 ## デモ
 
@@ -41,7 +41,7 @@ SSH設定は `~/.ssh/config` に書いていますが、Ansibleのインベン�
 $ uv run ansible-playbook -i ondemand.py playbook.yml --limit $(ondemand.py | fzf)
 ```
 
-GitHubリポジトリ: [xhiroga/homelab - ondemand.py](https://github.com/xhiroga/homelab/blob/93ea84375b9d6aa7e134ebbfec8806fe837be24e/playbooks/ondemand.py)
+https://github.com/xhiroga/homelab/blob/93ea84375b9d6aa7e134ebbfec8806fe837be24e/playbooks/ondemand.py
 
 ```python
 #!/usr/bin/env python
