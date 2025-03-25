@@ -1,31 +1,49 @@
+---
+title: "SSH設定ファイルからAnsibleインベントリを動的に生成する"
+emoji: "🔧"
+type: "tech"
+topics: ["ansible", "python", "ssh", "sshconf"]
+published: false
+---
 
+## TL;DR
 
-- Ansibleのインベントリには、JSONを返すスクリプトを指定できる
-- Pythonでもよい
-- シェバンでenv で検索した？Pythonを指定する場合、AnsibleをUVで実行していたら、その環境になる
-- 動的にインベントリを出した後、ホスト一覧をlimitで絞り込む
-
-
-## デモ
-
-[![asciicast](https://asciinema.org/a/709732.svg)](https://asciinema.org/a/709732)
+- SSH設定ファイル（~/.ssh/config）からAnsibleインベントリを動的に生成するPythonスクリプトを書きました
+- SSH Configの読み取りには `sshconf` を使った
+- AnsibleのランタイムをPythonの仮想環境にすると、動的インベントリも同じ環境で実行させられる
 
 ## 動機
 
-機械学習をやっているとGPUクラウドを立てたり落としたりする
-接続先を複数個所に書くのは結構ストレスだった
+機械学習の実験をしていると、GPUクラウドを頻繁に立てたり落としたりします。その度に接続先情報を複数の場所に書き換えるのは大きなストレスでした。
 
-## 大まかな構成
+SSH設定は `~/.ssh/config` に書いていますが、Ansibleのインベントリファイルにも同じホスト情報を記述する必要があります。この二重管理をなくし、DRY（Don't Repeat Yourself）の原則に従いたいと考えました。
 
-- ondemand.py には二つの機能がある
-- -i オプションに渡す機能
-- --limit オプションに渡す出力のための機能 ホスト名を選ぶ
+## デモ
 
+実際の動作の様子です。SSH設定からホスト一覧を取得し、インタラクティブに実行対象を選択できます。
 
-## コード
+[![asciicast](https://asciinema.org/a/709732.svg)](https://asciinema.org/a/709732)
 
-https://github.com/xhiroga/homelab/blob/93ea84375b9d6aa7e134ebbfec8806fe837be24e/playbooks/ondemand.py
-```py
+## 実装方法
+
+### 大まかな構成
+
+作成したスクリプト `ondemand.py` には主に二つの機能があります：
+
+1. Ansibleの `-i` オプションに渡すためのJSON形式インベントリを出力する機能
+2. `--limit` オプションに渡すためのホスト名リストを出力し、fzfなどで選択できるようにする機能
+
+### コード
+
+次のように実行します。
+
+```console
+$ uv run ansible-playbook -i ondemand.py playbook.yml --limit $(ondemand.py | fzf)
+```
+
+GitHubリポジトリ: [xhiroga/homelab - ondemand.py](https://github.com/xhiroga/homelab/blob/93ea84375b9d6aa7e134ebbfec8806fe837be24e/playbooks/ondemand.py)
+
+```python
 #!/usr/bin/env python
 import argparse
 import json
@@ -82,14 +100,27 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 ```
 
-- Paramikoが有名だがincludeディレクティブに対応していない
-- fzfの採用について...
-  - Pythonで完結させたかったが、Pythonスクリプトからの標準入出力がAnsibleに吸われる性質上難しかった
+#### Ansibleの動的インベントリ
+
+Ansibleのインベントリには、JSONを返すスクリプトを指定できます。Pythonで書いたスクリプトも使用可能です。
+
+スクリプトは `--list` オプションが指定された場合、全ホストの情報をJSON形式で返す必要があります。また、`--host <hostname>` オプションが指定された場合は、特定ホストの変数情報を返します。
+
+#### 環境変数の扱い
+
+シェバンで `#!/usr/bin/env python` と指定しているため、Ansibleを[UV](https://github.com/astral-sh/uv)などの環境で実行している場合、そのPython環境が使用されます。
+
+#### ホスト選択機能
+
+動的にインベントリを生成した後、実行対象のホストを `--limit` オプションで絞り込めるようにしています。オプションなしで実行した場合はホスト名のリストを出力し、これを `fzf` などのツールと組み合わせることでインタラクティブな選択が可能になります。
+
+#### 実装上の選択
+
+- [Paramiko](https://www.paramiko.org/)は有名なSSHライブラリですが、SSH設定の `Include` ディレクティブに対応していないため、[sshconf](https://pypi.org/project/sshconf/)を使用しました
+- ホスト選択をPythonで完結させることも検討しましたが、Pythonスクリプトからの標準入出力がAnsibleに吸収される性質上難しかったため、外部ツール（fzf）との連携を選択しました
 
 ## まとめ
 
-DRYができてすっきり
-
+インタラクティブに環境構築ができ、開発者体験が良いのでオススメです。
