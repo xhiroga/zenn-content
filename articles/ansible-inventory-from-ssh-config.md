@@ -22,7 +22,7 @@ SSH設定は `~/.ssh/config` に書いていますが、Ansibleのインベン�
 
 実際の動作の様子です。SSH設定からホスト一覧を取得し、インタラクティブに実行対象を選択できます。
 
-[![asciicast](https://asciinema.org/a/709732.svg)](https://asciinema.org/a/709732)
+[![asciicast](https://asciinema.org/a/709734.svg)](https://asciinema.org/a/709734)
 
 ## 実装方法
 
