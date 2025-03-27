@@ -3,7 +3,7 @@ title: "macOSからWSL2にRemote SSHして開発する備忘録"
 emoji: "🐧"
 type: "tech"
 topics: ["wsl", "windows", "ubuntu", "vscode", "machinelearning"]
-published: false
+published: true
 ---
 
 ## TL;DR
@@ -13,7 +13,9 @@ published: false
 
 ## 動機
 
-ゲーム用途で購入したWindows PCに搭載されている高性能GPUを、機械学習の開発にも活用したいと考えました。普段macOSを使っている開発者が、Windows上のWSL2環境を活用して効率的に開発を行うための環境構築とTIPSをまとめています。
+ゲーム用途で購入したWindows PCに搭載されている高性能GPUを、機械学習の開発にも活用したいと考えました。
+
+普段macOSを使っている開発者が、Windows上のWSL2環境を活用して効率的に開発を行うための環境構築とTIPSをまとめています。
 
 ## すること
 
