@@ -1,5 +1,5 @@
 ---
-title: "WSL2を活用したクロスプラットフォーム機械学習開発環境の構築"
+title: "macOSからWSL2にRemote SSHして開発する備忘録"
 emoji: "🐧"
 type: "tech"
 topics: ["wsl", "windows", "ubuntu", "vscode", "machinelearning"]
@@ -9,7 +9,7 @@ published: false
 ## TL;DR
 
 - macOSからWindows機のGPUを活用して機械学習開発をするためのWSL2環境構築方法
-- WSL2の機能アップデートとTailscale、VSCode Remote SSHの活用により凝った設定が不要に
+- WSL2の機能アップデートとTailscale、VSCodeのRemote SSHの活用により凝った設定が不要に
 
 ## 動機
 
