@@ -151,6 +151,30 @@ $ systemctl status sshd
 
 3. sshdが立たない場合、WSL関連設定がポートを確保してしまっていることがあります。その場合はWindows側で次のコマンドを実行します：
 
+:::details ポート競合によるSSH起動失敗の例
+
+```shell
+$ systemctl status sshd
+× ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)
+     Active: failed (Result: exit-code) since Mon 2025-05-26 10:48:29 JST; 1min 11s ago
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+    Process: 247 ExecStartPre=/usr/sbin/sshd -t (code=exited, status=0/SUCCESS)
+    Process: 282 ExecStart=/usr/sbin/sshd -D $SSHD_OPTS (code=exited, status=255/EXCEPTI>
+   Main PID: 282 (code=exited, status=255/EXCEPTION)
+
+May 26 10:48:29 HIROGA-RTX4090 systemd[1]: Starting OpenBSD Secure Shell server...
+May 26 10:48:29 HIROGA-RTX4090 sshd[282]: error: Bind to port 2222 on 0.0.0.0 failed: Ad>
+May 26 10:48:29 HIROGA-RTX4090 sshd[282]: error: Bind to port 2222 on :: failed: Address>
+May 26 10:48:29 HIROGA-RTX4090 sshd[282]: fatal: Cannot bind any address.
+May 26 10:48:29 HIROGA-RTX4090 systemd[1]: ssh.service: Main process exited, code=exited>
+May 26 10:48:29 HIROGA-RTX4090 systemd[1]: ssh.service: Failed with result 'exit-code'.
+May 26 10:48:29 HIROGA-RTX4090 systemd[1]: Failed to start OpenBSD Secure Shell server.
+```
+
+:::
+
 ```powershell
 wsl --shutdown
 sudo net stop winnat
