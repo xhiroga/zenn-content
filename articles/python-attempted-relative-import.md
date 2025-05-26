@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Pythonの相対インポートを試みる"
 emoji: "🐍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["python"]
@@ -54,6 +54,11 @@ Pythonの相対インポートはファイルパスではなくパッケージ�
 
 また、解決済みのパッケージ構造を表示してくれる開発ツールもある。
 （ここAIに調べてもらう）
+
+さらなるエラーケース
+
+-m しているのに  with no known parent package
+__package__ が空
 
 
 
