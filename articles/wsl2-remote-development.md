@@ -149,7 +149,7 @@ $ systemctl status sshd
 
 :::
 
-3. sshdが立たない場合、WSL関連設定がポートを確保してしまっていることがあります。その場合はWindows側で次のコマンドを実行します：
+3. sshdが立たない場合、WSL関連設定がポートを確保してしまっていることがあります。
 
 :::details ポート競合によるSSH起動失敗の例
 
@@ -174,6 +174,8 @@ May 26 10:48:29 HIROGA-RTX4090 systemd[1]: Failed to start OpenBSD Secure Shell 
 ```
 
 :::
+
+その場合はWindows側で次のコマンドを実行します：
 
 ```powershell
 wsl --shutdown
