@@ -151,9 +151,11 @@ $ systemctl status sshd
 
 3. sshdが立たない場合、WSL関連設定がポートを確保してしまっていることがあります。その場合はWindows側で次のコマンドを実行します：
 
-```shell
-$ net stop winnat
-$ net start winnat
+```powershell
+wsl --shutdown
+sudo net stop winnat
+sudo net start winnat
+wsl
 ```
 
 4. Windowsのファイアウォール設定も確認します
