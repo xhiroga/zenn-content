@@ -180,6 +180,7 @@ May 26 10:48:29 HIROGA-RTX4090 systemd[1]: Failed to start OpenBSD Secure Shell 
 ```powershell
 wsl --shutdown
 sudo net stop winnat
+# 20秒程度待つと良さそうです
 sudo net start winnat
 wsl
 ```
