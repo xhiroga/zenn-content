@@ -1,5 +1,5 @@
 {
-    "pasteImage.basePath": "${projectRoot}",
-    "pasteImage.path": "${projectRoot}/images",
-    "pasteImage.prefix": "/"
+  "markdown.copyFiles.destination": {
+    "**/*": "${documentWorkspaceFolder}/images/${documentBaseName}.${fileExtName}",
+  }
 }
