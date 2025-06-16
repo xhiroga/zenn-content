@@ -3,7 +3,7 @@ title: "VSCodeのmarkdown.copyFiles設定の詳細な挙動"
 emoji: "📸"
 type: "tech"
 topics: ["vscode", "markdown"]
-published: false
+published: true
 ---
 
 ## TL;DR
