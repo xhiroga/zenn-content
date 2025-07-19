@@ -6,6 +6,8 @@ topics: ["FramePack","HunyuanVideo"]
 published: false
 ---
 
+TODO: ここにkisekaeなどのサンプルを入れる
+
 ## FramePackとは？
 
 Hunyuan Videoの動画生成モデルを用いた動画・画像生成フレームワークです。ざっくり言えば次のとおり動画・画像を生成しています。
@@ -32,9 +34,6 @@ out_latent-->vae_dec-->video
 ```
 
 <!-- 
-<details>
-<summary>詳しいフローチャート</summary>
-
 ```mermaid
 flowchart LR
 
@@ -51,9 +50,7 @@ llama_vec[/Llama Vector/]
 clip[CLIP]
 clip_l_pooler[/CLIP L Pooler/]
 ```
-</details>
  -->
-
 
 フローチャートでご覧の通り、FramePackは動画全体をまとめて生成せずに、動画を圧縮した潜在ベクトルをいくつかのセクションに分けて生成します。
 
@@ -68,6 +65,8 @@ block-beta
 ```
 
 <!-- ComfyUIでFramePackを使って動画生成をされた方は、出力される動画のフレーム数として指定できる値が特徴的であることに気付いたと思いますが、それはこれが関係しています。 -->
+
+TODO: ここに関連ツールのごく簡単な年表を入れる
 
 ## LoRA学習
 
@@ -214,3 +213,8 @@ fp_1f_no_post = true
 
 ![alt text](/images/framepack-lora.png)
 
+## まとめ
+
+TODO
+
+TODO: ここに宣伝
