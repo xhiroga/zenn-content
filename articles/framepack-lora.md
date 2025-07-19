@@ -61,6 +61,8 @@ TODO: 初めはプロンプトを探求した方が良い的なこと
 
 純粋な学習だけ見れば、シンプルなプロンプトのみで指定できる動き・変化については、$25・1日以内で学習ができます。
 
+TODO: 内訳（H100でbatch_size=16で1000stepsあたり1時間程度、とか）
+
 TODO: 人件費や試行錯誤について
 
 ### データセット
@@ -94,7 +96,7 @@ uv run accelerate launch --num_processes 1 --dynamo_backend=no --mixed_precision
 runpodctl stop pod $RUNPOD_POD_ID
 ```
 
-## 設定
+### 設定
 
 私([@xhiorga](https://x.com/xhiroga))は、FramePackのLoRA学習では [musubi-tuner](https://github.com/kohya-ss/musubi-tuner) を使っています。
 
@@ -143,7 +145,8 @@ timestep_sampling = "shift"
 discrete_flow_shift = 6.0
 
 # データセットの枚数や`num_repeat`を変更すると、1epochごとのステップ数も変わる
-# それでは変更前後のモデルを、同じくらいの学習の進み具合で比較できないため、ステップでの保存を推奨
+# それでは変更前後のモデルを、同じくらいの学習の進み具合で比較できない
+# またwandbに主に記録されるのもステップ数なので、ステップでの保存を推奨
 save_every_n_steps = 100
 
 # save_state を有効にすると `resume` で途中から学習再開できる
@@ -205,7 +208,14 @@ fp_1f_no_post = true
 
 ![alt text](/images/framepack-lora.png)
 
-### 学習したモデルのテスト
+## LoRAによる推論
+
+注意点は次のとおり
+
+- プロンプトは学習時と全く同じものを使う。(Llamaのベクトルを経由しているにも拘らず)文章が少し違うだけで結果が反映されないことがあるらしい？
+- 
+
+
 
 ComfyUIを用いて推論することもできます。一方musubi-tunerでも、バッチ推論を行うことができます。
 
