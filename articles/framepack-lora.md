@@ -105,8 +105,9 @@ block-beta
 
 ## 設定
 
-私([@xhiorga](https://x.com/xhiroga))の2025-07時点での設定は次のようになっています。
-1フレーム学習の設定です。
+私([@xhiorga](https://x.com/xhiroga))は、FramePackのLoRA学習では [musubi-tuner](https://github.com/kohya-ss/musubi-tuner) を使っています。
+
+2025-07時点では、次のような設定を使っています。1フレーム学習の設定です。
 
 ```config.toml
 # 参考
@@ -117,7 +118,7 @@ vae = "/workspace/models/vae/diffusion_pytorch_model.safetensors"
 text_encoder1 = "/workspace/models/text_encoder/model-00001-of-00004.safetensors"
 text_encoder2 = "/workspace/models/text_encoder_2/model.safetensors"
 image_encoder = "/workspace/models/image_encoder/model.safetensors"
-dataset_config = "/workspace/framepack-lora-kisekae/configs/v8.1/dataset.toml"
+dataset_config = "/workspace/my-framepack-project/configs/v8/dataset.toml"
 
 blocks_to_swap = 20
 split_attn = true
@@ -159,7 +160,7 @@ save_state = true
 save_state_on_train_end = true
 
 # まだ試していないが、HuggingFaceに直接保存するオプションもある
-output_dir = "/workspace/my-framepack-project"
+output_dir = "/workspace/my-framepack-models"
 output_name = "my-framepack-project-v8"
 
 # wandbは無料で使えるので絶対に有効化した方が良い
@@ -169,13 +170,13 @@ log_tracker_name = "my-framepack-project"
 log_config = true
 
 # 途中から学習再開する場合のオプション
-# resume = "/workspace/my-framepack-project/my-framepack-project-v8-step00001000-state"
+# resume = "/workspace/my-framepack-models/my-framepack-project-v8-step00001000-state"
 
 # Sampling options
 # 学習の進度を見ることができるので絶対に有効にした方が良い
 sample_at_first = true
 sample_every_n_steps = 100
-sample_prompts = "/workspace/framepack-lora-kisekae/configs/v8.1/prompts.txt"
+sample_prompts = "/workspace/my-framepack-project/configs/v8/prompts.txt"
 fp8_llm = true
 vae_chunk_size = 32
 vae_spatial_tile_sample_min_size = 128
@@ -202,6 +203,12 @@ fp_1f_clean_indices = [0, 10]
 fp_1f_target_index = 5
 fp_1f_no_post = true
 ```
+
+[musubi-tuner](https://github.com/kohya-ss/musubi-tuner)のインストールですが、現在は`uv`や`pip`でインストールすることができます。特に`uv`で管理するのを強くお勧めします。
+
+`uv`で管理した場合、仮想環境の管理も`uv`が賄ってくれます。RunPodなどのGPUクラウドを用いている場合は仮想環境の構築そのものは不要ですが、`uv`をタスクランナーとして用いることで、学習実行時に環境構築がされていなければ、`musubi-tuner`を含むパッケージが自動でインストールされ、非常に便利です。
+
+環境構築の方法も非常に簡単で、`uv init --python 3.10`の後に`uv add "https://github.com/xhiroga/musubi-tuner.git[cu128]"`で良いはずです（動かなかったら教えてください）
 
 また、wandbのLossはだいたい次のようになっています。あくまで参考ですが、成功している時のLossは0.01付近か以内であることが多いでしょうか。
 
