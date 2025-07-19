@@ -51,6 +51,9 @@ block-beta
 
 TODO: ここに関連ツールのごく簡単な年表を入れる
 
+https://note.com/kohya_ss/n/nbd94d074ddef
+
+
 ## LoRA学習
 
 ### 本当にLoRA学習の必要があるか？
@@ -79,28 +82,13 @@ TODO: 人件費や試行錯誤について
 
 この辺りは探っているところです。
 
-### GPUクラウド
-
-筆者はRunPodを利用しています。他にVast.ai と Lambda Cloudを学習に使ったことがありますが、次の点でRunPodを採用しています。
-
-- ストレージのアタッチ
-- Serverlessも使える（？）
-
-マシンにはまずRTX6000Adaなどで環境を作りきって2~3steps回し、次にh100などに切り替えて（適宜バッチサイズと学習率も切り替える）
-
-ちなみにRunPodには、RunPodのコンテナの停止等の操作が可能なCLIがインストールされています。次のように、学習が終わったらコンテナを停止することもできます。
-
-```bash
-uv run accelerate launch --num_processes 1 --dynamo_backend=no --mixed_precision bf16 \
--m musubi_tuner.fpack_train_network --image_encoder $$IMAGE_ENCODER --config_file $(CONFIG_FILE) &&\
-runpodctl stop pod $RUNPOD_POD_ID
-```
-
 ### 設定
 
 私([@xhiorga](https://x.com/xhiroga))は、FramePackのLoRA学習では [musubi-tuner](https://github.com/kohya-ss/musubi-tuner) を使っています。
 
 2025-07時点では、次のような設定を使っています。1フレーム学習の設定です。
+
+TODO: フォルダ構造
 
 ```config.toml
 # 参考
@@ -198,6 +186,8 @@ fp_1f_target_index = 5
 fp_1f_no_post = true
 ```
 
+TODO: メタデータのtoml
+
 [musubi-tuner](https://github.com/kohya-ss/musubi-tuner)のインストールですが、現在は`uv`や`pip`でインストールすることができます。特に`uv`で管理するのを強くお勧めします。
 
 `uv`で管理した場合、仮想環境の管理も`uv`が賄ってくれます。RunPodなどのGPUクラウドを用いている場合は仮想環境の構築そのものは不要ですが、`uv`をタスクランナーとして用いることで、学習実行時に環境構築がされていなければ、`musubi-tuner`を含むパッケージが自動でインストールされ、非常に便利です。
@@ -208,13 +198,32 @@ fp_1f_no_post = true
 
 ![alt text](/images/framepack-lora.png)
 
+### GPUクラウド
+
+筆者はRunPodを利用しています。他にVast.ai と Lambda Cloudを学習に使ったことがありますが、次の点でRunPodを採用しています。
+
+- ストレージのアタッチ
+- Serverlessも使える（？）
+
+マシンにはまずRTX6000Adaなどで環境を作りきって2~3steps回し、次にh100などに切り替えて（適宜バッチサイズと学習率も切り替える）
+
+ちなみにRunPodには、RunPodのコンテナの停止等の操作が可能なCLIがインストールされています。次のように、学習が終わったらコンテナを停止することもできます。
+
+```bash
+uv run accelerate launch --num_processes 1 --dynamo_backend=no --mixed_precision bf16 \
+-m musubi_tuner.fpack_train_network --image_encoder $$IMAGE_ENCODER --config_file $(CONFIG_FILE) &&\
+runpodctl stop pod $RUNPOD_POD_ID
+```
+
+accelerateを使う場合...
+
+なおuvx nvitopが便利
+
 ## LoRAによる推論
 
 注意点は次のとおり
 
 - プロンプトは学習時と全く同じものを使う。(Llamaのベクトルを経由しているにも拘らず)文章が少し違うだけで結果が反映されないことがあるらしい？
-- 
-
 
 
 ComfyUIを用いて推論することもできます。一方musubi-tunerでも、バッチ推論を行うことができます。
