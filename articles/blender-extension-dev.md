@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Blender Extension開発の私的まとめ"
 emoji: "💙"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["blender","bpy", "python"]
