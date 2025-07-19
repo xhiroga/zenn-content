@@ -79,7 +79,7 @@ TODO: 人件費や試行錯誤について
 
 ### GPUクラウド
 
-筆者はRunPodを利用しています。Vast.ai や Lambda Cloudも学習に使ったことがありますが、次の点でRunPodを採用しています。
+筆者はRunPodを利用しています。他にVast.ai と Lambda Cloudを学習に使ったことがありますが、次の点でRunPodを採用しています。
 
 - ストレージのアタッチ
 - Serverlessも使える（？）
@@ -204,6 +204,30 @@ fp_1f_no_post = true
 また、wandbのLossはだいたい次のようになっています。あくまで参考ですが、成功している時のLossは0.01付近か以内であることが多いでしょうか。
 
 ![alt text](/images/framepack-lora.png)
+
+### 学習したモデルのテスト
+
+ComfyUIを用いて推論することもできます。一方musubi-tunerでも、バッチ推論を行うことができます。
+
+ComfyUIの環境構築は大変ですし、musubi-tunerでの推論がお勧めです。次のように指定できます。
+
+```bash
+uv run -m musubi_tuner.fpack_generate_video \
+--fp8_scaled \
+--fp8_llm \
+--from_file /workspace/my-framepack-project/configs/v8/prompts.txt \
+--output_type latent_images \
+--dit /workspace/models/diffusion_models/FramePackI2V_HY/diffusion_pytorch_model-00001-of-00003.safetensors \
+--vae /workspace/models/vae/diffusion_pytorch_model.safetensors \
+--text_encoder1 /workspace/models/text_encoder/model-00001-of-00004.safetensors \
+--text_encoder2 /workspace/models/text_encoder_2/model.safetensors \
+--image_encoder /workspace/models/image_encoder/model.safetensors \
+--vae_spatial_tile_sample_min_size 128 --vae_chunk_size 32 --blocks_to_swap 20 \
+--attn_mode sdpa \
+--lora_weight /workspace/my-framepack-models/my-framepack-project-v8-step00005000.safetensors \
+--lora_multiplier 1.2 \
+--save_path /workspace/my-framepack-models/sample/v8-step00005000-lm1.2
+```
 
 ## まとめ
 
