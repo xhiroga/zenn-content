@@ -34,11 +34,8 @@ out_latent-->vae_dec-->video
 ```
 
 <!-- 
-```mermaid
 flowchart LR
-
 image[/入力画像/]
-
 image_encoder[画像エンコーダー from FLUX1]
 image_encoder_last_hidden_state[/隠れ状態/]
 vae[VAE from HunyuanVideo]
@@ -46,15 +43,15 @@ start_latent[/潜在ベクトル/]
 prompt[/プロンプト/]
 llama[Llama]
 llama_vec[/Llama Vector/]
-
 clip[CLIP]
 clip_l_pooler[/CLIP L Pooler/]
-```
  -->
 
 フローチャートでご覧の通り、FramePackは動画全体をまとめて生成せずに、動画を圧縮した潜在ベクトルをいくつかのセクションに分けて生成します。
 
 例えば30fpsで1.2秒(72f)の動画を生成する場合、かつ1セクションあたり9潜在フレームを含む場合、だいたい次のようになります。
+
+TODO: あまりにも小さすぎるので差し替える...
 
 ```mermaid
 block-beta
@@ -72,12 +69,13 @@ TODO: ここに関連ツールのごく簡単な年表を入れる
 
 ### 本当にLoRA学習の必要があるか？
 
-
+TODO: 初めはプロンプトを探求した方が良い的なこと
 
 ### クオリティ・費用・期間
 
 純粋な学習だけ見れば、シンプルなプロンプトのみで指定できる動き・変化については、$25・1日以内で学習ができます。
 
+TODO: 人件費や試行錯誤について
 
 ### データセット
 
@@ -97,10 +95,10 @@ TODO: ここに関連ツールのごく簡単な年表を入れる
 
 筆者はRunPodを利用しています。Vast.ai や Lambda Cloudも学習に使ったことがありますが、次の点でRunPodを採用しています。
 
+- ストレージのアタッチ
+- Serverlessも使える（？）
 
-マシンには
-
-まずRTX6000Adaなどで環境を作りきって2~3steps回し、次にh100などに切り替えて（適宜バッチサイズと学習率も切り替える）
+マシンにはまずRTX6000Adaなどで環境を作りきって2~3steps回し、次にh100などに切り替えて（適宜バッチサイズと学習率も切り替える）
 
 ## 設定
 
