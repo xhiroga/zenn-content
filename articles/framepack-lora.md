@@ -33,20 +33,6 @@ out_latent-->DiT
 out_latent-->vae_dec-->video
 ```
 
-<!-- 
-flowchart LR
-image[/入力画像/]
-image_encoder[画像エンコーダー from FLUX1]
-image_encoder_last_hidden_state[/隠れ状態/]
-vae[VAE from HunyuanVideo]
-start_latent[/潜在ベクトル/]
-prompt[/プロンプト/]
-llama[Llama]
-llama_vec[/Llama Vector/]
-clip[CLIP]
-clip_l_pooler[/CLIP L Pooler/]
- -->
-
 フローチャートでご覧の通り、FramePackは動画全体をまとめて生成せずに、動画を圧縮した潜在ベクトルをいくつかのセクションに分けて生成します。
 
 例えば30fpsで1.2秒(72f)の動画を生成する場合、かつ1セクションあたり9潜在フレームを含む場合、だいたい次のようになります。
