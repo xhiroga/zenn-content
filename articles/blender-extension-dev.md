@@ -1,3 +1,10 @@
+---
+title: ""
+emoji: "💙"
+type: "tech" # tech: 技術記事 / idea: アイデア
+topics: ["blender","bpy", "python"]
+published: false
+---
 
 
 ## そもそもAdd-onじゃなくてExtensionになった背景は？
