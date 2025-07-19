@@ -86,6 +86,14 @@ TODO: 人件費や試行錯誤について
 
 マシンにはまずRTX6000Adaなどで環境を作りきって2~3steps回し、次にh100などに切り替えて（適宜バッチサイズと学習率も切り替える）
 
+ちなみにRunPodには、RunPodのコンテナの停止等の操作が可能なCLIがインストールされています。次のように、学習が終わったらコンテナを停止することもできます。
+
+```bash
+uv run accelerate launch --num_processes 1 --dynamo_backend=no --mixed_precision bf16 \
+-m musubi_tuner.fpack_train_network --image_encoder $$IMAGE_ENCODER --config_file $(CONFIG_FILE) &&\
+runpodctl stop pod $RUNPOD_POD_ID
+```
+
 ## 設定
 
 私([@xhiorga](https://x.com/xhiroga))は、FramePackのLoRA学習では [musubi-tuner](https://github.com/kohya-ss/musubi-tuner) を使っています。
