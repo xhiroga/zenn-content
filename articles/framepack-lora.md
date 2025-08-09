@@ -1,16 +1,26 @@
 ---
-title: "FramePackのLoRA学習の私的メモ＆設定"
+title: "musubi-tunerでFramePackの学習をする私的ベストプラクティス"
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["FramePack","HunyuanVideo"]
+topics: ["FramePack", "HunyuanVideo"]
 published: false
 ---
 
-TODO: ここにkisekaeなどのサンプルを入れる
+FramePackを追加学習すると、画像・動画の生成時にテキストのプロンプトでは難しい指示を守らせることができます。たとえば、等速で360度回転する、のような指示が可能です。
 
-## FramePackとは？
+![FramePackのLoRA有無の比較](/images/framepack-lora-fig1.gif)
 
-Hunyuan Videoの動画生成モデルを用いた動画・画像生成フレームワークです。ざっくり言えば次のとおり動画・画像を生成しています。
+FramePackのLoRA学習にあたっては、[musubi-tuner](https://github.com/kohya-ss/musubi-tuner)を使うのが簡単です。とはいえ機械学習なので、どうしても試行錯誤があります。
+
+この記事には学習のコツをまとめました。Web上で進捗を確認することも可能なので、ぜひ試してみてください！
+
+![FramePackによるLoRA学習をwandbで管理しているスクショ](/images/framepack-lora-fig2.gif)
+
+## そもそもFramePackとは？
+
+[FramePack](https://github.com/lllyasviel/FramePack)は、Hunyuan(混元 = hùn yuán, フンユアン) Videoの動画生成モデルを用いた動画・画像生成フレームワークです。
+
+Hunyuan VideoのDiffusion Transformer(DiT)に対して、既に生成したフレームと条件付けを入力して新しいフレームを生成する...ということを繰り返し、指定された長さの動画を生成します。
 
 ```mermaid
 flowchart LR
@@ -33,11 +43,9 @@ out_latent-->DiT
 out_latent-->vae_dec-->video
 ```
 
-フローチャートでご覧の通り、FramePackは動画全体をまとめて生成せずに、動画を圧縮した潜在ベクトルをいくつかのセクションに分けて生成します。
+Stable Diffusionがそうであるように、Hunyuan VideoのDiTも画像・動画をピクセルでは扱わず、VAEによってエンコードされた潜在フレームとして扱います。さらにFramePackでは、いくつかの潜在フレームをまとめて「セクション」として扱っています。
 
-例えば30fpsで1.2秒(72f)の動画を生成する場合、かつ1セクションあたり9潜在フレームを含む場合、だいたい次のようになります。
-
-TODO: あまりにも小さすぎるので差し替える...
+例えば30fpsで1.2秒(72f)の動画を生成する場合、かつ1セクションあたり9潜在フレームを含む場合、その関係は次のようになります。（非常に見辛くてすみません...）
 
 ```mermaid
 block-beta
@@ -49,10 +57,7 @@ block-beta
 
 <!-- ComfyUIでFramePackを使って動画生成をされた方は、出力される動画のフレーム数として指定できる値が特徴的であることに気付いたと思いますが、それはこれが関係しています。 -->
 
-TODO: ここに関連ツールのごく簡単な年表を入れる
-
-https://note.com/kohya_ss/n/nbd94d074ddef
-
+FramePackによる学習・推論は、コミュニティベースで進化を重ねています。詳しくは[KohyaさんのNote記事](https://note.com/kohya_ss/n/nbd94d074ddef)をご覧ください。
 
 ## LoRA学習
 
@@ -219,6 +224,20 @@ runpodctl stop pod $RUNPOD_POD_ID
 accelerateを使う場合...
 
 なおuvx nvitopが便利
+
+
+追加学習の場合はLossが低いところから始まっていることを確認
+
+Lossがいきなり低かったら入力画像と教師画像が同じになっている可能性がある
+
+ストレージは1学習200GBくらい
+
+
+  1. /workspace/models (105GB) - 大きなモデルファイル群
+  2. /workspace/framepack-lora-kisekae-models (41GB)
+  3. /workspace/framepack-lora-kisekae-dataset (24GB)
+  4. /workspace/framepack-lora-kisekae (17GB)
+  5. /workspace/turntable (2.4GB)
 
 ## LoRAによる推論
 
