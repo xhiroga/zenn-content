@@ -249,7 +249,11 @@ fp_1f_no_post = true
 
 #### prompts.txt
 
-サンプル用の画像・動画は、次のような形式のプロンプト・設定を含むテキストファイルを指定することで出力できます。まずは動画の例です。
+サンプル用の画像・動画は、次のような形式のプロンプト・設定を含むテキストファイルを指定することで出力できます。wandbを使えば、次のように出力した画像を学習ステップ別に確認できます。
+
+![wandbでステップ別の推論結果を確認するスクショ](/images/framepack-lora-fig4.gif)
+
+テキストファイルの例です。まずは動画の場合。
 
 ```/workspace/my-framepack-project/configs/v1/prompts.txt
 rotating 360 degrees. --w 512 --h 960 --f 81 --d 42 --s 20 --i /workspace/data/asagi-chan/chatgpt-4o/asagi-chan-stand-up.png
