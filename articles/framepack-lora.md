@@ -71,9 +71,9 @@ FramePackは、自然言語での入力に対応していることもあり、�
 
 シンプルなプロンプトのみで指定できる動き・変化については、純粋に学習だけなら$25以内かつ1日以内で学習ができます。設定によりますが、一例としてはH100を$2.5/Hourで8時間借りて1,000steps程度学習できる感じでしょうか。
 
-しかし、学習途中で設定の誤りやデータのバグに気づいたり、はたまた学習データを増やしたり、プロンプトを変更したりするのが普通です。個人的にはいい結果が出るまで5~20回は学習設定を変えています。（例えば[Turntable](https://turntable.sawara.dev)に用いているLoRAはバージョン18です。
+しかし、学習途中で設定の誤りやデータのバグに気づいたり、はたまた学習データを増やしたり、プロンプトを変更したりするのが普通です。個人的にはいい結果が出るまで5~20回は学習設定を変えています。（例えば[Turntable](https://turntable.sawara.dev)に用いているLoRAはバージョン18です）
 
-最短を狙うなら、すでに上手く学習できている人から設定を分けてもらったり、レビューしてもらうのも手です。私でよければいつでも見るので、ご連絡ください！
+最短を狙うなら、すでに上手く学習できている人から設定を分けてもらったり、レビューしてもらうのも手です。[私](https://twitter.com/xhiroga)でよければいつでも見るので、ご連絡ください！
 
 ### データセット
 
@@ -89,6 +89,8 @@ FramePackのLoRA学習を快適に行うには、VRAMが体感で30GB以上必�
 
 - 複数のインスタンス間でストレージを使いまわせる（RunPodとLambdaLabsで可能）
 - 個人的にUIが分かりやすい
+
+複数の設定で並列に学習したり、学習中のモデルの性能を確認するために別インスタンスを立てることがあるので、ストレージを使いまわせた方が良いんですね。
 
 学習の進め方としては、初めにRTX6000Adaなど比較的安いインスタンスで5Stepsくらい学習を回します。それで設定が正しいことを確認できたら、H100などに切り替えて本格的に回すことが多いです。
 （もっとも、そこまでGPUインスタンスが余ってないことも多いので、初めに確保したインスタンスをそのまま使うこともあります）
@@ -131,7 +133,7 @@ FramePackのLoRA学習を快適に行うには、VRAMが体感で30GB以上必�
 
 次のような構成です。なお、バージョンごとの差分を比較しやすいよう、オプションではなく`toml`で管理することをお勧めします。
 
-```configs/v1/config.toml
+```/workspace/my-framepack-project/configs/v1/config.toml
 dit = "/workspace/models/diffusion_models/FramePackI2V_HY/diffusion_pytorch_model-00001-of-00003.safetensors"
 vae = "/workspace/models/vae/diffusion_pytorch_model.safetensors"
 text_encoder1 = "/workspace/models/text_encoder/model-00001-of-00004.safetensors"
@@ -213,9 +215,9 @@ log_config = true
 
 #### dataset.toml
 
-次のような設定です。
+次のような設定です。なお、kisekaeichiでの学習を前提としています。
 
-```dataset.toml
+```/workspace/my-framepack-project/configs/v1/dataset.toml
 [general]
 resolution = [512, 768]
 caption_extension = ".txt"
@@ -244,6 +246,25 @@ fp_1f_no_post = true
 {"image_path": "/workspace/my-framepack-project-dataset/dataset-v1/girl-pose.png", "control_path_0": "/workspace/my-framepack-project-dataset/dataset-v1/girl-pose.png", "control_path_1": "/workspace/my-framepack-project-dataset/dataset-v1/girl.png", "caption": "Convert reference images of poses and expressions into character design images."}
 ...
 ```
+
+#### prompts.txt
+
+サンプル用の画像・動画は、次のような形式のプロンプト・設定を含むテキストファイルを指定することで出力できます。まずは動画の例です。
+
+```/workspace/my-framepack-project/configs/v1/prompts.txt
+rotating 360 degrees. --w 512 --h 960 --f 81 --d 42 --s 20 --i /workspace/data/asagi-chan/chatgpt-4o/asagi-chan-stand-up.png
+...
+```
+
+画像の1f学習の例です。`--of`オプションはkisekaeichiの想定です。
+
+```/workspace/my-framepack-project/configs/v1/prompts.txt
+# コメントも可能
+Convert reference images of poses and expressions into character design images. --w 512 --h 768 --d 42 --s 20 --i /workspace/my-framepack-project-dataset/validation/boy-pose.png --ci /workspace/my-framepack-project-dataset/validation/boy-pose.png --ci /workspace/my-framepack-project-dataset/validation/boy.png --of target_index=9,control_index=0;1,no_2x,no_4x,no_post
+...
+```
+
+注意点として、サンプルの入力には学習に含めていないデータも用いましょう。モデルの汎化性能を測る必要があるためです。
 
 #### 学習用コマンド
 
@@ -302,16 +323,11 @@ cache:
 
 Lossの遷移が普段と違うな？と思ったら、設定を見直してもいいかもしれません。例えば私の場合、`resume`なしで学習していきなりLossが`0.01`付近だったら、入力画像と教師画像が同じ画像になっちゃってた、ということがありました。
 
-## LoRAによる推論
+## LoRAを用いた推論
 
-注意点は次のとおり
+学習したLoRAの性能を測るには、ComfyUIを用いて推論することが多いです。
 
-- プロンプトは学習時と全く同じものを使う。(Llamaのベクトルを経由しているにも拘らず)文章が少し違うだけで結果が反映されないことがあるらしい？
-
-
-ComfyUIを用いて推論することもできます。一方musubi-tunerでも、バッチ推論を行うことができます。
-
-ComfyUIの環境構築は大変ですし、musubi-tunerでの推論がお勧めです。次のように指定できます。
+[FramePackのためのカスタムノード](https://github.com/xhiroga/ComfyUI-FramePackWrapper_PlusOne)もありますが、実はmusubi-tunerでもバッチ推論を行うことができます。次のように指定すればOKです。
 
 ```bash
 uv run -m musubi_tuner.fpack_generate_video \
@@ -333,6 +349,4 @@ uv run -m musubi_tuner.fpack_generate_video \
 
 ## まとめ
 
-TODO
 
-TODO: ここに宣伝
