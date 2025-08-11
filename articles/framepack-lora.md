@@ -87,9 +87,10 @@ FramePackは、自然言語での入力に対応していることもあり、�
 
 ### GPUクラウドの利用
 
-FramePackのLoRA学習を快適に行うには、VRAMが体感で30GB以上必要です。そこでRTX6000AdaやH100を利用するため、筆者はGPUクラウドのRunPodを利用しています。GPUクラウドとしては Vast.ai と Lambda Cloudを学習に使ったことがありますが、次の点でRunPodを採用しています。
+FramePackのLoRA学習を快適に行うには、VRAMが体感で30GB以上必要です。そこでRTX6000AdaやH100を利用するため、筆者はGPUクラウドのRunPodを利用しています。GPUクラウドとしては Google Colab, Lambda Cloud, RunPod, Vast.aiを学習に使ったことがありますが、次の点でRunPodを採用しています。
 
-- 複数のインスタンス間でストレージを使いまわせる（RunPodとLambdaLabsで可能）
+- VSCodeでRemote-SSH接続できる（Google Colab以外で可能）
+- 複数のインスタンス間でストレージを使いまわせる（RunPodとLambda Cloudで可能）
 - 個人的にUIが分かりやすい
 
 複数の設定で並列に学習したり、学習中のモデルの性能を確認するために別インスタンスを立てることがあるので、ストレージを使いまわせた方が良いんですね。
