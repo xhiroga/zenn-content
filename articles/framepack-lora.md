@@ -1,9 +1,9 @@
 ---
-title: "musubi-tunerでFramePackの学習をする私的ベストプラクティス"
+title: "musubi-tunerでFramePackの学習をする私的ベストプラクティス集"
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["FramePack", "HunyuanVideo"]
-published: false
+published: true
 ---
 
 FramePackを追加学習すると、画像・動画の生成時にテキストのプロンプトでは難しい指示を守らせることができます。たとえば、等速で360度回転する、のような指示が可能です。
@@ -12,13 +12,15 @@ FramePackを追加学習すると、画像・動画の生成時にテキスト�
 
 FramePackのLoRA学習にあたっては、[musubi-tuner](https://github.com/kohya-ss/musubi-tuner)を使うのが簡単です。とはいえ機械学習なので、どうしても試行錯誤があります。
 
-しかし、学習の設定次第ではLossの遷移や途中にサンプルした画像をリアルタイムで確認するなど、とても管理がしやすくなります。基本からニッチな点まで、一通り書いたのでぜひご参照ください！
+ですが、設定次第で、「学習途中のLoRAの性能をリアルタイムで確認する」「学習率の変化の影響を可視化する」「学習後に自動でGPUインスタンスを落とす」などの工夫ができます。全て書いたので、参考にしてください！
 
 ![FramePackによるLoRA学習をwandbで管理しているスクショ](/images/framepack-lora-fig2.gif)
 
+また、誤りや改善点があれば、記事に取り込みたいのでぜひコメントいただけると幸いです。
+
 ## そもそもFramePackとは？
 
-[FramePack](https://github.com/lllyasviel/FramePack)は、Hunyuan(混元 = hùn yuán, フンユアン) Videoの動画生成モデルを用いた動画・画像生成フレームワークです。
+[FramePack](https://github.com/lllyasviel/FramePack)は、[Hunyuan(混元 = hùn yuán, フンユアン) Video](https://github.com/Tencent-Hunyuan/HunyuanVideo)の動画生成モデルを用いた動画・画像生成フレームワークです。
 
 Hunyuan VideoのDiffusion Transformer(DiT)に対して、既に生成したフレームと条件付けを入力して新しいフレームを生成する...ということを繰り返し、指定された長さの動画を生成します。
 
@@ -71,7 +73,7 @@ FramePackは、自然言語での入力に対応していることもあり、�
 
 シンプルなプロンプトのみで指定できる動き・変化については、純粋に学習だけなら$25以内かつ1日以内で学習ができます。設定によりますが、一例としてはH100を$2.5/Hourで8時間借りて1,000steps程度学習できる感じでしょうか。
 
-しかし、学習途中で設定の誤りやデータのバグに気づいたり、はたまた学習データを増やしたり、プロンプトを変更したりするのが普通です。個人的にはいい結果が出るまで5~20回は学習設定を変えています。（例えば[Turntable](https://turntable.sawara.dev)に用いているLoRAはバージョン18です）
+しかし、学習途中で設定の誤りやデータのバグに気づいたり、はたまた学習データを増やしたり、プロンプトを変更したりするのが普通です。個人的には、初めてのタイプの学習ではいい結果が出るまで10~20回学習設定を変えています。（例えば[Turntable](https://turntable.sawara.dev)に用いているLoRAはバージョン18です）
 
 最短を狙うなら、すでに上手く学習できている人から設定を分けてもらったり、レビューしてもらうのも手です。[私]((https://sawara.dev))でよければいつでも見るので、ご連絡ください！
 
@@ -105,7 +107,8 @@ FramePackのLoRA学習を快適に行うには、VRAMが体感で30GB以上必�
 
 #### リポジトリ概要
 
-次のような構成です。
+次のような構成です。学習設定は`configs`以下にバージョニングして管理しています。
+
 ```
 - .git
 - configs
@@ -117,17 +120,40 @@ FramePackのLoRA学習を快適に行うには、VRAMが体感で30GB以上必�
   - ...
 - .gitignore
 - .python-version
-- pyproject.toml  # uvでプロジェクト管理。`uv add musubi-tuner`で学習スクリプト追加
+- pyproject.toml
 - Makefile
 - README.md
 - uv.lock
 ```
 
-[musubi-tuner](https://github.com/kohya-ss/musubi-tuner)のインストールですが、現在は`uv`や`pip`でインストールすることができます。特に`uv`で管理するのを強くお勧めします。
+#### pyproject.toml
+
+続いて、学習のための環境です。
+
+```
+[project]
+name = "my-framepack-project"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "sageattention>=1.0.6",
+    "musubi-tuner[cu128]",
+    "wandb>=0.21.0",
+    "toml>=0.10.2",
+]
+
+[tool.uv]
+# キャッシュ先を`.venv`と同じファイルシステムにしないと、GPUインスタンス作成ごとにインストールが走るので注意
+cache-dir = "/workspace/.uv_cache"
+
+[tool.uv.sources]
+musubi-tuner = { git = "https://github.com/kohya-ss/musubi-tuner.git" }
+
+```
+
+[musubi-tuner](https://github.com/kohya-ss/musubi-tuner)のインストールには`uv`を用いるのを強くお勧めします。
 
 `uv`で管理した場合、仮想環境の管理も`uv`が賄ってくれます。RunPodなどのGPUクラウドを用いている場合は仮想環境の構築そのものは不要ですが、`uv`をタスクランナーとして用いることで、学習実行時に環境構築がされていなければ、`musubi-tuner`を含むパッケージが自動でインストールされ、非常に便利です。
-
-環境構築の方法も非常に簡単で、`uv init --python 3.10`の後に`uv add "https://github.com/xhiroga/musubi-tuner.git[cu128]"`で良いはずです（動かなかったら教えてください）
 
 #### config.toml
 
