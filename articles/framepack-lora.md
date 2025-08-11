@@ -1,5 +1,5 @@
 ---
-title: "musubi-tunerでFramePackの学習をする私的ベストプラクティス集"
+title: "musubi-tunerによるFramePack学習の私的ベストプラクティス集"
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["FramePack", "HunyuanVideo"]
