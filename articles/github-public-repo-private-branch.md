@@ -3,7 +3,7 @@ title: "GitHubで公開リポジトリにプライベートなブランチを生
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["GitHub", "git"]
-published: false
+published: true
 ---
 
 ## TL;DR
@@ -24,7 +24,7 @@ https://github.com/xhiroga/blender-mcp-senpai
 
 一方で、キャラクターを360度回転させるためのモデル（具体的にはFramePackのLoRA）は非公開です。どのようなビジネスの機会があるか分からないので、そうした判断をしています。
 
-しかし、開発自体はモノリポの方が捗るのも事実です。そこで、前述の「二重リポ戦略」を用いて、一部のコードをOSSにしつつ、モデルや学習データ・推論コードをクローズドに保っています。
+しかし、開発自体はモノリポの方が捗るのも事実です。そこで、前述の「**二重リポ戦略**」を用いて、**一部のコードをOSSにしつつ、モデルや学習データ・推論コードをクローズド**に保っています。
 
 それ以外にも、例えば「フロントエンドはOSSにしたいが、バックエンドは非公開にしたい」のような場合でも役に立つと思います。　
 
@@ -44,6 +44,8 @@ https://github.com/xhiroga/blender-mcp-senpai
 なお、`~/.git-template/hooks/` を活用する方法もあります。非公開リポジトリの存在さえ明かせない場合は、そちらを検討してもいいかもしれません。私の場合は機械学習モデルの訓練のためにGPUサーバーにリポジトリを`clone`する機会が多いため、`.githooks`を使っています。
 
 ```console
+% chmod +x .githooks/*
+
 % git config core.hooksPath .githooks
 
 % git config core.hooksPath
@@ -77,6 +79,25 @@ This may expose private code to the public repository!
 To undo this merge, run:
   git reset --hard HEAD^
 ```
+
+## 別の環境にCloneする場合
+
+まず公開リポジトリをCloneし、次に非公開リポジトリから`private/`ブランチをPullするのがおすすめです。
+
+```console
+% git clone git@github.com:owner/my-repo.git
+% cd my-repo
+
+# 非公開リポジトリを remote として追加
+% git remote add private git@github.com:owner/private-my-repo.git
+
+# 非公開リポジトリの private/* ブランチを取得
+% git fetch private
+
+# 例: private/main をローカルに作成して追跡
+% git switch -c private/main --track private/private/main
+```
+
 
 ## 注意事項
 
