@@ -98,6 +98,14 @@ To undo this merge, run:
 % git switch -c private/main --track private/private/main
 ```
 
+## プライベートブランチの内容を公開ブランチに取り込む場合
+
+公開ブランチとプライベートブランチで共通のファイルの内容を、プライベートブランチ側で編集してしまった、ということがあると思います。次のように取り込むと、コミットは手動にできるので安全でオススメです。
+
+```sh
+git switch main
+git restore --source <feature-branch> --staged --worktree --pathspec-from-file=<(git diff --name-only --diff-filter=M main...<feature-branch>
+```
 
 ## 注意事項
 
