@@ -34,7 +34,26 @@ https://github.com/xhiroga/blender-mcp-senpai
 
 次に、ローカルのリポジトリに`private/main`ブランチを作成します。この時単に`private`ブランチを作成すると、あとあと`private/hogehoge`が作成できなくなるので注意です。
 
-それが完了したら、`private/main`のremoteを`private`という名前で非公開のリポジトリに設定します。また、誤って公開リポジトリ側にPush / 公開ブランチ側にMergeしないように、commit hookを設定します。
+それが完了したら、`private/main`のremoteを`private`という名前で非公開のリポジトリに設定します。
+
+```console
+# 公開用・非公開用のリポジトリを作成。【重要】非公開リポジトリはコミット無しにする（作成時README等を自動設定しない）
+# ローカルのリポジトリに`private/main`ブランチを作成
+% git switch -c private/main
+
+# リモートリポジトリを登録
+% git remote add private git@github.com:owner/private-my-repo.git 
+
+# リモートリポジトリにPush
+% git push -u private private/main:main
+
+# 確認
+% git branch -vv
+  main         a1b2c3d [origin/main] feat: my commit
+* private/main a1b2c3d [remotes/private/main] feat: my commit
+```
+
+完了したら、誤って公開リポジトリ側にPush / 公開ブランチ側にMergeしないように、commit hookを設定します。
 
 ## Commit Hook
 
