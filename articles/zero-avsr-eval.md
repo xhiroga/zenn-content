@@ -22,16 +22,35 @@ published: false
 
 ## Zero-AVSRについて
 
-Zero-AVSRは、2025年3月にarXivにて初版が公開された、多言語対応のAVSRフレームワークです。次のようなアーキテクチャから成り立ちます。
+Zero-AVSRは、2025年3月にarXivにて初版が公開された、多言語対応のAVSRフレームワークです。
 
-### Cascaded Zero-shot AVSR
+構成を大きく分けると、音声・読唇情報をローマ字に変換する "AV-Romanizer" と、ローマ字を文章に変換するLLMの2段から成り立っています。特に "AV-Romanizer" は、音声と読唇のデファクトの特徴抽出器の1つである "AV-HuBERT" のヘッドをローマ字分類タスク用にファインチューニングしたモデルとなっており、全体像を読み解くのが少々大変でした。詳しく解説します。
+
+### 先行研究: HuBERT および AV-HuBERT
+
+音声データを連続するベクトルとして表現するモデルのうち、Metaが自己教師あり学習を用いて開発したのがHuBERTです。AV-HuBERTはHuBERTを音声・視覚に拡張したモデルです。
+
+ごく簡単に言えば、HuBERTは音声ファイルを20msごとのフレームに分割し、それぞれのフレームを256~1024次元（モデルサイズによって異なります）のベクトルに変換するモデルです。ベクトルに変換した上で、さらに下流タスクごとに異なるヘッドを装着して推論を行い、性能を測っています。
+
+例えば、HuBERTでASRを行う場合の構成は次のとおりです。
+
+```mermaid
+```
+
+
+### Cascaded Zero-AVSR
+
+
 
 ```mermaid
 flowchart LR
 
 ```
 
-### Zero-shot AVSR with Multi-task Training
+### (Directly Integrated) Zero-AVSR
+
+間にローマ字を挟む `Cascated Zero-AVSR` とは異なる、音声・読唇から抽出した特徴をそのままLLMに統合するアーキテクチャが提案されています。論文ではこちらを単に `Zero-AVSR` とよんでいます。本記事では、特に `Cascaded Zero-AVSR` と区別したい場合に `Directly Integrated Zero AVSR` と呼ぶことにします。次のようなアーキテクチャです。
+
 
 ```mermaid
 flowchart LR
@@ -79,6 +98,10 @@ flowchart TB
 ```
 
 ## Zero-AVSRを評価する
+
+### MARC を用意する
+
+### Cascaded Zero-AVSR を評価する
 
 スクリプトを実行して、`Cascaded Zero-AVSR`の性能を評価します。
 
@@ -135,6 +158,30 @@ d a s s | d a s | g a n z e | n a t u e r l i c h | a u c h | m a n c h m a l | 
 ]
 ```
 
+### (Directly Integrated) Zero-AVSR を評価する
 
+```log
+bash scripts/stage2/eval.sh
+
+......
+
+[2025-10-08 19:31:24,737][__main__][INFO] -
+INST:Given romanized transcriptions extracted from audio-visual materials, back-transliterate them into the original script of German, Standard. Input:
+REF:gebt es zu
+HYP:gibt es zu
+
+[2025-10-08 19:31:24,737][__main__][INFO] -
+INST:Given romanized transcriptions extracted from audio-visual materials, back-transliterate them into the original script of German, Standard. Input:
+REF:warum das denn
+HYP:warum tat er das
+
+......
+
+[2025-10-08 19:31:24,748][__main__][INFO] -
+German WER: 27.95071335927367%
+German CER: 16.331652991921707%
+```
+
+## 自撮りで試してみる
 
 
