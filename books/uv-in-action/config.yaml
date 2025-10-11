@@ -1,0 +1,12 @@
+title: "【執筆中】実践! uv/uvx"
+summary: "Pythonのパッケージ・プロジェクト管理ツールuvのガイドブックです"
+topics: ["python", "uv"] # トピック（5つまで）
+published: true
+price: 1000 # 有料の場合200〜5000
+chapters:
+  - 01-introduction
+  - 02-uv-init
+  - 03-migrate-to-uv
+  - 04-uv-init-package
+  - 05-convert-to-package
+  - 06-uvx
