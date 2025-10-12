@@ -37,3 +37,19 @@ fn main() {
 
 :::
 
+
+## 
+
+
+:::message
+`uv run` は何をしている？
+
+`uv run` で実行すると、プロジェクトの `.venv` が自動で使われます。仕組みは実はシンプルで、子プロセスを起動するときに`PATH`環境変数を書き換えているんですね。
+
+```console
+% uv run env | grep '^PATH='
+PATH=/home/hiroga/Documents/GitHub/til/software-engineering/facebookresearch/fairseq/_src/getting-started/.venv/bin:/home/hiroga/mamba/condabin:/run/user/1000/fnm_multishells/86039_1760254392293/bin:/home/linuxbrew/.linuxbrew/opt/rustup/bin:/usr/lib/wsl/lib:/usr/local/cuda/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+```
+
+なので、毎回 `.venv/bin/activate` などを実行しなくても大丈夫になっています！
+:::
