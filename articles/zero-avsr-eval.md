@@ -33,72 +33,31 @@ Zero-AVSRは、2025年3月にarXivにて初版が公開された、多言語対�
 
 ごく簡単に言えば、HuBERTは音声ファイルを20msごとのフレームに分割し、それぞれのフレームを256~1024次元（モデルサイズによって異なります）のベクトルに変換するモデルです。次のデモでは、HuBERTによって4秒の音声を200フレームのベクトルに変換し、低次元に投影しています。
 
-![HuBERTによって4秒の音声を200フレームのベクトルに変換](/images/zero-avsr-eval-hubert.gif)
+![HuBERTによって4秒の音声を200フレームのベクトルに変換](/images/zero-avsr-eval/hubert.gif)
 
 評価の際は、ベクトルに変換した上で、さらに下流タスクごとに異なるヘッドを装着して推論を行います。[TransformersのHubertのドキュメント](https://huggingface.co/docs/transformers/en/model_doc/hubert)にも、HubertForCTCやHubertForSequenceClassificationといったタスク別のクラスが定義されています。
 
-### Stage 1: Cascaded Zero-AVSR
+### Stage1: Cascaded Zero-AVSR
 
 Zero-AVSRには2種類あります。初めにご紹介するのは、よりシンプルなCascaded Zero-AVSRです。
 
 ごく簡単に言えば、音声と口パク映像から発音をローマ字として出力し、それをgpt-4o-miniに投げて文章化する、という構成です。
 
-![](/images/zero-avsr-image1.png)[^JeongHun0716_2025]
+![](/images/zero-avsr-eval/image1.png)[^JeongHun0716_2025]
 [^JeongHun0716_2025]: J. H. Yeo, M. Kim, C. W. Kim, S. Petridis, and Y. M. Ro, “Zero-AVSR: Zero-Shot Audio-Visual Speech Recognition with LLMs by Learning Language-Agnostic Speech Representations,” July 21, 2025, arXiv: arXiv:2503.06273. doi: 10.48550/arXiv.2503.06273.
 
 本構成における論文著者らの貢献は、AV-HuBERTに改変と追加学習を施してAV-Romanizerへと仕立て直したことです。具体的には、[AV-HuBERTの離散クラスタを推定する分類ヘッドを削除し](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage1/model.py#L260)、代わりに[ローマ字列を生成するCTCヘッドを付与しています](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage1/model.py#L278)。
 
 また、追加学習にあたって、後述する多言語データセットMARCを新設しています。追加学習にあたってはAV-HuBERTの全層が学習対象であり、実際に視覚・音声の特徴抽出のレイヤーのパラメータのL2ノルムが変化していることを確認できました。
 
-### Stage 2: (Directly Integrated) Zero-AVSR
+### Stage2: (Directly Integrated) Zero-AVSR
 
 間にローマ字を挟む `Cascated Zero-AVSR` とは異なる、音声・読唇から抽出した特徴をそのままLLMに統合するアーキテクチャが提案されています。論文ではこちらを単に `Zero-AVSR` とよんでいます。本記事では、特に `Cascaded Zero-AVSR` と区別したい場合に `Directly Integrated Zero AVSR` と呼ぶことにします。次のようなアーキテクチャです。
 
+![](/images/zero-avsr-eval/image2.png)[^JeongHun0716_2025]
 
-```mermaid
-flowchart LR
+Stage1 Cascaded Zero-AVSRでは、AV-Romanizerの出力のうちCTC-Headを経由したローマ字テキストを使っていましたが、[本構成ではCTC-Headを経由しない生の視覚音声埋め込みを用います](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage2/model.py#L282)。
 
-```
-
-
-
-
-```mermaid
-flowchart TB
-  subgraph AVRomanizer["AV-Romanizer Pretraining (AV-HuBERT)"]
-    audio["Audio waveform"] -->|log-mel fbank| audEnc["Audio encoder (linear layer)"]
-    video["Mouth ROI video"] --> visEnc["Visual encoder (3D ResNet-18)"]
-    audEnc --> fuse["Concat + linear W"]
-    visEnc --> fuse
-    fuse --> transformer["Transformer encoder (24 layers, d=1024, heads=16)"]
-    transformer --> romanHead["Linear projection to romanized tokens"]
-    romanHead --> romanOut["Romanized token sequence"]
-    romanOut --> ctc["CTC loss"]
-  end
-
-  transformer --> fav["Fused AV feature f_av"]
-
-  subgraph Task1["Task 1: Align AV features with LLM"]
-    fav --> lenComp["Length compressor (1D conv stride 2)"]
-    lenComp --> adapter["Adapter to LLM embedding space"]
-    instruction["Instruction prompt tokens"] --> instrEmb["Instruction embeddings"]
-    adapter --> concat1["Concatenate embeddings"]
-    instrEmb --> concat1
-    concat1 --> llm1["LLM (Llama3.2-3B, frozen base) with QLoRA"]
-    llm1 --> output1["Language-specific transcript"]
-    output1 --> loss1["Language modeling loss"]
-  end
-
-  subgraph Task2["Task 2: Text-only de-romanization"]
-    romanCorpus["Romanized transcripts (MARC text only)"] --> concat2["Tokenized prompt"]
-    concat2 --> llm2["LLM (shared QLoRA adapters)"]
-    llm2 --> output2["Language-specific transcript"]
-    output2 --> loss2["Language modeling loss"]
-  end
-
-  llm1 --- shared["Shared QLoRA weights"]
-  shared --- llm2
-```
 
 ## Zero-AVSRを評価する
 
