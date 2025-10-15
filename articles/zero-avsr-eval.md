@@ -1,15 +1,20 @@
 ---
-title: '多言語対応の読唇モデル "Zero-AVSR" を動かす'
+title: '多言語対応の読唇モデル "Zero-AVSR" を動かす【論文】'
 emoji: "💄"
 type: "tech"
-topics: ["zero-avsr", "marc", "av-hubert", "hubert", "machinelearning", "deeplearning", "LLM"]
-published: false
+topics: ["zero-avsr", "hubert", "machinelearning", "deeplearning", "LLM"]
+published: true
 ---
+
+## Zero-AVSR: Zero-Shot Audio-Visual Speech Recognition with LLMs by Learning Language-Agnostic Speech Representations[^JeongHun0716_2025]
+[^JeongHun0716_2025]: J. H. Yeo, M. Kim, C. W. Kim, S. Petridis, and Y. M. Ro, “Zero-AVSR: Zero-Shot Audio-Visual Speech Recognition with LLMs by Learning Language-Agnostic Speech Representations,” July 21, 2025, arXiv: arXiv:2503.06273. doi: 10.48550/arXiv.2503.06273.
+
+https://arxiv.org/abs/2503.06273
 
 ## TL;DR
 
-- `AV-HuBERT`と`Llama`の知識を組み合わせることで、明示的にコーパスから学習しなくても視覚音声認識ができる
-- 新しい視覚音声データセット`MARC`は、元データにラベル無しデータを用いることで対応言語数と総再生時間を大幅に増加
+- "AV-HuBERT"と"Llama"の知識を組み合わせることで、明示的にコーパスから学習しなくても視覚音声認識ができる
+- 新しい視覚音声データセット"MARC"は、元データにラベル無しデータを用いることで対応言語数と総再生時間を大幅に増加
 - 同じ「ゼロショット推論」でも、やはり学習データに含まれる言語に近い言語の方が認識精度が高い
 
 ## 動機
@@ -47,7 +52,6 @@ Zero-AVSRには2種類あります。初めにご紹介するのは、よりシ�
 ごく簡単に言えば、音声と口パク映像から発音をローマ字として出力し、それをgpt-4o-miniに投げて文章化する、という構成です。
 
 ![Cascaded Zero-AVSR](/images/zero-avsr-eval/image1.png)[^JeongHun0716_2025]
-[^JeongHun0716_2025]: J. H. Yeo, M. Kim, C. W. Kim, S. Petridis, and Y. M. Ro, “Zero-AVSR: Zero-Shot Audio-Visual Speech Recognition with LLMs by Learning Language-Agnostic Speech Representations,” July 21, 2025, arXiv: arXiv:2503.06273. doi: 10.48550/arXiv.2503.06273.
 
 本構成の中心になるのは、視覚・音声入力をローマ字に変換するAV-Romanizerです。AV-HuBERTのアーキテクチャを改変・追加学習しています。具体的には、[AV-HuBERTの離散クラスタを推定する分類ヘッドを削除し](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage1/model.py#L260)、代わりに[ローマ字列を生成するCTCヘッドを付与しています](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage1/model.py#L278)。
 
