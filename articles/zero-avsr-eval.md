@@ -2,16 +2,19 @@
 title: '多言語対応の読唇モデル "Zero-AVSR" を動かす'
 emoji: "💄"
 type: "tech"
-topics: ["zero-avsr", "marc", "av-hubert", "hubert"]
+topics: ["zero-avsr", "marc", "av-hubert", "hubert", "machinelearning", "deeplearning", "LLM"]
 published: false
 ---
 
 ## TL;DR
 
+- `AV-HuBERT`と`Llama`の知識を組み合わせることで、明示的にコーパスから学習しなくても視覚音声認識ができる
+- 新しい視覚音声データセット`MARC`は、元データにラベル無しデータを用いることで対応言語数と総再生時間を大幅に増加
+- 同じ「ゼロショット推論」でも、やはり学習データに含まれる言語に近い言語の方が認識精度が高い
 
 ## 動機
 
-とある理由から読唇の研究に興味があり、中でも多言語対応かつソースが公開されている[Zero-AVSR](https://arxiv.org/abs/2503.06273)に興味を持ちました。
+とある理由から読唇の研究に興味を持ち、中でも多言語対応かつソースが公開されている[Zero-AVSR](https://arxiv.org/abs/2503.06273)を深掘りしています。
 
 しかし、特に任意の音声・映像に対して推論を動かすのが結構しんどかったので、記事にしました。併せて論文の解説もしています。
 
@@ -43,31 +46,47 @@ Zero-AVSRには2種類あります。初めにご紹介するのは、よりシ�
 
 ごく簡単に言えば、音声と口パク映像から発音をローマ字として出力し、それをgpt-4o-miniに投げて文章化する、という構成です。
 
-![](/images/zero-avsr-eval/image1.png)[^JeongHun0716_2025]
+![Cascaded Zero-AVSR](/images/zero-avsr-eval/image1.png)[^JeongHun0716_2025]
 [^JeongHun0716_2025]: J. H. Yeo, M. Kim, C. W. Kim, S. Petridis, and Y. M. Ro, “Zero-AVSR: Zero-Shot Audio-Visual Speech Recognition with LLMs by Learning Language-Agnostic Speech Representations,” July 21, 2025, arXiv: arXiv:2503.06273. doi: 10.48550/arXiv.2503.06273.
 
-本構成における論文著者らの貢献は、AV-HuBERTに改変と追加学習を施してAV-Romanizerへと仕立て直したことです。具体的には、[AV-HuBERTの離散クラスタを推定する分類ヘッドを削除し](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage1/model.py#L260)、代わりに[ローマ字列を生成するCTCヘッドを付与しています](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage1/model.py#L278)。
+本構成の中心になるのは、視覚・音声入力をローマ字に変換するAV-Romanizerです。AV-HuBERTのアーキテクチャを改変・追加学習しています。具体的には、[AV-HuBERTの離散クラスタを推定する分類ヘッドを削除し](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage1/model.py#L260)、代わりに[ローマ字列を生成するCTCヘッドを付与しています](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage1/model.py#L278)。
 
-また、追加学習にあたって、後述する多言語データセットMARCを新設しています。追加学習にあたってはAV-HuBERTの全層が学習対象であり、実際に視覚・音声の特徴抽出のレイヤーのパラメータのL2ノルムが変化していることを確認できました。
+個人的に[追加学習前後の比較表](https://github.com/xhiroga/audio-visual-toolkit/blob/main/packages/fairseq-toolkit/examples/large_vox_iter5_pt-vs-checkpoint_best_pt.md)を作成しました。特に特徴抽出レイヤー (`feature_extractor_audio.proj.bias`, `feature_extractor_video.proj.bias`) のノルムの相対的な変化量が大きく、コサイン類似度が低いことが分かります。
 
 ### Stage2: (Directly Integrated) Zero-AVSR
 
-間にローマ字を挟む `Cascated Zero-AVSR` とは異なる、音声・読唇から抽出した特徴をそのままLLMに統合するアーキテクチャが提案されています。論文ではこちらを単に `Zero-AVSR` とよんでいます。本記事では、特に `Cascaded Zero-AVSR` と区別したい場合に `Directly Integrated Zero AVSR` と呼ぶことにします。次のようなアーキテクチャです。
+本論文では、`Cascated Zero-AVSR` とは異なり、[音声・読唇から抽出した特徴をそのまま](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage2/model.py#L282)埋め込みとしてLLMに統合するアーキテクチャも提案されています。論文ではこちらを単に `Zero-AVSR` とよんでいます。本記事では、特に `Cascaded Zero-AVSR` と区別したい場合に `Directly Integrated Zero AVSR` と呼ぶことにします。次のようなアーキテクチャです。
 
-![](/images/zero-avsr-eval/image2.png)[^JeongHun0716_2025]
+![(Directly Integrated) Zero-AVSR](/images/zero-avsr-eval/image2.png)[^JeongHun0716_2025]
 
-Stage1 Cascaded Zero-AVSRでは、AV-Romanizerの出力のうちCTC-Headを経由したローマ字テキストを使っていましたが、[本構成ではCTC-Headを経由しない生の視覚音声埋め込みを用います](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage2/model.py#L282)。
+生の視覚音声埋め込みは、Llamaに入力可能な形式に変換するために[時間方向に圧縮&線形層2段からなるアダプター](https://github.com/JeongHun0716/zero-avsr/blob/1a0b7a921a8d7e29e640e583ea252d1d11ecd1ca/stage2/model.py#L108-L111)で変形されています。
 
+(Directly Integrated) Zero-AVSRの学習は、次の2段階からなります。
+
+1. アダプターの学習。といっても、アダプターのみを学習するのではなく、視覚・音声入力＋プロンプトから脱ローマ字化された文章までを一気通貫で推論・逆伝播させる。これは複数種類の言語で行う。
+2. LLMの追加学習を行う。1段階目の学習対象だった言語に引っ張られすぎないように、さらに多くの種類の言語で学習する。
+
+こちらも、[追加学習前後の比較表](https://github.com/xhiroga/audio-visual-toolkit/blob/main/packages/fairseq-toolkit/examples/Llama-3_2-3B-vs-checkpoint_best_pt.md)を公開しています。LlamaのLoRAについてはまんべんなく学習されている印象です。
 
 ## Zero-AVSRを評価する
 
+Zero-AVSRのリポジトリには、fairseqで評価用のタスクが定義されており、スクリプトもあります。そこで、実際に動かすための手順をご紹介します。
+
 ### MARC を用意する
+
+まず、多言語の視覚音声ローマ字化コーパスであるMARCを準備します。
+
+[リポジトリの手順](https://github.com/JeongHun0716/zero-avsr/tree/main/marc)にしたがって、MARCデータセットを用意します。私はその中でも、MuAViCから生成できる分のみを対象にしました。[UVで動くフォーク版](https://github.com/xhiroga/muavic)を用意したので、よければご活用ください。
+
+MuAViCのデータは言語ごとに構築することになります。私は一番サイズの小さそうなドイツ語で試しましたが、それでも最終的に1.7GB（中間ファイル込みだと7GB程度）になります。言語によっては30GBを超えるので注意してください。言語ごとのファイルサイズを測るには、MuAViCデータセットの元データの字幕などをホストする[OpenSLR](https://www.openslr.org/100/)を確認するのが良いと思います。
+
+MARCデータセットの規模について、論文では82言語・2,916時間と報告されています。その元になったデータセットは4つあるのですが、LRS3(433時間, 英語, ラベルあり), MuAViC(1,200時間, 9言語, ラベルあり), VoxCeleb2(2,442時間, 多言語, ラベルなし), AVSpeech(4,700時間, 多言語, ラベルなし)となっています。ラベルなしデータセットを取り入れたことで、言語数と総再生時間が伸びていることが分かります。
 
 ### Cascaded Zero-AVSR を評価する
 
 スクリプトを実行して、`Cascaded Zero-AVSR`の性能を評価します。
 
-MARCのドイツ語コーパスを対象にAVSRタスクを実行すると、`Cascaded Zero-AVSR` 全体でそれぞれWER: 29%, CER: 17%程度の性能が得られます。また、`AV-Romanizer` が出力するローマ字＆単語区切り文字を単語列と見做した場合、WER: 42%程度の性能が得られます。
+MARCのドイツ語コーパスを対象にAVSRタスクを実行すると、`Cascaded Zero-AVSR` 全体でそれぞれWER: 29%, CER: 17%程度の性能が得られます。これは、論文の表2の結果とも一致します。WERとは、文章あたりの単語がどれだけ誤っているかの割合です。
 
 実行手順については、私がフォークした[`Zero-AVSR`](https://github.com/xhiroga/zero-avsr/)のリポジトリをご覧ください。
 
@@ -122,6 +141,8 @@ d a s s | d a s | g a n z e | n a t u e r l i c h | a u c h | m a n c h m a l | 
 
 ### (Directly Integrated) Zero-AVSR を評価する
 
+スクリプトを実行して、`(Directly Integrated) Zero-AVSR`の性能を評価します。MARCのデータセットを用いてドイツ語で評価しました。論文の表2同様、WER: 27%となりました。
+
 ```log
 bash scripts/stage2/eval.sh
 
@@ -144,6 +165,28 @@ German WER: 27.95071335927367%
 German CER: 16.331652991921707%
 ```
 
-## 自撮りで試してみる
+## その他
 
+論文では、単純にMARCデータセットで学習したモデルの精度だけでなく、例えば「イタリア語なしで学習した場合のイタリア語の認識精度」や「学習データセットに似た語族が含まれないとされる日本語での認識精度」なども計測しています。
 
+論文の主張とは、「ゼロショット = 学習時のコーパスに明示的に含まれない言語の認識精度がMARCデータセットを用いることで改善する」というものです。これについては、単に英語からの距離が離れたことで他の言語の性能が引き上げられた可能性も検討しなくてはいけないな、と思いました。実際、論文中では多言語データセットで学習した前後の英語認識精度については触れられていませんでした。
+
+また、（英語のみで学習したベースモデルに対して）ターゲットの語族と同じ語族の言語を追加学習した場合と、別の語族の言語を追加学習した場合、前者の方が認識精度が大幅に上がることも触れられていました。
+
+これらの情報を総合すると、日本語向けの視覚音声認識モデルを開発する際は、日本語の学習データを十分に用意することが重要であり、他の言語の学習データではあまり代えが効かなさそう、という結論になりそうです。
+
+## 感想
+
+AV-HuBERTとLlamaのポテンシャルが分かる論文だと思いました。特にAV-Romanizerの性能については、ベースモデルのAV-HuBERTの貢献が大きいと感じます。
+
+その理由にも関わりますが、モデルの追加学習前後の比較結果の解釈で悩んでいます。AV-Romanizerについては、視覚と音声をTransformerに向けてマッピングする層の変化が特徴的で、他の変化は大きくありませんでした。
+
+仮説ですが、事前学習時は英語のデータが主だったのに対して、追加学習では多言語（82言語）になったことで、音・口の形と対応するローマ字・離散音声トークンにズレが生じたのかな、と予想しています。例えば、/ʃ/（硬口蓋摩擦音）をローマ字化する場合、英語では sh（ship）、フランス語では ch（chef）のような違いが生じていた可能性を考えています。
+
+一方で、LlamaのLoRAの解釈はアイデアがありません。全層まんべんなくちょっとづつ更新されている印象でした。ちょっと普通のLlamaのLoRAも見比べてみたいです。
+
+細かい点だと、fairseqは結構クセがあるフレームワークでキャッチアップに苦労しました。素のPyTorchと違ってトレーニングループまで管理しているので、FWの事前知識無しだとどこから読んだら良いのか全く分かりません。
+
+## まとめ
+
+多言語に対応した視覚・音声認識モデル "Zero-AVSR" の仕組みを確認し、性能を評価しました。
