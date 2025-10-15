@@ -1,5 +1,5 @@
 ---
-title: '多言語対応の読唇モデル "Zero-AVSR" を動かす【論文】'
+title: '多言語対応の視覚音声認識モデル "Zero-AVSR" を動かす【論文】'
 emoji: "💄"
 type: "tech"
 topics: ["zero-avsr", "hubert", "machinelearning", "deeplearning", "LLM"]
