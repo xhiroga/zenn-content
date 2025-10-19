@@ -29,3 +29,7 @@ references:
 
 
 ## パッケージの高速な改善のためのテクニック
+
+```sh
+uv sync --reinstall
+```

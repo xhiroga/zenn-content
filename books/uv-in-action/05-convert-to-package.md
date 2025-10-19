@@ -111,6 +111,16 @@ __init__.pyi  hashlib.h  mmh3module.c  murmurhash3.c  murmurhash3.h  py.typed
       - `from {リポジトリ名}` でimportしたい
         - 以降、import予定のコードがリポジトリルートにある と同様に分岐
 
+### パターン1
+
+### パターン2
+
+### パターン3
+
+https://github.com/xhiroga/VSP-LLM/tree/packaged/src/vsp_llm/clustering
+
+only-include = ["*.py"] ← これ *は使えなさそう。
+
 ### 事例1: [musubi-tuner](https://github.com/kohya-ss/musubi-tuner)
 
 kohya-ssさんが開発・運営する、画像・動画生成AIの追加学習・推論リポジトリです。アプリケーションに組み込んで利用しやすいようパッケージ化し、本家にもPRをmergeいただきました。非常に感謝しています。
