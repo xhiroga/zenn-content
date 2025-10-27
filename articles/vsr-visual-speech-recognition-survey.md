@@ -20,12 +20,18 @@ references:
 
 時間をかけて注意深く調べていますが、筆者は専門的な訓練を受けていないため、本記事には誤りがある可能性があります。
 
+## VSRとは
+
+<!-- そういえば silent speech recognition ともいう -->
+
 ## ASR/VSRの発展の概要
 
 ASRリーダーボード
 https://huggingface.co/spaces/hf-audio/open_asr_leaderboard
 
 <!-- これ多言語のほうが低いのはなんで？ -->
+
+https://superbbenchmark.github.io?subset=Paper#/leaderboard
 
 VLM
 https://huggingface.co/spaces/opencompass/open_vlm_leaderboard
@@ -47,8 +53,8 @@ RNNベースのMakino 2019
 
 - タスクはASVかVSRのいずれかのみ記載し、AVT, VSR, AVSRなどは省略した。
 - 筆者の主観で代表的なモデルを選んだ。
-- ASRモデルの学習データおよびWERについては、[Open ASR Leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard)に記載されているモデルを優先した。
-- VSRモデルのWERについては、論文の記載を優先した。評価データセットの多様性に乏しい点に注意。
+- ASRモデルには複数の事前学習済み重みが存在するため、[Open ASR Leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard)の記載を参照した。
+- VSRモデルでは主にLRS3のWERを記載した。ASRのベンチマークよりデータの多様性が乏しいため数値の単純比較をすべきでない点に注意。
 - データセットの名前については、次のとおり省略した。
   - LL: Libri-Light
   - LS: LibriSpeech
@@ -57,11 +63,14 @@ RNNベースのMakino 2019
 
 |年月|タスク|モデル|アーキテクチャ|学習データ|WER|コメント|
 |-|-|-|-|-|-|-|
-|2020|ASR|wav2vec 2.0|CNN+Transformer(Enc)|LL(60,000h)+LS(FT,960h)|22.55%||
-|2021|ASR|HuBERT|CNN+Transformer(Enc)|LL(60,000h)+LS(FT,960h)|22.55%||
-|2022|**VSR**|AV-HuBERT|CNN+Transformer(Enc)|VC2(1,326h)+LRS3(433h)+LRS3(FT,433h)|26.9%||
+|2020|ASR|wav2vec 2.0|CNN+TF(Enc)|LL(60,000h)+LS(FT,960h)|22.55%||
+|2020-12|VSR|VTP|3dCNN+VTP+TF(Enc/Dec)|LRS2+LRS3+TEDxext(2,676h)|30.7%||
+|2021|ASR|HuBERT|CNN+TF(Enc)|LL(60,000h)+LS(FT,960h)|22.55%||
+|2021|-|WavLM|
+|2022|**VSR**|AV-HuBERT|CNN+TF(Enc)|VC2(1,326h)+LRS3(433h)+LRS3(FT,433h)|26.9%||
 |2022|ASR|Whisper v1||680,000h|10.32%||
-|2022-10|**VSR**|Ma et al. (2022)|3dCNN+2dCNN+CF+TF(Dec)|1,459h|31.5%||
+|2022-10|**VSR**|Ma et al.|3dCNN+2dCNN+CF+TF(Dec)|1,459h|31.5%||
+|2023-06|**VSR**|Auto-AVSR|3dCNN+RN18+CF+TF(Dec)||||
 |2023|**VSR**|LP-Conformer|Frontend+Conformer|YT(100,000h)+LRS3(FT,400h)|12.8%|VSRのSOTA|
 |2023|ASR|Whisper large-v3||5,000,000h|7.44%||
 |2024|ASR|Granite-Speech|||5.74%||
@@ -73,6 +82,12 @@ RNNベースのMakino 2019
 #### wav2vec
 
 CNNベースの手法
+
+#### VTP[^VTP]
+
+[^VTP]: K. R. Prajwal, T. Afouras, and A. Zisserman, “Sub-word Level Lip Reading With Visual Attention,” Dec. 03, 2021, arXiv: arXiv:2110.07603. doi: 10.48550/arXiv.2110.07603.
+
+3D CNN + Visual Transformer Pooling + Transformer Encoder-Decoderによる、文字単位ではなくサブワード単位の認識が特徴のモデル。VTPという略称は公式ではないが、少なくともVALLR[^VALLR]でそう言及されている。
 
 #### wav2vec 2.0
 
@@ -131,6 +146,13 @@ PyTorch実装で扱いやすく、エコシステムも充実している。最�
 
 [^Ma-VSR]: P. Ma, S. Petridis, and M. Pantic, “Visual Speech Recognition for Multiple Languages in the Wild,” Nat Mach Intell, vol. 4, no. 11, pp. 930–939, Oct. 2022, doi: 10.1038/s42256-022-00550-z.
 
+https://www.youtube.com/watch?v=FIau-6JA9Po
+
+#### Auto-AVSR[^Auto-AVSR]
+
+[^Auto-AVSR]: P. Ma, A. Haliassos, A. Fernandez-Lopez, H. Chen, S. Petridis, and M. Pantic, “Auto-AVSR: Audio-Visual Speech Recognition with Automatic Labels,” in ICASSP 2023 - 2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), June 2023, pp. 1–5. doi: 10.1109/ICASSP49357.2023.10096889.
+
+[事前学習済み重み](https://github.com/mpc001/auto_avsr)が公開されている。学習データ3,291時間で学習した重みがあり、これはVSRの公開されている重みの中でも最大。
 
 #### LP-Conformer[^LP-Conformer]
 
@@ -167,10 +189,23 @@ ViT-Baseを組み込んだ音素エンコーダーを開発し、Llama3等と接
 
 ViT-Baseのアーキテクチャだけでなく、事前学習済み重みを使ってこその性能と思われる。LRS3のわずか30時間のデータを用いるという前提のためViT-Baseを採用しているのかもしれない。その場合、学習・推論速度を無視すれば、より大きなデータセット + ViT-Largeの採用で簡単に性能の向上が期待できる。
 
+<!--
+結構理に適っている気がするのだけど、ViT採用のアイデアはどこから？
+（他のモデルがAV-HuBERTにこだわっているのはなぜ？）
+（9月にVideoMAEで自作した際はあまりうまくいかなかったが、この論文との差分は？）
+
+他の論文への言及
+- VSP-LLM, Personal Lip Reading: LLM活用の先駆者として言及。ただし制御性の低さを指摘。Zero-AVSRはほぼ登場が同時なので引用されていない。
+- VTP, LP: スコアのみ
+- Whisperer: ASRモデルの転移学習の最新手法として紹介し、大量のデータが必要な点を指摘。ほか、CTCヘッドの学習戦略のきっかけとして言及
+- Zero-shot keyword spotting: 先駆けとして（のはず）
+-->
+
 ## データセット
 
 |年月|名前|時間|ソース|特徴|
 |-|-|-|-|-|
+||Grid||||
 ||LRW||||
 ||LRS2||||
 ||AVSpeech||||
@@ -209,16 +244,18 @@ VSRの事実上の標準データセット。現在は公式サイトから配�
 ## 今後の課題
 
 - モデルは性能の良さというより学習効率で選んだ方が良いかもしれない
+(AV-HuBERT? ViT? VideoMAE?)
+(Phonemeベース? トークンベース?)
+(直接統合? プロンプト経由の統合?)
+(セミオープンな語彙の場合は？)
 
-## サーベイ
+## 参考文献（サーベイなど）
 
-VSR
-K. Rezaee and M. Yeganeh, “Automatic Visual Lip Reading: A Comparative Review of Machine-Learning Approaches,” Results in Engineering, p. 107171, Sept. 2025, doi: 10.1016/j.rineng.2025.107171.
-（でもAV-HuBERTに触れてないのが気になる）
-
-Integrating Speech Recognition into Intelligent Information
-Systems: From Statistical Models to Deep Learning
-
-
-動画認識側
-[1] N. Madan, A. Moegelmose, R. Modi, Y. S. Rawat, and T. B. Moeslund, “Foundation Models for Video Understanding: A Survey,” May 06, 2024, arXiv: arXiv:2405.03770. doi: 10.48550/arXiv.2405.03770.
+- ASR
+  - [C. Wu, Y. Pan, H. Wu, and L. Ning, “Integrating Speech Recognition into Intelligent Information Systems: From Statistical Models to Deep Learning,” Informatics, vol. 12, no. 4, p. 107, Oct. 2025, doi: 10.3390/informatics12040107.](https://www.mdpi.com/2227-9709/12/4/107)
+  - [Y. Yang et al., “Towards Universal Speech Discrete Tokens: A Case Study for ASR and TTS,” Dec. 14, 2023, arXiv: arXiv:2309.07377. doi: 10.48550/arXiv.2309.07377.](https://arxiv.org/abs/2309.07377)
+- VSR
+  - [J. Rishabh and H. Naomi, “From Hype to Insight: Rethinking Large Language Model Integration in Visual Speech Recognition.” Accessed: Oct. 27, 2025. [Online]. Available: https://arxiv.org/abs/2509.14880v1](https://arxiv.org/abs/2509.14880v1)
+  - [K. Rezaee and M. Yeganeh, “Automatic Visual Lip Reading: A Comparative Review of Machine-Learning Approaches,” Results in Engineering, p. 107171, Sept. 2025, doi: 10.1016/j.rineng.2025.107171.](https://www.sciencedirect.com/science/article/pii/S2590123025032268)
+- Computer Vision
+  - [N. Madan, A. Moegelmose, R. Modi, Y. S. Rawat, and T. B. Moeslund, “Foundation Models for Video Understanding: A Survey,” May 06, 2024, arXiv: arXiv:2405.03770. doi: 10.48550/arXiv.2405.03770.](http://arxiv.org/abs/2405.03770)
