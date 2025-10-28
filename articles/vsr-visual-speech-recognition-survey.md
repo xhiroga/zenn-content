@@ -14,6 +14,8 @@ references:
 
 ## TL;DR
 
+
+
 ## 動機
 
 読唇術のモデルを開発するためには、視覚音声認識(VSR)だけでなく音声認識(ASR)のトレンドを抑える必要があります。そこで、ASR/VSRにおける代表的なモデル・データセット・学習手法などについてまとめました。
@@ -22,9 +24,13 @@ references:
 
 ## VSRとは
 
-<!-- そういえば silent speech recognition ともいう -->
+VSR(Visual Speech Recognition)とは、視覚データから発話内容を認識する、いわば読唇術のタスクです。それ以外にA-VSR(Auto VSR)やLip ReadingやSilent Speech Recognitionと呼ばれることもあります。
 
-## ASR/VSRの発展の概要
+関連するタスクとしては、音声からの文字起こしを行うASR(Audio Visual Recognition)や、視覚を用いてノイズなどの影響を取り除くAVSR(Audio Visual Speech Recognition)などがあります。
+
+## ASR/VSRの発展
+
+
 
 ASRリーダーボード
 https://huggingface.co/spaces/hf-audio/open_asr_leaderboard
@@ -36,20 +42,7 @@ https://superbbenchmark.github.io?subset=Paper#/leaderboard
 VLM
 https://huggingface.co/spaces/opencompass/open_vlm_leaderboard
 
-
-## 歴史
-
-超・古典的な技術
-
-
-DNN
-
-
-RNNベースのMakino 2019
-
-
-
-### 自己教師あり時代
+### モデル一覧
 
 - タスクはASVかVSRのいずれかのみ記載し、AVT, VSR, AVSRなどは省略した。
 - 筆者の主観で代表的なモデルを選んだ。
@@ -70,16 +63,40 @@ RNNベースのMakino 2019
 |2022|**VSR**|AV-HuBERT|CNN+TF(Enc)|VC2(1,326h)+LRS3(433h)+LRS3(FT,433h)|26.9%||
 |2022|ASR|Whisper v1||680,000h|10.32%||
 |2022-10|**VSR**|Ma et al.|3dCNN+2dCNN+CF+TF(Dec)|1,459h|31.5%||
+|2023-04|**VSR**|RAVEn|||||
 |2023-06|**VSR**|Auto-AVSR|3dCNN+RN18+CF+TF(Dec)||||
 |2023|**VSR**|LP-Conformer|Frontend+Conformer|YT(100,000h)+LRS3(FT,400h)|12.8%|VSRのSOTA|
 |2023|ASR|Whisper large-v3||5,000,000h|7.44%||
 |2024|ASR|Granite-Speech|||5.74%||
+|2024|**VSR**|BRAVEn|||||
 |2024-05|**VSR**|VSP-LLM|AV-HuBERT+Llama|VC2(1,326h)+LRS3(433h)+LRS3(FT,433h)|25.4%||
 |2024-09|**VSR**|Whisperer|AV-HuBERT+Adpt+Whisper|VC2(1,326h)+LRS3(433h)+LRS3(FT,433h)|24.3%||
 |2025|**VSR**|VALLR|ViT-Base+Adpt+CTC+Llama|(ViT-Base+Llama3.2-3B)+30h|18.7%||
 
+<!-- ちなみにプロのLip Readerの正解率は？ -->
 
-#### wav2vec
+### 教師あり学習
+
+超・古典的な技術
+
+
+DNN
+
+
+RNNベースのMakino 2019
+
+
+
+### 自己教師あり学習・反教師あり学習
+
+
+
+
+
+#### wav2vec[^wav2vec]
+
+[^wav2vec]: [S. Schneider, A. Baevski, R. Collobert, and M. Auli, “wav2vec: Unsupervised Pre-training for Speech Recognition,” Sept. 11, 2019, arXiv: arXiv:1904.05862. doi: 10.48550/arXiv.1904.05862.](https://arxiv.org/abs/1904.05862)
+
 
 CNNベースの手法
 
@@ -89,7 +106,10 @@ CNNベースの手法
 
 3D CNN + Visual Transformer Pooling + Transformer Encoder-Decoderによる、文字単位ではなくサブワード単位の認識が特徴のモデル。VTPという略称は公式ではないが、少なくともVALLR[^VALLR]でそう言及されている。
 
-#### wav2vec 2.0
+#### wav2vec 2.0[^wav2vec2.0]
+
+[^wav2vec2.0]: [A. Baevski, H. Zhou, A. Mohamed, and M. Auli, “wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations,” Oct. 22, 2020, arXiv: arXiv:2006.11477. doi: 10.48550/arXiv.2006.11477.](https://arxiv.org/abs/2006.11477)
+
 
 https://huggingface.co/speechbrain/asr-wav2vec2-librispeech
 https://huggingface.co/facebook/wav2vec2-large-960h-lv60-self
@@ -201,25 +221,54 @@ ViT-Baseのアーキテクチャだけでなく、事前学習済み重みを使
 - Zero-shot keyword spotting: 先駆けとして（のはず）
 -->
 
-## データセット
+## VSRのデータセット
 
-|年月|名前|時間|ソース|特徴|
-|-|-|-|-|-|
-||Grid||||
-||LRW||||
-||LRS2||||
-||AVSpeech||||
-|2018|VoxCeleb2||||
-||LRS3||||
-||WildVSR|||
+|年月|名前|言語|時間|ソース|特徴|
+|-|-|-|-|-|-|
+||GRID|英語|||
+||LRW|英語|173h|||
+|2016-11|LRS|英語|?h|BBC||
+||AVSpeech|英語||||
+|2018|VoxCeleb2|英語||||
+|2018-09|LRS2|英語|224h|BBC||
+|2018-09|LRS3|英語|437h|TED&TEDx||
+||WildVSR||||
+|2023-01|OLKAVS|韓国語|1,150h||
 
 
+なお、各データセットの図表は公式およびサーベイ[^Changchong]からの引用である。
 
-### LRS3
+[^Changchong]: [1] S. Changchong et al., “Deep Learning for Visual Speech Analysis: A Survey.” Accessed: Oct. 28, 2025. [Online]. Available: https://www.computer.org/csdl/journal/tp/2024/09/10472054/1VhFlotHb2w
 
-VSRの事実上の標準データセット。現在は公式サイトから配布されていない。Train/Val/Testで話者分離をしていないため、LRS3のみで学習すると話者ごとの充分な汎化性能が得られない可能性がある。
+### LRW[^LRW]
 
-<!-- LRS2よりも難しかったはず -->
+[^LRW]: [J. S. Chung and A. Zisserman, “Lip Reading in the Wild,” S.-H. Lai, V. Lepetit, K. Nishino, and Y. Sato, Eds., in Lecture Notes in Computer Science, vol. 10112. Cham: Springer International Publishing, 2017, pp. 87–103. doi: 10.1007/978-3-319-54184-6_6.](https://link.springer.com/chapter/10.1007/978-3-319-54184-6_6)
+
+### LRS[^LRS]
+
+[^LRS]: [J. S. Chung, A. Senior, O. Vinyals, and A. Zisserman, “Lip Reading Sentences in the Wild,” in 2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR), July 2017, pp. 3444–3453. doi: 10.1109/CVPR.2017.367.](https://arxiv.org/abs/1611.05358)
+
+![LRS](/images/vsr-visual-speech-recognition-survey/lrs-fig3.png)
+
+LRWが1クリップ1単語だったのに対して、1クリップ1センテンスとなっている。
+
+### LRS2[^LRS2]
+
+[^LRS2]: [T. Afouras, J. S. Chung, A. Senior, O. Vinyals, and A. Zisserman, “Deep Audio-Visual Speech Recognition,” IEEE Trans. Pattern Anal. Mach. Intell., vol. 44, no. 12, pp. 8717–8727, Dec. 2022, doi: 10.1109/TPAMI.2018.2889052.](https://arxiv.org/abs/1809.02108)
+
+![LRS2](/images/vsr-visual-speech-recognition-survey/lrs2-fig3.png)
+
+LRS1の上位互換と見做されているのか、LRS1を飛ばしてLRS2が言及されることが多い。現在は公式サイトの配布が停止している。
+
+### LRS3[^LRS3]
+
+[^LRS3]: [T. Afouras, J. S. Chung, and A. Zisserman, “LRS3-TED: a large-scale dataset for visual speech recognition,” Oct. 28, 2018, arXiv: arXiv:1809.00496. doi: 10.48550/arXiv.1809.00496.](https://arxiv.org/abs/1809.00496)
+
+![LRS3](/images/vsr-visual-speech-recognition-survey/dl-for-vsa-lrs3.png)
+
+2025年時点におけるVSRの事実上の標準データセット。現在は[公式サイト](https://www.robots.ox.ac.uk/~vgg/data/lip_reading/)の配布が停止している。Train/Val/Testで話者分離をしていないため、LRS3のみで学習すると話者ごとの充分な汎化性能が得られない可能性がある。
+
+TEDの映像から自動で顔認識してクリップを作成している。登壇者ではなく背後のスライドが切り抜かれてしまっているクリップも意外とあるらしい？
 
 ### WildVSR[^WildVSR]
 
@@ -227,7 +276,13 @@ VSRの事実上の標準データセット。現在は公式サイトから配�
 
 <!-- 角度とかはこだわりある？ -->
 
-## ASR to VSRの技術
+### OLKAVS[^OLKAVS]
+
+[^OLKAVS]: [J. Park et al., “OLKAVS: An Open Large-Scale Korean Audio-Visual Speech Dataset,” Aug. 28, 2025, arXiv: arXiv:2301.06375. doi: 10.48550/arXiv.2301.06375.]([1] J. Park et al., “OLKAVS: An Open Large-Scale Korean Audio-Visual Speech Dataset,” Aug. 28, 2025, arXiv: arXiv:2301.06375. doi: 10.48550/arXiv.2301.06375.)
+
+非英語、総映像時間1,150時間というだけでもすごいのに、5点から収録しているので実質データ量が5倍。
+
+## VSRの学習
 
 時間マスキング
 (ma et all 2022など)
@@ -240,6 +295,10 @@ VSRの事実上の標準データセット。現在は公式サイトから配�
 転移学習メソッド
 
 多言語対応メソッド
+
+### QLoRA, LoRA, フルトレーニング
+
+VSP-LLMを用いて、LLMの追加学習方法について比較がなされています。LRS3による学習においては、学習ステップ数が30kステップ数程度である場合、QLoRAやLoRAでは損失が収束するが、フルトレーニングでは収束に至らないことが示されています。
 
 ## 今後の課題
 
@@ -255,7 +314,8 @@ VSRの事実上の標準データセット。現在は公式サイトから配�
   - [C. Wu, Y. Pan, H. Wu, and L. Ning, “Integrating Speech Recognition into Intelligent Information Systems: From Statistical Models to Deep Learning,” Informatics, vol. 12, no. 4, p. 107, Oct. 2025, doi: 10.3390/informatics12040107.](https://www.mdpi.com/2227-9709/12/4/107)
   - [Y. Yang et al., “Towards Universal Speech Discrete Tokens: A Case Study for ASR and TTS,” Dec. 14, 2023, arXiv: arXiv:2309.07377. doi: 10.48550/arXiv.2309.07377.](https://arxiv.org/abs/2309.07377)
 - VSR
-  - [J. Rishabh and H. Naomi, “From Hype to Insight: Rethinking Large Language Model Integration in Visual Speech Recognition.” Accessed: Oct. 27, 2025. [Online]. Available: https://arxiv.org/abs/2509.14880v1](https://arxiv.org/abs/2509.14880v1)
+  - [J. Rishabh and H. Naomi, “From Hype to Insight: Rethinking Large Language Model Integration in Visual Speech Recognition.” Accessed: Oct. 27, 2025. [Online]. Available: https://arxiv.org/abs/2509.14880v1](https://arxiv.org/abs/2509.14880v1): サーベイではなく論文ですが、最近のVSR+LLMの流れをまとめている（オープンアクセスでは）現状唯一の論文かも？
+  - [P. Nemani, G. S. Krishna, and S. Kundrapu, “Automated Speaker Independent Visual Speech Recognition: A Comprehensive Survey,” Image and Vision Computing, vol. 138, p. 104787, Oct. 2023, doi: 10.1016/j.imavis.2023.104787.](https://arxiv.org/abs/2306.08314): 包括的。さらにOLKAVSに言及している数少ない論文。
   - [K. Rezaee and M. Yeganeh, “Automatic Visual Lip Reading: A Comparative Review of Machine-Learning Approaches,” Results in Engineering, p. 107171, Sept. 2025, doi: 10.1016/j.rineng.2025.107171.](https://www.sciencedirect.com/science/article/pii/S2590123025032268)
 - Computer Vision
   - [N. Madan, A. Moegelmose, R. Modi, Y. S. Rawat, and T. B. Moeslund, “Foundation Models for Video Understanding: A Survey,” May 06, 2024, arXiv: arXiv:2405.03770. doi: 10.48550/arXiv.2405.03770.](http://arxiv.org/abs/2405.03770)
