@@ -226,17 +226,20 @@ ViT-Baseのアーキテクチャだけでなく、事前学習済み重みを使
 |年月|名前|言語|時間|ソース|特徴|
 |-|-|-|-|-|-|
 ||GRID|英語|||
-||LRW|英語|173h|||
+|2016|LRW|英語|173h|BBC||
 |2016-11|LRS|英語|?h|BBC||
-||AVSpeech|英語||||
 |2018|VoxCeleb2|英語||||
+|2018-08|AVSpeech|英語|4,700h|YouTube||
 |2018-09|LRS2|英語|224h|BBC||
 |2018-09|LRS3|英語|437h|TED&TEDx||
 ||WildVSR||||
-|2023-01|OLKAVS|韓国語|1,150h||
+|2022|GLips|ドイツ語|1,150h||
+|2023-01|OLKAVS|韓国語|1,150h|Original||
+|2023-03|MuAViC|多言語|1,200h|TED&TEDx||
+|2023-09|VSR-LOW|多言語|1,200h|TED&TEDx||
 
 
-なお、各データセットの図表は公式およびサーベイ[^Changchong]からの引用である。
+なお、各データセットの図表は公式およびサーベイ[^Changchong]からの引用です。
 
 [^Changchong]: [1] S. Changchong et al., “Deep Learning for Visual Speech Analysis: A Survey.” Accessed: Oct. 28, 2025. [Online]. Available: https://www.computer.org/csdl/journal/tp/2024/09/10472054/1VhFlotHb2w
 
@@ -252,6 +255,14 @@ ViT-Baseのアーキテクチャだけでなく、事前学習済み重みを使
 
 LRWが1クリップ1単語だったのに対して、1クリップ1センテンスとなっている。
 
+### AVSpeech[^AVSpeech]
+
+[^AVSpeech]: [A. Ephrat et al., “Looking to Listen at the Cocktail Party: A Speaker-Independent Audio-Visual Model for Speech Separation,” ACM Trans. Graph., vol. 37, no. 4, pp. 1–11, Aug. 2018, doi: 10.1145/3197517.3201357.](http://arxiv.org/abs/1804.03619)
+
+![AVSpeech](/images/vsr-visual-speech-recognition-survey/avspeech-fig2.png)
+
+https://github.com/naba89/AVSpeechDownloader
+
 ### LRS2[^LRS2]
 
 [^LRS2]: [T. Afouras, J. S. Chung, A. Senior, O. Vinyals, and A. Zisserman, “Deep Audio-Visual Speech Recognition,” IEEE Trans. Pattern Anal. Mach. Intell., vol. 44, no. 12, pp. 8717–8727, Dec. 2022, doi: 10.1109/TPAMI.2018.2889052.](https://arxiv.org/abs/1809.02108)
@@ -266,9 +277,9 @@ LRS1の上位互換と見做されているのか、LRS1を飛ばしてLRS2が�
 
 ![LRS3](/images/vsr-visual-speech-recognition-survey/dl-for-vsa-lrs3.png)
 
-2025年時点におけるVSRの事実上の標準データセット。現在は[公式サイト](https://www.robots.ox.ac.uk/~vgg/data/lip_reading/)の配布が停止している。Train/Val/Testで話者分離をしていないため、LRS3のみで学習すると話者ごとの充分な汎化性能が得られない可能性がある。
+2025年時点におけるVSRの事実上の標準データセット。現在は[公式サイト](https://www.robots.ox.ac.uk/~vgg/data/lip_reading/)の配布が停止している。TEDの映像から自動で顔認識してクリップを作成している。登壇者ではなく背後のスライドが切り抜かれてしまっているクリップも意外とあるらしい？
 
-TEDの映像から自動で顔認識してクリップを作成している。登壇者ではなく背後のスライドが切り抜かれてしまっているクリップも意外とあるらしい？
+Train/Val/Testで話者分離をしていないため、LRS3のみで学習すると話者ごとの充分な汎化性能が得られない可能性がある。
 
 ### WildVSR[^WildVSR]
 
@@ -282,6 +293,20 @@ TEDの映像から自動で顔認識してクリップを作成している。�
 
 非英語、総映像時間1,150時間というだけでもすごいのに、5点から収録しているので実質データ量が5倍。
 
+### MuAViC[^MuAViC]
+
+[^MuAViC]: [M. Anwar, B. Shi, V. Goswami, W.-N. Hsu, J. Pino, and C. Wang, “MuAViC: A Multilingual Audio-Visual Corpus for Robust Speech Recognition and Robust Speech-to-Text Translation,” Mar. 07, 2023, arXiv: arXiv:2303.00628. doi: 10.48550/arXiv.2303.00628.](http://arxiv.org/abs/2303.00628)
+
+9言語（英・アラビア・ドイツ・ギリシャ・スペイン・フランス・イタリア・ポルトガル・ロシア）のデータセット。いずれもスペースで区切られる言語。英語部分はLRS3を流用しているが、それ以外はTEDxからなる。
+
+データセット本体ではなく、構築用のスクリプトが配布されている。動画はYouTubeから取得する。1言語あたり、データセット構築に1日程度かかると思ったほうがよい。
+
+### VSR-LOW[^VSR-LOW]
+
+[^VSR-LOW]: [J. H. Yeo, M. Kim, S. Watanabe, and Y. M. Ro, “Visual Speech Recognition for Languages with Limited Labeled Data using Automatic Labels from Whisper,” Jan. 12, 2024, arXiv: arXiv:2309.08535. doi: 10.48550/arXiv.2309.08535.](http://arxiv.org/abs/2309.08535)
+
+
+
 ## VSRの学習
 
 時間マスキング
@@ -289,6 +314,8 @@ TEDの映像から自動で顔認識してクリップを作成している。�
 文脈情報に応じて口のかたちを推定する力を養う
 
 モダリティdropout
+
+ASRからの知識蒸留
 
 擬似ラベル
 
