@@ -92,7 +92,8 @@ FramePackは、自然言語での入力に対応していることもあり、�
 生成時の`latent_window_size`と、生成したい動画の長さに応じて、生成したい動画の長さは変わってきます。フレーム数は次のような計算で算出します。
 
 ```
-pixel frames = latent frames * 4 - 3
+pixel frames = latent frames * 4 - 3	# -3 は重複分
+latent frames = latent_window_size * iteration + 1	# +1 は開始フレーム
 ex1: 73 = (9 * 2 + 1) * 4 - 3
 ex2: 109 = (9 * 3 + 1) * 4 - 3
 ```
