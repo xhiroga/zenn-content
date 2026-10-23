@@ -3,7 +3,7 @@ title: "Windowsからクライアント証明書をexportしてスクレイピ�
 emoji: "🔖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["openssl"]
-published: true
+published: false
 ---
 [justInCase](https://www.wantedly.com/companies/justincase)では保険業務の自動化を進めており、その中にはWindows端末が必須とされている業務もありました。
 そこで、クライアント証明書&秘密鍵をexportしてプログラムからでもアクセスできるようにしてみたので共有します。
